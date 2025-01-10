@@ -11,12 +11,17 @@ export default function AudioPlayerPage() {
     // TODO: will be retrieved from database where the previous time the user left the app
     const startTime = 0
     const audioDuration = sampleData.metaData.duration
+    
+    const lyrics = sampleData.lyrics
 
     const {playing, togglePlay, duration, currentTime, seek} = useAudio(audioUrl, startTime, audioDuration)
 
     return (
         <main>
-            <LyricsDisplay />
+            <LyricsDisplay 
+                lyrics={lyrics}
+                currentTime={currentTime}
+            />
             {/* Lyrics Mode Controls */}
             <LyricsModeControls 
                 playing={playing}
