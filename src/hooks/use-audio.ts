@@ -8,6 +8,10 @@ export function useAudio(url: string, startTime: number, audioDuration: number) 
 
   const togglePlay = () => setPlaying((prev) => !prev);
 
+  const seek = (time: number) => {
+    audio.current.currentTime = time
+  }
+
   useEffect(() => {
     const audioElement = audio.current;
 
@@ -24,5 +28,5 @@ export function useAudio(url: string, startTime: number, audioDuration: number) 
     };
   }, [playing]);
 
-  return { playing, duration, currentTime, togglePlay };
+  return { playing, duration, currentTime, togglePlay, seek };
 }

@@ -12,7 +12,7 @@ export default function AudioPlayerPage() {
     const startTime = 0
     const audioDuration = sampleData.metaData.duration
 
-    const {playing, togglePlay, duration, currentTime} = useAudio(audioUrl, startTime, audioDuration)
+    const {playing, togglePlay, duration, currentTime, seek} = useAudio(audioUrl, startTime, audioDuration)
 
     return (
         <main>
@@ -23,6 +23,7 @@ export default function AudioPlayerPage() {
                 togglePlay={togglePlay}
                 duration={duration}
                 currentTime={currentTime}
+                seek={seek}
             />
         </main>
     )
