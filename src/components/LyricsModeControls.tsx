@@ -13,10 +13,15 @@ export default function LyricsModeControls({
   playing: boolean;
   seek: (time: number) => void;
 }) {
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
   return (
     <>
-      <p>duration: {duration}</p>
-      <p>current time: {currentTime}</p>
+      <p>duration: {formatTime(duration)}</p>
+      <p>current time: {formatTime(currentTime)}</p>
       <Slider
         className="max-w-[300px]"
         value={[currentTime]}
