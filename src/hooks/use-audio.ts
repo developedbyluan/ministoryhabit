@@ -46,6 +46,7 @@ export function useAudio(
 
     return () => {
       audioElement.removeEventListener("timeupdate", setAudioTime);
+      audioElement.addEventListener("loadedmetadata", setAudioMetadata)
     };
   }, [playing]);
 
