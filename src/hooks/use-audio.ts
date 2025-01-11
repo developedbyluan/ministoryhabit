@@ -8,7 +8,8 @@ export function useAudio(
   const audio = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(startTime);
-  const duration = audioDuration;
+  // const duration = audioDuration;
+  const [duration, setDuration] = useState(audioDuration)
 
   useEffect(() => {
     // Initialize audio only on client side
@@ -18,9 +19,9 @@ export function useAudio(
   const togglePlay = () => setPlaying((prev) => !prev);
 
   const seek = (time: number) => {
-    const audioElement = audio.current
-    if (!audioElement) return
-      audioElement.currentTime = time;
+    const audioElement = audio.current;
+    if (!audioElement) return;
+    audioElement.currentTime = time;
   };
 
   useEffect(() => {
@@ -30,8 +31,12 @@ export function useAudio(
     const setAudioTime = () => {
       setCurrentTime(audioElement.currentTime);
     };
+    const setAudioMetadata = () => {
+      setDuration(audioElement.duration)
+    }
 
     audioElement.addEventListener("timeupdate", setAudioTime);
+    audioElement.addEventListener("loadedmetadata", setAudioMetadata)
 
     if (playing) {
       audioElement.play();
@@ -43,6 +48,17 @@ export function useAudio(
       audioElement.removeEventListener("timeupdate", setAudioTime);
     };
   }, [playing]);
+
+  useEffect(() => {
+    const audioElement = audio.current
+    if(!audioElement) return
+
+    if (currentTime >= duration) {
+      audioElement.currentTime = 0;
+      audioElement.pause();
+      setPlaying(false);
+    }
+  }, [currentTime]);
 
   return { playing, duration, currentTime, togglePlay, seek };
 }
