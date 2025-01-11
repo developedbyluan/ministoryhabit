@@ -6,18 +6,21 @@ export default function LyricsModeControls({
   togglePlay,
   playing,
   seek,
+  handleShowSentenceMode
 }: {
   duration: number;
   currentTime: number;
   togglePlay: () => void;
   playing: boolean;
   seek: (time: number) => void;
+  handleShowSentenceMode: () => void;
 }) {
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
+  
   return (
     <>
       <p>duration: {formatTime(duration)}</p>
@@ -31,6 +34,7 @@ export default function LyricsModeControls({
       />
       <div>
         <button onClick={togglePlay}>{playing ? "Pause" : "Play"}</button>
+        <button onClick={handleShowSentenceMode}>Show Sentence Mode</button>
       </div>
     </>
   );
