@@ -6,6 +6,8 @@ import { useAudio } from "@/hooks/use-audio";
 
 import { sampleData } from "@/db/sample-data";
 import { useState } from "react";
+import SentenceDisplay from "@/components/SentenceDisplay";
+import SentenceModeControls from "@/components/SentenceModeControls";
 
 export default function AudioPlayerPage() {
   const audioUrl = sampleData.audioUrl;
@@ -25,13 +27,16 @@ export default function AudioPlayerPage() {
   const [showSentenceMode, setShowSentenceMode] = useState<boolean>(false);
 
   function handleShowSentenceMode() {
-    setShowSentenceMode(true)
+    setShowSentenceMode(true);
   }
 
   return (
     <main>
       {showSentenceMode ? (
-        "Sentence Mode"
+        <>
+          <SentenceDisplay />
+          <SentenceModeControls />
+        </>
       ) : (
         <>
           <LyricsDisplay lyrics={lyrics} currentTime={currentTime} />
