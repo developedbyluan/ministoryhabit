@@ -101,8 +101,17 @@ export function useAudio(
     setCurrentLyricIndex(prev => prev - 1)
   }
 
+  function handlePause() {
+    const audioElement = audio.current
+    if (!audioElement) return
+
+    audioElement.pause()
+    setPlaying(false)
+  }
+
   return {
     playing,
+    handlePause,
     duration,
     currentTime,
     togglePlay,

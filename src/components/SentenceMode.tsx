@@ -29,7 +29,7 @@ export default function SentenceMode({
       <button onClick={() => handlePlayInRange()}>
         {playing ? "Pause" : "Play"}
       </button>
-      <button onClick={() => playPrev}>Prev</button>
+      <button onClick={() => playPrev()}>Prev</button>
       <button onClick={handleShowSentenceMode}>Hide Sentence mode</button>
     </main>
   );

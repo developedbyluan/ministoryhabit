@@ -18,6 +18,7 @@ export default function AudioPlayerPage() {
 
   const {
     playing,
+    handlePause,
     togglePlay,
     duration,
     currentTime,
@@ -66,6 +67,7 @@ export default function AudioPlayerPage() {
             currentTime={currentTime}
             seek={seek}
             handleShowSentenceMode={handleShowSentenceMode}
+            handlePause={handlePause}
           />
         </>
       )}
