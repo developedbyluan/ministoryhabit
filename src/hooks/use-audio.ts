@@ -68,7 +68,7 @@ export function useAudio(
     if (endTimeRef.current !== -1 && currentTime >= endTimeRef.current) {
       audioElement.pause();
       setPlaying(false);
-      endTimeRef.current = -1
+      endTimeRef.current = -1;
     }
   }, [currentTime, duration]);
 
@@ -81,11 +81,11 @@ export function useAudio(
     const audioElement = audio.current;
     if (!audioElement) return;
 
-    if(playing) {
-      audioElement.pause()
-      endTimeRef.current = -1
-      setPlaying(false)
-      return
+    if (playing) {
+      audioElement.pause();
+      endTimeRef.current = -1;
+      setPlaying(false);
+      return;
     }
     audioElement.currentTime = startTime;
     audioElement.play();
@@ -93,20 +93,20 @@ export function useAudio(
     endTimeRef.current = endTime - 0.4;
   }
 
-  function playNext() {
-    setCurrentLyricIndex(prev => prev + 1)
+  function nextLyric() {
+    setCurrentLyricIndex((prev) => prev + 1);
   }
 
-  function playPrev() {
-    setCurrentLyricIndex(prev => prev - 1)
+  function prevLyric() {
+    setCurrentLyricIndex((prev) => prev - 1);
   }
 
   function handlePause() {
-    const audioElement = audio.current
-    if (!audioElement) return
+    const audioElement = audio.current;
+    if (!audioElement) return;
 
-    audioElement.pause()
-    setPlaying(false)
+    audioElement.pause();
+    setPlaying(false);
   }
 
   return {
@@ -119,7 +119,7 @@ export function useAudio(
     currentLyricIndex,
     updateCurrentLyricIndex,
     playInRange,
-    playNext,
-    playPrev
+    nextLyric,
+    prevLyric,
   };
 }
