@@ -44,7 +44,7 @@ export default function AudioPlayerPage() {
         <>
           <SentenceMode
             lyrics={lyrics}
-            curretLyricIndex={currentLyricIndex}
+            currentLyricIndex={currentLyricIndex}
             handleShowSentenceMode={handleShowSentenceMode}
             playInRange={playInRange}
             playNext={playNext}
