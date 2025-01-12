@@ -4,9 +4,11 @@ import type { Lyric } from "@/types/lyrics";
 export default function LyricsDisplay({
   lyrics,
   currentTime,
+  updateCurrentLyricIndex
 }: {
   lyrics: Lyric[];
   currentTime: number;
+  updateCurrentLyricIndex: (index: number) => void;
 }) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +20,8 @@ export default function LyricsDisplay({
       const lyricElement = lyricsArrayRef.current.children[currentLyricIndex];
 
       lyricElement.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      updateCurrentLyricIndex(currentLyricIndex)
     }
   }, [currentTime, lyrics]);
 

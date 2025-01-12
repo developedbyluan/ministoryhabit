@@ -9,7 +9,11 @@ export function useAudio(
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(startTime);
   // const duration = audioDuration;
-  const [duration, setDuration] = useState(audioDuration)
+  const [duration, setDuration] = useState(audioDuration);
+
+  // TODO: SentenceMode component
+  const [currentLyricIndex, setCurrentLyricIndex] = useState<number>(0);
+  const endTimeRef = useRef<number>(-1);
 
   useEffect(() => {
     // Initialize audio only on client side
@@ -32,11 +36,11 @@ export function useAudio(
       setCurrentTime(audioElement.currentTime);
     };
     const setAudioMetadata = () => {
-      setDuration(audioElement.duration)
-    }
+      setDuration(audioElement.duration);
+    };
 
     audioElement.addEventListener("timeupdate", setAudioTime);
-    audioElement.addEventListener("loadedmetadata", setAudioMetadata)
+    audioElement.addEventListener("loadedmetadata", setAudioMetadata);
 
     if (playing) {
       audioElement.play();
@@ -46,20 +50,57 @@ export function useAudio(
 
     return () => {
       audioElement.removeEventListener("timeupdate", setAudioTime);
-      audioElement.addEventListener("loadedmetadata", setAudioMetadata)
+      audioElement.addEventListener("loadedmetadata", setAudioMetadata);
     };
   }, [playing]);
 
   useEffect(() => {
-    const audioElement = audio.current
-    if(!audioElement) return
+    const audioElement = audio.current;
+    if (!audioElement) return;
 
     if (currentTime >= duration) {
       audioElement.currentTime = 0;
       audioElement.pause();
       setPlaying(false);
     }
+
+    // TODO: SentenceMode
+    if (endTimeRef.current !== -1 && currentTime >= endTimeRef.current) {
+      audioElement.pause();
+      setPlaying(false);
+      endTimeRef.current = -1
+    }
   }, [currentTime, duration]);
 
-  return { playing, duration, currentTime, togglePlay, seek };
+  // TODO: SentenceMode
+  function updateCurrentLyricIndex(index: number) {
+    setCurrentLyricIndex(index);
+  }
+
+  function playInRange(startTime: number, endTime: number) {
+    const audioElement = audio.current;
+    if (!audioElement) return;
+
+    if(playing) {
+      audioElement.pause()
+      endTimeRef.current = -1
+      setPlaying(false)
+      return
+    }
+    audioElement.currentTime = startTime;
+    audioElement.play();
+    setPlaying(true);
+    endTimeRef.current = endTime;
+  }
+
+  return {
+    playing,
+    duration,
+    currentTime,
+    togglePlay,
+    seek,
+    currentLyricIndex,
+    updateCurrentLyricIndex,
+    playInRange,
+  };
 }

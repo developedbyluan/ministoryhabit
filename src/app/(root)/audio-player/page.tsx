@@ -16,28 +16,43 @@ export default function AudioPlayerPage() {
 
   const lyrics = sampleData.lyrics;
 
-  const { playing, togglePlay, duration, currentTime, seek } = useAudio(
-    audioUrl,
-    startTime,
-    audioDuration
-  );
+  const {
+    playing,
+    togglePlay,
+    duration,
+    currentTime,
+    seek,
+    currentLyricIndex,
+    updateCurrentLyricIndex,
+    playInRange,
+  } = useAudio(audioUrl, startTime, audioDuration);
 
   // TODO: PREPARE FOR SHOWING `SENTENCE MODE`
   const [showSentenceMode, setShowSentenceMode] = useState<boolean>(false);
 
   function handleShowSentenceMode() {
-    setShowSentenceMode(prev => !prev);
+    setShowSentenceMode((prev) => !prev);
   }
+  // TODO: Check if lyrics available before render UI
 
   return (
     <main>
       {showSentenceMode ? (
         <>
-          <SentenceMode />
+          <SentenceMode
+            lyrics={lyrics}
+            curretLyricIndex={currentLyricIndex}
+            handleShowSentenceMode={handleShowSentenceMode}
+            playInRange={playInRange}
+          />
         </>
       ) : (
         <>
-          <LyricsDisplay lyrics={lyrics} currentTime={currentTime} />
+          <LyricsDisplay
+            lyrics={lyrics}
+            currentTime={currentTime}
+            updateCurrentLyricIndex={updateCurrentLyricIndex}
+          />
           {/* Lyrics Mode Controls */}
           <LyricsModeControls
             playing={playing}
