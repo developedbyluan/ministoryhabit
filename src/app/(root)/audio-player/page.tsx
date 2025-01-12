@@ -8,6 +8,7 @@ import { sampleData } from "@/db/sample-data";
 import { useState } from "react";
 import SentenceDisplay from "@/components/SentenceDisplay";
 import SentenceModeControls from "@/components/SentenceModeControls";
+import SentenceMode from "@/components/SentenceMode";
 
 export default function AudioPlayerPage() {
   const audioUrl = sampleData.audioUrl;
@@ -34,8 +35,7 @@ export default function AudioPlayerPage() {
     <main>
       {showSentenceMode ? (
         <>
-          <SentenceDisplay />
-          <SentenceModeControls />
+          <SentenceMode />
         </>
       ) : (
         <>
