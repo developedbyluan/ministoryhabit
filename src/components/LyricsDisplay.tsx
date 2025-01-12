@@ -13,11 +13,18 @@ export default function LyricsDisplay({
   handleLyricClick: (startTime: number) => void;
 }) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
+  
+  const prevLyricIndexRef = useRef<number>(0)
 
   useEffect(() => {
     const currentLyricIndex = lyrics.findIndex((lyric: Lyric) => {
       return currentTime >= lyric.startTime && currentTime < lyric.endTime;
     });
+
+    if (currentLyricIndex === prevLyricIndexRef.current) return
+
+    prevLyricIndexRef.current = currentLyricIndex
+
     if (currentLyricIndex != -1 && lyricsArrayRef.current) {
       const lyricElement = lyricsArrayRef.current.children[currentLyricIndex];
 
