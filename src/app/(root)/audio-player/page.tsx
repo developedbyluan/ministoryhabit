@@ -25,6 +25,8 @@ export default function AudioPlayerPage() {
     currentLyricIndex,
     updateCurrentLyricIndex,
     playInRange,
+    playNext,
+    playPrev
   } = useAudio(audioUrl, startTime, audioDuration);
 
   // TODO: PREPARE FOR SHOWING `SENTENCE MODE`
@@ -44,6 +46,8 @@ export default function AudioPlayerPage() {
             curretLyricIndex={currentLyricIndex}
             handleShowSentenceMode={handleShowSentenceMode}
             playInRange={playInRange}
+            playNext={playNext}
+            playPrev={playPrev}
             playing={playing}
           />
         </>

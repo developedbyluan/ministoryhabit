@@ -93,6 +93,14 @@ export function useAudio(
     endTimeRef.current = endTime - 0.4;
   }
 
+  function playNext() {
+    setCurrentLyricIndex(prev => prev + 1)
+  }
+
+  function playPrev() {
+    setCurrentLyricIndex(prev => prev - 1)
+  }
+
   return {
     playing,
     duration,
@@ -102,5 +110,7 @@ export function useAudio(
     currentLyricIndex,
     updateCurrentLyricIndex,
     playInRange,
+    playNext,
+    playPrev
   };
 }
