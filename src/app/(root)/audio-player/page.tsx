@@ -20,6 +20,7 @@ export default function AudioPlayerPage() {
     playing,
     handlePause,
     togglePlay,
+    handleLyricClick,
     duration,
     currentTime,
     seek,
@@ -60,6 +61,7 @@ export default function AudioPlayerPage() {
             lyrics={lyrics}
             currentTime={currentTime}
             updateCurrentLyricIndex={updateCurrentLyricIndex}
+            handleLyricClick={handleLyricClick}
           />
           {/* Lyrics Mode Controls */}
           <LyricsModeControls

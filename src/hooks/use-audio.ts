@@ -29,14 +29,14 @@ export function useAudio(
   };
 
   const lyricStep = (step: number) => {
-    const audioElement = audio.current
-    if(!audioElement) return
+    const audioElement = audio.current;
+    if (!audioElement) return;
 
     setCurrentLyricIndex(step);
 
     // TODO: edge case
-    audioElement.pause()    
-    setPlaying(false)
+    audioElement.pause();
+    setPlaying(false);
   };
 
   useEffect(() => {
@@ -120,6 +120,16 @@ export function useAudio(
     setPlaying(false);
   }
 
+  // TODO: Karaoke mode
+  function handleLyricClick(startTime: number) {
+    const audioElement = audio.current
+    if(!audioElement) return
+
+    audioElement.currentTime = startTime
+    audioElement.play()
+    setPlaying(true)
+  }
+
   return {
     playing,
     handlePause,
@@ -132,6 +142,7 @@ export function useAudio(
     playInRange,
     nextLyric,
     prevLyric,
-    lyricStep
+    lyricStep,
+    handleLyricClick
   };
 }

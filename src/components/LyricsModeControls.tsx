@@ -7,7 +7,7 @@ export default function LyricsModeControls({
   playing,
   seek,
   handleShowSentenceMode,
-  handlePause
+  handlePause,
 }: {
   duration: number;
   currentTime: number;
