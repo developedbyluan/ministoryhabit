@@ -28,6 +28,17 @@ export function useAudio(
     audioElement.currentTime = time;
   };
 
+  const lyricStep = (step: number) => {
+    const audioElement = audio.current
+    if(!audioElement) return
+
+    setCurrentLyricIndex(step);
+
+    // TODO: edge case
+    audioElement.pause()    
+    setPlaying(false)
+  };
+
   useEffect(() => {
     const audioElement = audio.current;
     if (!audioElement) return;
@@ -121,5 +132,6 @@ export function useAudio(
     playInRange,
     nextLyric,
     prevLyric,
+    lyricStep
   };
 }

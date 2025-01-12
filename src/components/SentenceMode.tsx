@@ -1,4 +1,5 @@
 import type { Lyric } from "@/types/lyrics";
+import { Slider } from "./ui/slider";
 
 export default function SentenceMode({
   lyrics,
@@ -8,6 +9,7 @@ export default function SentenceMode({
   nextLyric,
   prevLyric,
   playing,
+  lyricStep
 }: {
   lyrics: Lyric[];
   currentLyricIndex: number;
@@ -16,6 +18,7 @@ export default function SentenceMode({
   nextLyric: () => void;
   prevLyric: () => void;
   playing: boolean;
+  lyricStep: (step: number) => void;
 }) {
   const currentLyric = lyrics[currentLyricIndex];
 
@@ -25,18 +28,24 @@ export default function SentenceMode({
 
   function handlePlayNext() {
     const lyric = lyrics[currentLyricIndex + 1];
-    nextLyric()
+    nextLyric();
     playInRange(lyric.startTime, lyric.endTime);
   }
 
-
   function handlePlayPrev() {
     const lyric = lyrics[currentLyricIndex - 1];
-    prevLyric()
+    prevLyric();
     playInRange(lyric.startTime, lyric.endTime);
   }
   return (
     <main>
+      <Slider
+        className="max-w-[300px]"
+        value={[currentLyricIndex]}
+        max={lyrics.length - 1}
+        step={1}
+        onValueChange={value => lyricStep(value[0])}
+      />
       <p>{currentLyric.text}</p>
       <button
         onClick={() => handlePlayNext()}
@@ -47,7 +56,10 @@ export default function SentenceMode({
       <button onClick={() => handlePlayInRange()}>
         {playing ? "Pause" : "Play"}
       </button>
-      <button onClick={() => handlePlayPrev()} disabled={currentLyricIndex < 1 || playing}>
+      <button
+        onClick={() => handlePlayPrev()}
+        disabled={currentLyricIndex < 1 || playing}
+      >
         Prev
       </button>
       <button onClick={handleShowSentenceMode}>Hide Sentence mode</button>
