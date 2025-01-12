@@ -13,10 +13,13 @@ export default function SentenceMode({
 }) {
   const currentLyric = lyrics[curretLyricIndex];
 
+  function handlePlayInRange() {
+    playInRange(currentLyric.startTime, currentLyric.endTime)
+  }
   return (
     <main>
       <p>{currentLyric.text}</p>
-      <button onClick={() => playInRange(8, 18)}>Play</button>
+      <button onClick={() => handlePlayInRange()}>Play</button>
       <button onClick={handleShowSentenceMode}>Hide Sentence mode</button>
     </main>
   );

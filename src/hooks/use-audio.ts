@@ -90,7 +90,7 @@ export function useAudio(
     audioElement.currentTime = startTime;
     audioElement.play();
     setPlaying(true);
-    endTimeRef.current = endTime;
+    endTimeRef.current = endTime - 0.4;
   }
 
   return {
