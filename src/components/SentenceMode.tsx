@@ -40,14 +40,14 @@ export default function SentenceMode({
       <p>{currentLyric.text}</p>
       <button
         onClick={() => handlePlayNext()}
-        disabled={currentLyricIndex > lyrics.length - 2}
+        disabled={currentLyricIndex > lyrics.length - 2 || playing}
       >
         Next
       </button>
       <button onClick={() => handlePlayInRange()}>
         {playing ? "Pause" : "Play"}
       </button>
-      <button onClick={() => handlePlayPrev()} disabled={currentLyricIndex < 1}>
+      <button onClick={() => handlePlayPrev()} disabled={currentLyricIndex < 1 || playing}>
         Prev
       </button>
       <button onClick={handleShowSentenceMode}>Hide Sentence mode</button>
