@@ -6,8 +6,6 @@ import { useAudio } from "@/hooks/use-audio";
 
 import { sampleData } from "@/db/sample-data";
 import { useState } from "react";
-import SentenceDisplay from "@/components/SentenceDisplay";
-import SentenceModeControls from "@/components/SentenceModeControls";
 import SentenceMode from "@/components/SentenceMode";
 
 export default function AudioPlayerPage() {
@@ -28,7 +26,7 @@ export default function AudioPlayerPage() {
   const [showSentenceMode, setShowSentenceMode] = useState<boolean>(false);
 
   function handleShowSentenceMode() {
-    setShowSentenceMode(true);
+    setShowSentenceMode(prev => !prev);
   }
 
   return (

@@ -59,7 +59,7 @@ export function useAudio(
       audioElement.pause();
       setPlaying(false);
     }
-  }, [currentTime]);
+  }, [currentTime, duration]);
 
   return { playing, duration, currentTime, togglePlay, seek };
 }
