@@ -5,10 +5,11 @@ type Word = {
   index: number;
 };
 
-export default function InteractiveTranslation({ text }: { text: string }) {
+export default function InteractiveTranslation({ text, ipa }: { text: string, ipa: string }) {
   const words: Word[] = text
     .split(" ")
     .map((word, index) => ({ text: word, index }));
+    const ipaArr = ipa.split(" ")
 
   const [startIndex, setStartIndex] = useState<number | null>(null);
   const [endIndex, setEndIndex] = useState<number | null>(null);
@@ -53,7 +54,7 @@ export default function InteractiveTranslation({ text }: { text: string }) {
       <div className="my-4 text-center border border-red-400 flex">
         {words.map((word, index) => (
           <div key={index} className="flex flex-col">
-            <span className="text-xs text-slate-400">1</span>
+            <span className="text-xs text-slate-400">{ipaArr[index]}</span>
             <span
               onClick={() => handleWordClick(index)}
               className={`cursor-pointer px-0.5 ${

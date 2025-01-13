@@ -48,7 +48,7 @@ export default function SentenceMode({
         onValueChange={value => lyricStep(value[0])}
       />
       {/* <p>{currentLyric.text}</p> */}
-      <InteractiveTranslation text={currentLyric.text} />
+      <InteractiveTranslation text={currentLyric.text} ipa={currentLyric.ipa} />
       <button
         onClick={() => handlePlayNext()}
         disabled={currentLyricIndex > lyrics.length - 2 || playing}
