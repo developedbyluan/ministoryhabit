@@ -13,6 +13,14 @@ export default function InteractiveTranslation({ text }: { text: string }) {
   const [startIndex, setStartIndex] = useState<number | null>(null);
   const [endIndex, setEndIndex] = useState<number | null>(null);
 
+  const [lookUpList, setLookUpList] = useState<
+    {
+      order: number;
+      text: string;
+      translation: string;
+    }[]
+  >([]);
+
   const handleWordClick = (index: number) => {
     if (startIndex === null) {
       setStartIndex(index);
@@ -38,29 +46,56 @@ export default function InteractiveTranslation({ text }: { text: string }) {
 
   const selectedWords = getSelectedRange();
 
+  console.log(selectedWords);
+
   return (
-    <>
-      <p className="my-4 text-center border border-red-400">
+    <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
+      <div className="my-4 text-center border border-red-400 flex">
         {words.map((word, index) => (
-          <span
-            key={index}
-            onClick={() => handleWordClick(index)}
-            className={`cursor-pointer px-0.5 ${
-              selectedWords.some((word) => word.index === index)
-                ? "bg-blue-200 text-blue-800"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            {word.text}
-          </span>
+          <div key={index} className="flex flex-col">
+            <span className="text-xs text-slate-400">1</span>
+            <span
+              onClick={() => handleWordClick(index)}
+              className={`cursor-pointer px-0.5 ${
+                selectedWords.some((word) => word.index === index)
+                  ? `bg-blue-200 text-blue-800 ${
+                      index === startIndex && "font-semibold"
+                    }`
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {word.text}
+            </span>
+          </div>
         ))}
-      </p>
-      <div className="mt-4 p-2 bg-gray-100 rounded">
-        <p className="text-sm text-gray-600">Selected words:</p>
-        <p className="font-medium">
-          {selectedWords.map((word) => word.text).join(" ")}
-        </p>
       </div>
-    </>
+      <button
+        onClick={() => {
+          if (!selectedWords) return [];
+          setLookUpList((prev) => [
+            ...prev,
+            {
+              order: selectedWords[0].index,
+              index: new Date(),
+              text: selectedWords.map((word) => word.text).join(" "),
+              translation: "Hello world",
+            },
+          ]);
+        }}
+      >
+        Look Up
+      </button>
+      <div className="max-h-20 overflow-y-auto">
+        {lookUpList
+          .sort((a, b) => a.order - b.order)
+          .map((lookUpPhrase, index) => {
+            return (
+              <li className="flex justify-between" key={index}>
+                {lookUpPhrase.text}: {lookUpPhrase.translation}
+              </li>
+            );
+          })}
+      </div>
+    </div>
   );
 }
