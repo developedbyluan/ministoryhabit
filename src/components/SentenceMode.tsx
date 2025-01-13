@@ -1,5 +1,6 @@
 import type { Lyric } from "@/types/lyrics";
 import { Slider } from "./ui/slider";
+import InteractiveTranslation from "./InteractiveTranslation";
 
 export default function SentenceMode({
   lyrics,
@@ -46,7 +47,8 @@ export default function SentenceMode({
         step={1}
         onValueChange={value => lyricStep(value[0])}
       />
-      <p>{currentLyric.text}</p>
+      {/* <p>{currentLyric.text}</p> */}
+      <InteractiveTranslation text={currentLyric.text} />
       <button
         onClick={() => handlePlayNext()}
         disabled={currentLyricIndex > lyrics.length - 2 || playing}
