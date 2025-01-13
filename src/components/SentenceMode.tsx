@@ -10,7 +10,7 @@ export default function SentenceMode({
   nextLyric,
   prevLyric,
   playing,
-  lyricStep
+  lyricStep,
 }: {
   lyrics: Lyric[];
   currentLyricIndex: number;
@@ -45,10 +45,14 @@ export default function SentenceMode({
         value={[currentLyricIndex]}
         max={lyrics.length - 1}
         step={1}
-        onValueChange={value => lyricStep(value[0])}
+        onValueChange={(value) => lyricStep(value[0])}
       />
       {/* <p>{currentLyric.text}</p> */}
-      <InteractiveTranslation text={currentLyric.text} ipa={currentLyric.ipa} />
+      <InteractiveTranslation
+        text={currentLyric.text}
+        ipa={currentLyric.ipa}
+        translation={currentLyric.translation}
+      />
       <button
         onClick={() => handlePlayNext()}
         disabled={currentLyricIndex > lyrics.length - 2 || playing}

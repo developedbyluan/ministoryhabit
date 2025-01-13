@@ -5,22 +5,30 @@ type Word = {
   index: number;
 };
 
-export default function InteractiveTranslation({ text, ipa }: { text: string, ipa: string }) {
+type LookUpPhrase = {
+  order: number;
+  text: string;
+  translation: string;
+};
+
+export default function InteractiveTranslation({
+  text,
+  ipa,
+  translation,
+}: {
+  text: string;
+  ipa: string;
+  translation: string;
+}) {
   const words: Word[] = text
     .split(" ")
     .map((word, index) => ({ text: word, index }));
-    const ipaArr = ipa.split(" ")
+  const ipaArr = ipa.split(" ");
 
   const [startIndex, setStartIndex] = useState<number | null>(null);
   const [endIndex, setEndIndex] = useState<number | null>(null);
 
-  const [lookUpList, setLookUpList] = useState<
-    {
-      order: number;
-      text: string;
-      translation: string;
-    }[]
-  >([]);
+  const [lookUpList, setLookUpList] = useState<LookUpPhrase[]>([]);
 
   const handleWordClick = (index: number) => {
     if (startIndex === null) {
@@ -51,13 +59,13 @@ export default function InteractiveTranslation({ text, ipa }: { text: string, ip
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-md">
-      <div className="my-4 text-center border border-red-400 flex">
+      <div className="my-4 text-center border border-red-400 flex flex-wrap">
         {words.map((word, index) => (
-          <div key={index} className="flex flex-col">
+          <div key={index} className="flex flex-col items-center">
             <span className="text-xs text-slate-400">{ipaArr[index]}</span>
             <span
               onClick={() => handleWordClick(index)}
-              className={`cursor-pointer px-0.5 ${
+              className={`text-lg px-2 cursor-pointer ${
                 selectedWords.some((word) => word.index === index)
                   ? `bg-blue-200 text-blue-800 ${
                       index === startIndex && "font-semibold"
@@ -70,9 +78,10 @@ export default function InteractiveTranslation({ text, ipa }: { text: string, ip
           </div>
         ))}
       </div>
+      <p>{translation}</p>
       <button
         onClick={() => {
-          if (!selectedWords) return [];
+          if (selectedWords.length <= 0) return [];
           setLookUpList((prev) => [
             ...prev,
             {
@@ -82,13 +91,26 @@ export default function InteractiveTranslation({ text, ipa }: { text: string, ip
               translation: "Hello world",
             },
           ]);
+
+          setStartIndex(null);
+          setEndIndex(null);
         }}
       >
         Look Up
       </button>
       <div className="max-h-20 overflow-y-auto">
         {lookUpList
-          .sort((a, b) => a.order - b.order)
+          .reduce((acc: LookUpPhrase[], current: LookUpPhrase) => {
+            const isDuplicate = acc.some(
+              (item: LookUpPhrase) => item.text === current.text
+            );
+            if (!isDuplicate) {
+              acc.push(current);
+            }
+
+            return acc;
+          }, [])
+          .sort((a: LookUpPhrase, b: LookUpPhrase) => a.order - b.order)
           .map((lookUpPhrase, index) => {
             return (
               <li className="flex justify-between" key={index}>
