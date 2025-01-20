@@ -52,8 +52,8 @@ export default function CustomYouTubePlayer() {
           controls: 0,
           disablekb: 1,
           rel: 0,
-        //   start: 100,
-        //   end: 110
+          //   start: 100,
+          //   end: 110
         },
         events: {
           // https://developers.google.com/youtube/iframe_api_reference#Adding_event_listener
@@ -145,99 +145,97 @@ export default function CustomYouTubePlayer() {
 
   const playInRange = (start: number, end: number) => {
     if (playerRef.current) {
-      playerRef.current.seekTo(start, true)
-      playerRef.current.playVideo()
+      playerRef.current.seekTo(start, true);
+      playerRef.current.playVideo();
 
       const checkTime = () => {
-        const currentTime = playerRef.current.getCurrentTime()
+        const currentTime = playerRef.current.getCurrentTime();
         if (currentTime >= end) {
-          playerRef.current.pauseVideo()
-          playerRef.current.seekTo(start, true)
+          playerRef.current.pauseVideo();
+          playerRef.current.seekTo(start, true);
         } else {
-          requestAnimationFrame(checkTime)  
+          requestAnimationFrame(checkTime);
         }
-      }
-      checkTime()
+      };
+      checkTime();
     }
-  }
+  };
 
   return (
     <div className="sm:flex sm:justify-between">
-    <SubtitleEditor
-      currentTime={currentTime}
-      isPlaying={isPlaying}
-    />
+      <SubtitleEditor currentTime={currentTime} isPlaying={isPlaying} />
 
-    <div className="space-y-4 px-4 border min-h-screen">
-      <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
-        <div id="youtube-player" className="absolute inset-0 w-full h-full" />
-      </div>
-      <p><span className="hidden">{formatTime(currentTime)}</span> ~ {currentTime}</p>
-      <p>{formatTime(duration)}</p>
-      <div className="flex justify-center">
-        <Button
-          onClick={togglePlayPause}
-          size="lg"
-          aria-label={isPlaying ? "Pause video" : "Play video"}
-        >
-          {isPlaying ? (
-            <>
-              <Pause className="w-5 h-5" />
-            </>
-          ) : (
-            <>
-              <Play className="w-5 h-5" />
-            </>
-          )}
-        </Button>
+      <div className="space-y-4 px-4 border min-h-screen">
+        <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
+          <div id="youtube-player" className="absolute inset-0 w-full h-full" />
+        </div>
+        <p>
+          <span className="hidden">{formatTime(currentTime)}</span> ~{" "}
+          {currentTime}
+        </p>
+        <p>{formatTime(duration)}</p>
+        <div className="flex justify-center">
+          <Button
+            onClick={togglePlayPause}
+            size="lg"
+            aria-label={isPlaying ? "Pause video" : "Play video"}
+          >
+            {isPlaying ? (
+              <>
+                <Pause className="w-5 h-5" />
+              </>
+            ) : (
+              <>
+                <Play className="w-5 h-5" />
+              </>
+            )}
+          </Button>
 
-        <Button onClick={rewind}> Rewind</Button>
-        <Button onClick={skipForward}>Skip Forward</Button>
+          <Button onClick={rewind}> Rewind</Button>
+          <Button onClick={skipForward}>Skip Forward</Button>
 
-        <Button
-          onClick={() => playInRange(36, 45)}
-          size="lg"
-          className="gap-2"
-          aria-label="Play video from 36 to 45 seconds"
-        >
-          Play Range
-        </Button>
+          <Button
+            onClick={() => playInRange(36, 45)}
+            size="lg"
+            className="gap-2"
+            aria-label="Play video from 36 to 45 seconds"
+          >
+            Play Range
+          </Button>
 
+          <Select
+            value={playbackRate.toString()}
+            onValueChange={(value) => changePlaybackRate(Number(value))}
+          >
+            <SelectTrigger className="w-[110px]">
+              <SelectValue placeholder="Speed" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0.5">0.5x</SelectItem>
+              <SelectItem value="0.66">0.66x</SelectItem>
+              <SelectItem value="0.75">0.75x</SelectItem>
+              <SelectItem value="0.9">0.9x</SelectItem>
+              <SelectItem value="1">1x</SelectItem>
+              <SelectItem value="1.1">1.1x</SelectItem>
+              <SelectItem value="1.25">1.25x</SelectItem>
+              <SelectItem value="1.5">1.5x</SelectItem>
+              <SelectItem value="1.75">1.75x</SelectItem>
+              <SelectItem value="2">2x</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Slider
           value={[currentTime]}
           step={1}
           max={duration}
           onValueChange={([value]) => seek(value)}
         />
-
-        <Select
-          value={playbackRate.toString()}
-          onValueChange={(value) => changePlaybackRate(Number(value))}
-        >
-          <SelectTrigger className="w-[110px]">
-            <SelectValue placeholder="Speed" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="0.5">0.5x</SelectItem>
-            <SelectItem value="0.66">0.66x</SelectItem>
-            <SelectItem value="0.75">0.75x</SelectItem>
-            <SelectItem value="0.9">0.9x</SelectItem>
-            <SelectItem value="1">1x</SelectItem>
-            <SelectItem value="1.1">1.1x</SelectItem>
-            <SelectItem value="1.25">1.25x</SelectItem>
-            <SelectItem value="1.5">1.5x</SelectItem>
-            <SelectItem value="1.75">1.75x</SelectItem>
-            <SelectItem value="2">2x</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      {/* <SyncedLyrics 
+        {/* <SyncedLyrics 
         transcription={transcription} 
         currentTime={currentTime} 
         onLyricClick={handleLyricClick}
       /> */}
-    </div>
-
+      </div>
     </div>
   );
 }

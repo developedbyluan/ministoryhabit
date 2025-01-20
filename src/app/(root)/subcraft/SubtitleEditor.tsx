@@ -1,17 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-type SubtitleEditorProps = {
-    currentTime: number;
-    isPlaying: boolean;
-}
+import { convertToSubtitleArr } from "./convertToSubtitlesArr";
 
-export default function SubtitleEditor({currentTime, isPlaying}: SubtitleEditorProps) {
+type SubtitleEditorProps = {
+  currentTime: number;
+  isPlaying: boolean;
+};
+
+export default function SubtitleEditor({
+  currentTime,
+  isPlaying,
+}: SubtitleEditorProps) {
   const [transcript, setTranscript] = useState("");
   const [currentLine, setCurrentLine] = useState("");
   const [lineNumber, setLineNumber] = useState(0);
@@ -20,68 +25,69 @@ export default function SubtitleEditor({currentTime, isPlaying}: SubtitleEditorP
   const [subtitle, setSubtitle] = useState("");
   const [lines, setLines] = useState<string[]>([]);
 
+  const [previousLineNumber, setPreviousLineNumber] = useState<number>(0)
+
   useEffect(() => {
     if (lineNumber > 0 && lineNumber <= lines.length) {
-      setCurrentLine(lines[lineNumber - 1])
+      setCurrentLine(lines[lineNumber - 1]);
     }
-  }, [lineNumber, lines])
+  }, [lineNumber, lines]);
 
   useEffect(() => {
-    setEndTime(`${currentTime}`)
-  }, [currentTime])
+    setEndTime(`${currentTime}`);
+  }, [currentTime]);
 
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-        if (event.key === "q") {
-            addToSubtitle()
-        }
-    } 
+    if (subtitle === "") return;
 
-    window.addEventListener('keydown', handleKeyPress)
-
-    return () => {
-        window.removeEventListener('keydown', handleKeyPress)
+    try {
+      console.log(subtitle);
+      console.log(convertToSubtitleArr(subtitle));
+    } catch (error) {
+      console.error(error);
     }
-  }, [])
+  }, [subtitle]);
 
   const loadFirstLine = () => {
-    const newLines = transcript.split('\n').filter(line => line.trim() !== '')
-    setLines(newLines)
+    const newLines = transcript
+      .split("\n")
+      .filter((line) => line.trim() !== "");
+    setLines(newLines);
     if (newLines.length > 0) {
-      setCurrentLine(newLines[0])
-      setLineNumber(1)
-      setStartTime(`${currentTime}`)
-      setEndTime(`${currentTime}`)
+      setCurrentLine(newLines[0]);
+      setLineNumber(1);
+      setStartTime(`${currentTime}`);
+      setEndTime(`${currentTime}`);
     }
-  }
+  };
 
   const addToSubtitle = () => {
     if (currentLine && startTime && endTime) {
-      const newSubtitle = `${lineNumber}\n${startTime} ---> ${endTime}\n${currentLine}\n\n`
-      setSubtitle(prevSubtitle => prevSubtitle + newSubtitle)
+      const newSubtitle = `\n${previousLineNumber + lineNumber}\n${startTime} ---> ${endTime}\n${currentLine}\n`;
+      setSubtitle((prevSubtitle) => prevSubtitle + newSubtitle);
 
       // Load next line
       if (lineNumber < lines.length) {
-        setLineNumber(prevLineNumber => prevLineNumber + 1)
+        setLineNumber((prevLineNumber) => prevLineNumber + 1);
       } else {
-        setCurrentLine('')
-        setLineNumber(0)
+        setCurrentLine("");
+        setLineNumber(0);
       }
 
       // Reset time inputs
-    //   setStartTime('')
-    //   setEndTime('')
-    setStartTime(endTime)
-    setEndTime(`${currentTime}`)
+      //   setStartTime('')
+      //   setEndTime('')
+      setStartTime(endTime);
+      setEndTime(`${currentTime}`);
     }
-  }
+  };
 
   const handleLineNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newLineNumber = parseInt(e.target.value, 10)
+    const newLineNumber = parseInt(e.target.value, 10);
     if (!isNaN(newLineNumber) && newLineNumber >= 0) {
-      setLineNumber(newLineNumber)
+      setLineNumber(newLineNumber);
     }
-  }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-8 space-y-6">
@@ -114,6 +120,17 @@ export default function SubtitleEditor({currentTime, isPlaying}: SubtitleEditorP
           type="number"
           value={lineNumber}
           onChange={handleLineNumberChange}
+          min={0}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="previousLineNumber">Previous line number</Label>
+        <Input
+          id="previousLineNumber"
+          type="number"
+          value={previousLineNumber}
+          onChange={(e) => setPreviousLineNumber(parseInt(e.target.value))}
           min={0}
         />
       </div>
@@ -154,5 +171,6 @@ export default function SubtitleEditor({currentTime, isPlaying}: SubtitleEditorP
           rows={5}
         />
       </div>
-    </div>);
+    </div>
+  );
 }
