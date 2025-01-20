@@ -11,11 +11,13 @@ import { convertToSubtitleArr } from "./convertToSubtitlesArr";
 type SubtitleEditorProps = {
   currentTime: number;
   isPlaying: boolean;
+  updateSubtitle: (newSubtitle: string[]) => void
 };
 
 export default function SubtitleEditor({
   currentTime,
   isPlaying,
+  updateSubtitle
 }: SubtitleEditorProps) {
   const [transcript, setTranscript] = useState("");
   const [currentLine, setCurrentLine] = useState("");
@@ -43,6 +45,7 @@ export default function SubtitleEditor({
     try {
       console.log(subtitle);
       console.log(convertToSubtitleArr(subtitle));
+      updateSubtitle(convertToSubtitleArr(subtitle))
     } catch (error) {
       console.error(error);
     }

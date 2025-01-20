@@ -35,6 +35,8 @@ export default function CustomYouTubePlayer() {
   const [duration, setDuration] = useState(0);
   const playerRef = useRef<any>(null);
 
+  const [subtitleArr, setSubtitleArr] = useState<string[]>([""])
+
   useEffect(() => {
     // https://developers.google.com/youtube/iframe_api_reference
     const tag = document.createElement("script");
@@ -46,7 +48,7 @@ export default function CustomYouTubePlayer() {
       playerRef.current = new window.YT.Player("youtube-player", {
         height: "360",
         width: "640",
-        videoId: "IhA4XU8ju7A",
+        videoId: "BNArBr_J8mA",
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
           controls: 0,
@@ -161,9 +163,13 @@ export default function CustomYouTubePlayer() {
     }
   };
 
+  const updateSubtitle = (newSubtitle: string[]) => {
+    setSubtitleArr(newSubtitle)
+  }
+
   return (
     <div className="sm:flex sm:justify-between">
-      <SubtitleEditor currentTime={currentTime} isPlaying={isPlaying} />
+      <SubtitleEditor currentTime={currentTime} isPlaying={isPlaying} updateSubtitle={updateSubtitle} />
 
       <div className="space-y-4 px-4 border min-h-screen">
         <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
@@ -230,6 +236,13 @@ export default function CustomYouTubePlayer() {
           max={duration}
           onValueChange={([value]) => seek(value)}
         />
+        <div>
+          {
+            subtitleArr.map(lyric => {
+              return <p key={lyric.id}>{lyric.text}</p>
+            })
+          }
+        </div>
         {/* <SyncedLyrics 
         transcription={transcription} 
         currentTime={currentTime} 
