@@ -13,12 +13,22 @@ import {
 } from "@/components/ui/select";
 import SubtitleEditor from "./SubtitleEditor";
 
+
 declare global {
   interface Window {
     onYouTubeIframeAPIReady: () => void;
     YT: any;
   }
 }
+
+type LyricObject = {
+  id: number;
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
 
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
@@ -35,7 +45,10 @@ export default function CustomYouTubePlayer() {
   const [duration, setDuration] = useState(0);
   const playerRef = useRef<any>(null);
 
-  const [subtitleArr, setSubtitleArr] = useState<string[]>([""])
+  const [subtitleArr, setSubtitleArr] = useState<LyricObject[]>([]);
+
+  const lyricsArrayRef = useRef<HTMLDivElement>(null);
+  const prevLyricIndexRef = useRef<number>(0);
 
   useEffect(() => {
     // https://developers.google.com/youtube/iframe_api_reference
@@ -71,6 +84,27 @@ export default function CustomYouTubePlayer() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    // const currentLyricIndex = lyrics.findIndex((lyric: LyricObject) => {
+    //   return currentTime >= lyric.start_time && currentTime < lyric.end_time;
+    // });
+
+    const currentLyricIndex = subtitleArr.findIndex((lyric: LyricObject) => {
+      return currentTime >= lyric.start_time && currentTime < lyric.end_time;
+    });
+
+    if (currentLyricIndex === prevLyricIndexRef.current) return;
+
+    prevLyricIndexRef.current = currentLyricIndex;
+
+    if (currentLyricIndex != -1 && lyricsArrayRef.current) {
+      const lyricElement = lyricsArrayRef.current.children[currentLyricIndex];
+      lyricElement.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      // updateCurrentLyricIndex(currentLyricIndex);
+    }
+  }, [currentTime, subtitleArr]);
 
   const onPlayerReady = (event: any) => {
     // Player is ready
@@ -133,18 +167,6 @@ export default function CustomYouTubePlayer() {
     setPlaybackRate(rate);
   };
 
-  const handleLyricClick = useCallback(
-    (time: number) => {
-      if (playerRef.current) {
-        playerRef.current.seekTo(time, true);
-        if (!isPlaying) {
-          playerRef.current.playVideo();
-        }
-      }
-    },
-    [isPlaying]
-  );
-
   const playInRange = (start: number, end: number) => {
     if (playerRef.current) {
       playerRef.current.seekTo(start, true);
@@ -163,15 +185,26 @@ export default function CustomYouTubePlayer() {
     }
   };
 
-  const updateSubtitle = (newSubtitle: string[]) => {
-    setSubtitleArr(newSubtitle)
-  }
+  const updateSubtitle = (newSubtitle: LyricObject[]) => {
+    setSubtitleArr(newSubtitle);
+  };
+
+  const handleLyricClick = (start: number) => {
+    const videoPlayer = playerRef.current;
+    if (!videoPlayer) return;
+    videoPlayer.seekTo(start, true);
+    videoPlayer.playVideo();
+  };
 
   return (
     <div className="sm:flex sm:justify-between">
-      <SubtitleEditor currentTime={currentTime} isPlaying={isPlaying} updateSubtitle={updateSubtitle} />
+      <SubtitleEditor
+        currentTime={currentTime}
+        isPlaying={isPlaying}
+        updateSubtitle={updateSubtitle}
+      />
 
-      <div className="space-y-4 px-4 border min-h-screen">
+      <div className="max-w-[540px] space-y-4 border min-h-screen">
         <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
           <div id="youtube-player" className="absolute inset-0 w-full h-full" />
         </div>
@@ -236,18 +269,25 @@ export default function CustomYouTubePlayer() {
           max={duration}
           onValueChange={([value]) => seek(value)}
         />
-        <div>
-          {
-            subtitleArr.map(lyric => {
-              return <p key={lyric.id}>{lyric.text}</p>
-            })
-          }
+        <div ref={lyricsArrayRef} className="h-48 overflow-y-auto">
+          {subtitleArr.map((lyric) => {
+            return (
+              <p
+                key={lyric.id}
+                role="button"
+                onClick={() => handleLyricClick(lyric.start_time)}
+                className={`text-2xl mb-4 hover:text-red-400 ${
+                  currentTime >= lyric.start_time &&
+                  currentTime < lyric.end_time
+                    ? "text-2xl font-bold"
+                    : "text-gray-200 hover:cursor-pointer"
+                }`}
+              >
+                {lyric.text}
+              </p>
+            );
+          })}
         </div>
-        {/* <SyncedLyrics 
-        transcription={transcription} 
-        currentTime={currentTime} 
-        onLyricClick={handleLyricClick}
-      /> */}
       </div>
     </div>
   );

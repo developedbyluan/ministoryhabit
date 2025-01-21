@@ -12,7 +12,6 @@ function convertToSubtitleArr(subtitle: string) {
   const lyricsArr = subtitle.split("\n\n");
 
   lyricsArr.forEach((lyric) => {
-    console.log(lyric)
     const lyricComponents = lyric.split("\n");
 
     const [id, timestamp, text, ipa, translation] = lyricComponents;

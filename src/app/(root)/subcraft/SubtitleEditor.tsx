@@ -8,16 +8,25 @@ import { Label } from "@/components/ui/label";
 
 import { convertToSubtitleArr } from "./convertToSubtitlesArr";
 
+type LyricObject = {
+  id: number;
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
+
 type SubtitleEditorProps = {
   currentTime: number;
   isPlaying: boolean;
-  updateSubtitle: (newSubtitle: string[]) => void
+  updateSubtitle: (newSubtitle: LyricObject[]) => void;
 };
 
 export default function SubtitleEditor({
   currentTime,
   isPlaying,
-  updateSubtitle
+  updateSubtitle,
 }: SubtitleEditorProps) {
   const [transcript, setTranscript] = useState("");
   const [currentLine, setCurrentLine] = useState("");
@@ -27,7 +36,7 @@ export default function SubtitleEditor({
   const [subtitle, setSubtitle] = useState("");
   const [lines, setLines] = useState<string[]>([]);
 
-  const [previousLineNumber, setPreviousLineNumber] = useState<number>(0)
+  const [previousLineNumber, setPreviousLineNumber] = useState<number>(0);
 
   useEffect(() => {
     if (lineNumber > 0 && lineNumber <= lines.length) {
@@ -43,9 +52,7 @@ export default function SubtitleEditor({
     if (subtitle === "") return;
 
     try {
-      console.log(subtitle);
-      console.log(convertToSubtitleArr(subtitle));
-      updateSubtitle(convertToSubtitleArr(subtitle))
+      updateSubtitle(convertToSubtitleArr(subtitle));
     } catch (error) {
       console.error(error);
     }
@@ -66,7 +73,9 @@ export default function SubtitleEditor({
 
   const addToSubtitle = () => {
     if (currentLine && startTime && endTime) {
-      const newSubtitle = `\n${previousLineNumber + lineNumber}\n${startTime} ---> ${endTime}\n${currentLine}\n`;
+      const newSubtitle = `\n${
+        previousLineNumber + lineNumber
+      }\n${startTime} ---> ${endTime}\n${currentLine}\n`;
       setSubtitle((prevSubtitle) => prevSubtitle + newSubtitle);
 
       // Load next line
@@ -93,7 +102,7 @@ export default function SubtitleEditor({
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 space-y-6">
+    <div className="max-w-[640px] mx-auto space-y-6 flex flex-col">
       <div className="space-y-2">
         <Label htmlFor="transcript">Transcript</Label>
         <Textarea
@@ -106,64 +115,65 @@ export default function SubtitleEditor({
       </div>
 
       <Button onClick={loadFirstLine}>Load first line</Button>
-
-      <div className="space-y-2">
-        <Label htmlFor="currentLine">Current Line</Label>
-        <Input
-          id="currentLine"
-          value={currentLine}
-          onChange={(e) => setCurrentLine(e.target.value)}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="lineNumber">Current line number</Label>
-        <Input
-          id="lineNumber"
-          type="number"
-          value={lineNumber}
-          onChange={handleLineNumberChange}
-          min={0}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="previousLineNumber">Previous line number</Label>
-        <Input
-          id="previousLineNumber"
-          type="number"
-          value={previousLineNumber}
-          onChange={(e) => setPreviousLineNumber(parseInt(e.target.value))}
-          min={0}
-        />
-      </div>
-
-      <div className="flex space-x-4">
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="startTime">Start Time</Label>
+      <div>
+        <div className="space-y-2">
+          <Label htmlFor="currentLine">Current Line</Label>
           <Input
-            id="startTime"
-            type="number"
-            step="0.01"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            placeholder="0.00"
+            id="currentLine"
+            value={currentLine}
+            onChange={(e) => setCurrentLine(e.target.value)}
           />
         </div>
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="endTime">End Time</Label>
+
+        <div className="space-y-2">
+          <Label htmlFor="lineNumber">Current line number</Label>
           <Input
-            id="endTime"
+            id="lineNumber"
             type="number"
-            step="0.01"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            placeholder="0.00"
+            value={lineNumber}
+            onChange={handleLineNumberChange}
+            min={0}
           />
         </div>
-      </div>
 
-      <Button onClick={addToSubtitle}>Add to Subtitle</Button>
+        <div className="space-y-2">
+          <Label htmlFor="previousLineNumber">Previous line number</Label>
+          <Input
+            id="previousLineNumber"
+            type="number"
+            value={previousLineNumber}
+            onChange={(e) => setPreviousLineNumber(parseInt(e.target.value))}
+            min={0}
+          />
+        </div>
+
+        <div className="flex space-x-4">
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="startTime">Start Time</Label>
+            <Input
+              id="startTime"
+              type="number"
+              step="0.01"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              placeholder="0.00"
+            />
+          </div>
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="endTime">End Time</Label>
+            <Input
+              id="endTime"
+              type="number"
+              step="0.01"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <Button onClick={addToSubtitle}>Add to Subtitle</Button>
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="subtitle">Subtitle</Label>
