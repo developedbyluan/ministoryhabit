@@ -11,15 +11,22 @@ export const runtime = "edge";
 
 export default function VideoPage() {
   const [email, setEmail] = useState("");
-  const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
+  const { isAuthenticated, isLoading, user, getPermission } = useKindeBrowserClient();
   console.log(isAuthenticated);
 
   if (isLoading) return <div>Loading...</div>;
 
+  // if this is a paid content
+    // check if user is paid user
+      // yes => render content
+      // no => send warning and comeback to homepage
+
+  const isPaid = getPermission("access:paidcontent")
+
   // https://docs.kinde.com/developer-tools/sdks/backend/nextjs-sdk/#redirecting-after-authentication
   return isAuthenticated ? (
     <div>
-      <h1>Video</h1>
+      <h1>{isPaid?.isGranted ? "Video": "This content is exclusively for Coaching Clients!"}</h1>
       <p>{user?.email}</p>
       <LogoutLink>Logout</LogoutLink>
     </div>

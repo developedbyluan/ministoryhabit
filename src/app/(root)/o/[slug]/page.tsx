@@ -16,7 +16,8 @@ export default async function OverviewPage({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   // const baseUrl = 'https://ministoryhabit.pages.dev'
   const res = await fetch(`${baseUrl}/api/supabase/${slug}`);
-  const data: { id: number; title: string; type: string }[] = await res.json();
+  const data: { id: number; title: string; type: string; paid: boolean }[] =
+    await res.json();
 
   console.log(JSON.stringify(data));
   const redirectURL = `/${data[0].type === "video" ? "v" : "a"}/${slug}`;
