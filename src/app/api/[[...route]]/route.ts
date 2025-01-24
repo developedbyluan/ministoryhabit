@@ -1,22 +1,57 @@
 // https://hono.dev/docs/getting-started/vercel#_2-hello-world
-import { Hono } from 'hono'
-import { handle } from 'hono/vercel'
+import { Hono } from "hono";
+import { handle } from "hono/vercel";
 import supabase from "@/utils/supabase";
 
-export const runtime = 'edge'
+export const runtime = "edge";
 
-const app = new Hono().basePath('/api')
+const app = new Hono().basePath("/api");
 
-app.get('/supabase/:slug', async(c) => {
-  const slug = c.req.param('slug')
+app.get("/supabase/:slug", async (c) => {
+  const slug = c.req.param("slug");
   // console.log(slug)
 
-  const {data, error} = await supabase.from("media").select('id, title, type, paid').eq('slug', slug)
+  const { data, error } = await supabase
+    .from("media")
+    .select("id, title, type, paid")
+    .eq("slug", slug);
 
-  if (error) return c.json({error: error})
+  if (error) return c.json({ error: error });
 
-  return c.json(data)
-})
+  return c.json(data);
+});
 
-export const GET = handle(app)
-// export const POST = handle(app)
+app.post("/supabase/addToPlaylist", async (c) => {
+  // https://supabase.com/docs/reference/javascript/using-filters
+  // https://supabase.com/docs/reference/javascript/upsert
+  const body = await c.req.json();
+  // console.log(body)
+  const { data, error } = await supabase
+    .from("users_playlist")
+    .upsert(
+      {
+        media_id: body.media_id,
+        kinde_auth_id: body.kinde_auth_id,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "media_id, kinde_auth_id",
+      }
+    )
+    .eq("media_id", body.media_id)
+    .eq("kinde_auth_id", body.kinde_auth_id)
+    .select();
+
+  if (error) return c.json({ error: error });
+
+  // const { error } = await supabase
+  //   .from("users_playlist")
+  //   .insert({ kinde_auth_id: 1, playlist: JSON.stringify({"media_id": 1}) })
+
+  // return c.json(error)
+
+  return c.json(data);
+});
+
+export const GET = handle(app);
+export const POST = handle(app);
