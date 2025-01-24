@@ -11,7 +11,7 @@ app.get('/supabase/:slug', async(c) => {
   const slug = c.req.param('slug')
   // console.log(slug)
 
-  const {data, error} = await supabase.from("media").select('id, title').eq('slug', slug)
+  const {data, error} = await supabase.from("media").select('id, title, type').eq('slug', slug)
 
   if (error) return c.json({error: error})
 

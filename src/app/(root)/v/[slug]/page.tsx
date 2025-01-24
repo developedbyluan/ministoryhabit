@@ -7,6 +7,8 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs";
 import { useState } from "react";
 
+export const runtime = "edge";
+
 export default function VideoPage() {
   const [email, setEmail] = useState("");
   const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
