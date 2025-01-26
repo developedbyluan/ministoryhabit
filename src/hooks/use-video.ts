@@ -69,13 +69,13 @@ export function useVideo({ src }: UseVideoProps) {
     if (!video) return;
     video.src = src
     const updateProgress = () => {
-        console.log(video.duration)
+        // console.log(video.duration)
       dispatch({ type: "SET_PROGRESS", payload: video.currentTime });
       updateLyrics(video.currentTime);
     };
 
     const updateDuration = () => {
-      console.log(video.duration);
+    //   console.log(video.duration);
       dispatch({ type: "SET_DURATION", payload: video.duration });
     };
 
