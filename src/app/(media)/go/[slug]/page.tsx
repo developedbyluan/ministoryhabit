@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useParams, useSearchParams } from "next/navigation";
 import { Languages, Play, X, TvMinimalPlay, TextSearch } from "lucide-react";
+import { VideoPlayer } from "./VideoPlayer";
 
 type Word = {
   word: string;
@@ -47,6 +48,7 @@ export default function GoPage() {
       </header>
       <main className="flex-grow overflow-y-auto">
         <div className="max-w-[576px] w-[95%] mx-auto px-6 space-y-4">
+          <VideoPlayer src="https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4" />
           <div className="my-4 text-center border border-red-400 flex flex-wrap">
             {words.map((word: Word) => (
               <div key={word.index} className="flex flex-col items-center mt-2">
