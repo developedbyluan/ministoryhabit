@@ -50,7 +50,8 @@ export default function GoPage() {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
-    lyrics
+    lyrics,
+    updateCurrentLyricIndex
   } = useVideo({ src });
 
   
@@ -65,6 +66,7 @@ export default function GoPage() {
         handleProgressChange={handleProgressChange}
         togglePlay={togglePlay}
         lyrics={lyrics}
+        updateCurrentLyricIndex={updateCurrentLyricIndex}
       />
     </>
   );

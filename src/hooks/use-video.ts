@@ -27,30 +27,30 @@ const lyrics = [
   },
   { startTime: 16.950343, endTime: 19.889932, text: "Whoa!", ipa: "wəʊ!" },
   {
-    startTime: 0,
-    endTime: 3.113839,
+    startTime: 19.889932,
+    endTime: 25,
     text: "I'm such a nerd!",
     ipa: "aɪm sʌʧ ə nɜːd!",
   },
   {
-    startTime: 3.113839,
-    endTime: 10.587138,
+    startTime: 25,
+    endTime: 30,
     text: "I can see you guys' faces like, what is she talking about?",
     ipa: "aɪ kæn siː juː ɡaɪz ˈfeɪsɪz laɪk, wɒt ɪz ʃiː ˈtɔːkɪŋ əˈbaʊt?",
   },
   {
-    startTime: 10.587138,
-    endTime: 12.247645,
+    startTime: 30,
+    endTime: 35,
     text: "Hi, this is Lisa, ",
     ipa: "haɪ, ðɪs ɪz ˈliːsə, ",
   },
   {
-    startTime: 12.247645,
-    endTime: 16.950343,
+    startTime: 35,
+    endTime: 40,
     text: "and this is my secret obsession.",
     ipa: "ænd ðɪs ɪz maɪ ˈsiːkrət əbˈsɛʃᵊn.",
   },
-  { startTime: 16.950343, endTime: 19.889932, text: "Whoa!", ipa: "wəʊ!" },
+  { startTime: 40, endTime: 45, text: "Whoa!", ipa: "wəʊ!" },
 ];
 
 interface VideoState {
@@ -59,6 +59,7 @@ interface VideoState {
   duration: number;
   playbackRate: number;
   currentLyric: string;
+  currentLyricIndex: number;
 }
 
 type VideoAction =
@@ -66,7 +67,8 @@ type VideoAction =
   | { type: "SET_PROGRESS"; payload: number }
   | { type: "SET_DURATION"; payload: number }
   | { type: "SET_PLAYBACK_RATE"; payload: number }
-  | { type: "SET_CURRENT_LYRIC"; payload: string };
+  | { type: "SET_CURRENT_LYRIC"; payload: string }
+  | {type: "SET_CURRENT_LYRIC_INDEX"; payload: number};
 
 const initialState: VideoState = {
   isPlaying: false,
@@ -74,6 +76,7 @@ const initialState: VideoState = {
   duration: 0,
   playbackRate: 1,
   currentLyric: "",
+  currentLyricIndex: 0
 };
 
 function videoReducer(state: VideoState, action: VideoAction): VideoState {
@@ -88,6 +91,8 @@ function videoReducer(state: VideoState, action: VideoAction): VideoState {
       return { ...state, playbackRate: action.payload };
     case "SET_CURRENT_LYRIC":
       return { ...state, currentLyric: action.payload };
+    case "SET_CURRENT_LYRIC_INDEX":
+      return {...state, currentLyricIndex: action.payload};
     default:
       return state;
   }
@@ -162,6 +167,11 @@ export function useVideo({ src }: UseVideoProps) {
     });
   };
 
+  const updateCurrentLyricIndex = (index: number) => {
+    console.log(index)
+    dispatch({type: "SET_CURRENT_LYRIC_INDEX", payload: index})
+  }
+
   return {
     videoRef,
     ...state,
@@ -169,5 +179,6 @@ export function useVideo({ src }: UseVideoProps) {
     handleProgressChange,
     handlePlaybackRateChange,
     lyrics,
+    updateCurrentLyricIndex
   };
 }

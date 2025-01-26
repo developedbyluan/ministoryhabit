@@ -21,6 +21,7 @@ type ReadModeProps = {
   handleProgressChange: (newProgress: number) => void;
   togglePlay: () => void;
   lyrics: Lyric[];
+  updateCurrentLyricIndex: (index: number) => void;
 };
 export default function ReadMode({
   videoRef,
@@ -30,6 +31,7 @@ export default function ReadMode({
   handleProgressChange,
   togglePlay,
   lyrics,
+  updateCurrentLyricIndex,
 }: ReadModeProps) {
   return (
     <div className="max-h-full py-4 flex flex-col justify-between">
@@ -61,7 +63,11 @@ export default function ReadMode({
             />
           </div>
         </div>
-        <ReadModeText lyrics={lyrics} />
+        <ReadModeText
+          lyrics={lyrics}
+          currentTime={progress}
+          updateCurrentLyricIndex={updateCurrentLyricIndex}
+        />
       </main>
       <footer>
         <div className="max-w-[576px] w-[95%] mx-auto px-4 pt-4">
