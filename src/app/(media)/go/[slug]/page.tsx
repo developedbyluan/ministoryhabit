@@ -50,12 +50,10 @@ export default function GoPage() {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
+    lyrics
   } = useVideo({ src });
 
-  const words: Word[] = lyric.text
-    .split(" ")
-    .map((word, index) => ({ word, index }));
-  const ipaArr = lyric.ipa.split(" ");
+  
 
   return (
     <>
@@ -66,6 +64,7 @@ export default function GoPage() {
         duration={duration}
         handleProgressChange={handleProgressChange}
         togglePlay={togglePlay}
+        lyrics={lyrics}
       />
     </>
   );

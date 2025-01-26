@@ -1,19 +1,56 @@
 import { useReducer, useRef, useEffect } from "react";
 
 const lyrics = [
-  { startTime: 0, endTime: 3.113839, text: "I'm such a nerd!" },
+  {
+    startTime: 0,
+    endTime: 3.113839,
+    text: "I'm such a nerd!",
+    ipa: "aɪm sʌʧ ə nɜːd!",
+  },
   {
     startTime: 3.113839,
     endTime: 10.587138,
     text: "I can see you guys' faces like, what is she talking about?",
+    ipa: "aɪ kæn siː juː ɡaɪz ˈfeɪsɪz laɪk, wɒt ɪz ʃiː ˈtɔːkɪŋ əˈbaʊt?",
   },
-  { startTime: 10.587138, endTime: 12.247645, text: "Hi, this is Lisa, " },
+  {
+    startTime: 10.587138,
+    endTime: 12.247645,
+    text: "Hi, this is Lisa, ",
+    ipa: "haɪ, ðɪs ɪz ˈliːsə, ",
+  },
   {
     startTime: 12.247645,
     endTime: 16.950343,
     text: "and this is my secret obsession.",
+    ipa: "ænd ðɪs ɪz maɪ ˈsiːkrət əbˈsɛʃᵊn.",
   },
-  { startTime: 16.950343, endTime: 19.889932, text: "Whoa!" },
+  { startTime: 16.950343, endTime: 19.889932, text: "Whoa!", ipa: "wəʊ!" },
+  {
+    startTime: 0,
+    endTime: 3.113839,
+    text: "I'm such a nerd!",
+    ipa: "aɪm sʌʧ ə nɜːd!",
+  },
+  {
+    startTime: 3.113839,
+    endTime: 10.587138,
+    text: "I can see you guys' faces like, what is she talking about?",
+    ipa: "aɪ kæn siː juː ɡaɪz ˈfeɪsɪz laɪk, wɒt ɪz ʃiː ˈtɔːkɪŋ əˈbaʊt?",
+  },
+  {
+    startTime: 10.587138,
+    endTime: 12.247645,
+    text: "Hi, this is Lisa, ",
+    ipa: "haɪ, ðɪs ɪz ˈliːsə, ",
+  },
+  {
+    startTime: 12.247645,
+    endTime: 16.950343,
+    text: "and this is my secret obsession.",
+    ipa: "ænd ðɪs ɪz maɪ ˈsiːkrət əbˈsɛʃᵊn.",
+  },
+  { startTime: 16.950343, endTime: 19.889932, text: "Whoa!", ipa: "wəʊ!" },
 ];
 
 interface VideoState {
@@ -67,15 +104,15 @@ export function useVideo({ src }: UseVideoProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.src = src
+    video.src = src;
     const updateProgress = () => {
-        // console.log(video.duration)
+      // console.log(video.duration)
       dispatch({ type: "SET_PROGRESS", payload: video.currentTime });
       updateLyrics(video.currentTime);
     };
 
     const updateDuration = () => {
-    //   console.log(video.duration);
+      //   console.log(video.duration);
       dispatch({ type: "SET_DURATION", payload: video.duration });
     };
 
@@ -131,5 +168,6 @@ export function useVideo({ src }: UseVideoProps) {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
+    lyrics,
   };
 }

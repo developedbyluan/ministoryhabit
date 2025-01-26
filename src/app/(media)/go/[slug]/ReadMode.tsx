@@ -4,22 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
 import { Ref } from "react";
+import ReadModeText from "./ReadModeText";
+
+type Word = {
+  word: string;
+  index: number;
+};
+
+type Lyric = { startTime: number; endTime: number; text: string; ipa: string };
 
 type ReadModeProps = {
-  videoRef: Ref<HTMLVideoElement>,
-  progress: number,
-  isPlaying: boolean,
-  duration: number,
-  handleProgressChange: (newProgress: number) => void,
-  togglePlay: () => void
-}
+  videoRef: Ref<HTMLVideoElement>;
+  progress: number;
+  isPlaying: boolean;
+  duration: number;
+  handleProgressChange: (newProgress: number) => void;
+  togglePlay: () => void;
+  lyrics: Lyric[];
+};
 export default function ReadMode({
   videoRef,
   progress,
   isPlaying,
   duration,
   handleProgressChange,
-  togglePlay
+  togglePlay,
+  lyrics,
 }: ReadModeProps) {
   return (
     <div className="max-h-full py-4 flex flex-col justify-between">
@@ -46,25 +56,12 @@ export default function ReadMode({
             <video
               ref={videoRef}
               // src={src}
-              className="w-full rounded-lg shadow-lg"
+              className="w-full rounded-lg shadow-lg hidden"
               playsInline
             />
           </div>
         </div>
-        {/* <div className="max-w-[576px] w-[95%] mx-auto px-6 space-y-4">
-          <div className="my-4 text-center border border-red-400 flex flex-wrap">
-            {words.map((word: Word) => (
-              <div key={word.index} className="flex flex-col items-center mt-2">
-                <span className="text-xs text-slate-400">
-                  {ipaArr[word.index]}
-                </span>
-                <span className="px-2 cursor-pointer bg-blue-100">
-                  {word.word}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div> */}
+        <ReadModeText lyrics={lyrics} />
       </main>
       <footer>
         <div className="max-w-[576px] w-[95%] mx-auto px-4 pt-4">
@@ -90,5 +87,5 @@ export default function ReadMode({
         </div>
       </footer>
     </div>
-  )
+  );
 }
