@@ -11,7 +11,7 @@ type Word = {
   index: number;
 };
 
-type Lyric = { startTime: number; endTime: number; text: string; ipa: string };
+type Lyric = { start_time: number; end_time: number; text: string; ipa: string; translation: string };
 
 type ReadModeProps = {
   videoRef: Ref<HTMLVideoElement>;

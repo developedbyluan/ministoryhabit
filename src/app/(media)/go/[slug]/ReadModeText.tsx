@@ -5,7 +5,7 @@ type Word = {
   index: number;
 };
 
-type Lyric = { startTime: number; endTime: number; text: string; ipa: string };
+type Lyric = { start_time: number; end_time: number; text: string; ipa: string; translation: string };
 
 type ReadModeTextProps = {
   lyrics: Lyric[];
@@ -17,14 +17,14 @@ export default function ReadModeText({
   lyrics,
   currentTime,
   updateCurrentLyricIndex,
-  showIPA
+  showIPA,
 }: ReadModeTextProps) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
   const prevLyricIndexRef = useRef<number>(0);
 
   useEffect(() => {
     const currentLyricIndex = lyrics.findIndex((lyric: Lyric) => {
-      return currentTime >= lyric.startTime && currentTime < lyric.endTime;
+      return currentTime >= lyric.start_time && currentTime < lyric.end_time;
     });
     // console.log(currentLyricIndex)
 
@@ -54,19 +54,24 @@ export default function ReadModeText({
         // console.log(words)
         const wordsElement = words.map((word: Word) => (
           <div key={word.index} className="flex flex-col items-center mt-2">
-            <span className={`${showIPA ? "" : "hidden"} text-xs text-slate-400`}>{ipaArr[word.index]}</span>
-            <span className="px-1 cursor-pointer">{word.word}</span>
+            <span
+              className={`${showIPA ? "" : "hidden"} text-xs text-slate-400`}
+            >
+              {ipaArr[word.index]}
+            </span>
+            <span
+              className={`px-1 cursor-pointer ${
+                currentTime >= lyric.start_time && currentTime < lyric.end_time
+                  ? "border-b-2 border-red-100"
+                  : ""
+              }`}
+            >
+              {word.word}
+            </span>
           </div>
         ));
         return (
-          <div
-            key={index}
-            className={`flex flex-wrap ${
-              currentTime >= lyric.startTime && currentTime < lyric.endTime
-                ? "font-semibold"
-                : ""
-            }`}
-          >
+          <div key={index} className="flex flex-wrap">
             {wordsElement}
           </div>
         );
