@@ -314,6 +314,8 @@ export function useVideo({ src }: UseVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    if (!src) return
+
     const video = videoRef.current;
     if (!video) return;
     video.src = src;
@@ -340,7 +342,7 @@ export function useVideo({ src }: UseVideoProps) {
       // video.removeEventListener('loadeddata', updateDuration)
       // video.addEventListener("canplay", updateDuration)
     };
-  }, []);
+  }, [src]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -378,7 +380,7 @@ export function useVideo({ src }: UseVideoProps) {
   };
 
   const updateCurrentLyricIndex = (index: number) => {
-    console.log(index);
+    // console.log(index);
     dispatch({ type: "SET_CURRENT_LYRIC_INDEX", payload: index });
   };
 

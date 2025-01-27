@@ -14,6 +14,8 @@ import {
 
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
+import { useEffect, useState } from "react";
+import { getAllVideos, getVideo, saveVideo } from "@/utils/indexedDB";
 
 type Word = {
   word: string;
@@ -39,6 +41,58 @@ export default function GoPage() {
   const src =
     "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
 
+    const [videoSource, setVideoSource] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const handleDownload = async (remoteVideoUrl: string, videoName: string) => {
+      try {
+        setIsLoading(true)
+        const response = await fetch(remoteVideoUrl)
+        const videoBlob = await response.blob()
+        await saveVideo(videoBlob, videoName)
+        // await loadStoredVideos()
+        // setIsDownloadDialogOpen(false)
+      } catch (err) {
+        // setError("Failed to download video")
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    const loadVideo = async (videoName: string) => {
+      try {
+        setIsLoading(true)
+        // setError(null)
+  
+        const video = await getVideo(videoName)
+        if (video) {
+          alert("Play video from indexedDB")
+          const url = URL.createObjectURL(video.blob)
+          // setVideoUrl(url)
+          setVideoSource(url)
+          // setIsOfflineAvailable(true)
+          // setCurrentVideoName(name)
+        } else {
+          alert("Play video from remote url")
+          // setVideoUrl(null)
+          const remoteVideoUrl = "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4"
+          setVideoSource(remoteVideoUrl)
+          handleDownload(remoteVideoUrl, lessonSlug)
+          // setIsOfflineAvailable(false)
+          // setCurrentVideoName(null)
+        }
+      } catch (err) {
+        // setError("Failed to load video")
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    loadVideo(lessonSlug)
+  }, [lessonSlug]);
   //
   const {
     videoRef,
@@ -53,7 +107,7 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-  } = useVideo({ src });
+  } = useVideo({ src: videoSource});
 
   return (
     <>
