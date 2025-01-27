@@ -42,6 +42,7 @@ export default function ReadMode({
   }
   return (
     <div className="max-h-full py-4 flex flex-col justify-between">
+      {!duration && <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">Download Lesson...</div>}
       <header>
         <div className="max-w-[576px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
           <Button variant="ghost">

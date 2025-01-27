@@ -317,6 +317,7 @@ export function useVideo({ src }: UseVideoProps) {
     const video = videoRef.current;
     if (!video) return;
     video.src = src;
+    video.preload = "auto"
     const updateProgress = () => {
       // console.log(video.duration)
       dispatch({ type: "SET_PROGRESS", payload: video.currentTime });
@@ -331,11 +332,13 @@ export function useVideo({ src }: UseVideoProps) {
     video.addEventListener("timeupdate", updateProgress);
     video.addEventListener("loadedmetadata", updateDuration);
     // video.addEventListener('loadeddata', updateDuration)
+    // video.addEventListener("canplay", updateDuration)
 
     return () => {
       video.removeEventListener("timeupdate", updateProgress);
       video.removeEventListener("loadedmetadata", updateDuration);
       // video.removeEventListener('loadeddata', updateDuration)
+      // video.addEventListener("canplay", updateDuration)
     };
   }, []);
 
