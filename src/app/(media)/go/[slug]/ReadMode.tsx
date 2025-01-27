@@ -22,6 +22,7 @@ type ReadModeProps = {
   togglePlay: () => void;
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
+  handlePause: (startTime: number, index: number) => void
 };
 export default function ReadMode({
   videoRef,
@@ -32,6 +33,7 @@ export default function ReadMode({
   togglePlay,
   lyrics,
   updateCurrentLyricIndex,
+  handlePause
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false)
 
@@ -73,6 +75,7 @@ export default function ReadMode({
           currentTime={progress}
           updateCurrentLyricIndex={updateCurrentLyricIndex}
           showIPA={showIPA}
+          handlePause={handlePause}
         />
       </main>
       <footer>

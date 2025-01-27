@@ -23,7 +23,7 @@ const lyrics = [
     start_time: 19.253153,
     end_time: 20.890975,
     text: "Speaker Johnson.",
-    ipa: "ˈspiːkə ˈʤɒnsən./ ",
+    ipa: "ˈspiːkə ˈʤɒnsən./",
     translation: "Chủ tịch Hạ viện Johnson.",
   },
   {
@@ -379,6 +379,21 @@ export function useVideo({ src }: UseVideoProps) {
     dispatch({ type: "SET_CURRENT_LYRIC_INDEX", payload: index });
   };
 
+  // Read Mode
+  function handlePause(startTime: number, index: number) {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    videoElement.pause();
+    handleProgressChange(startTime)
+    // dispatch({type: "SET_PROGRESS", payload: startTime})
+    dispatch({ type: "SET_CURRENT_LYRIC_INDEX", payload: index });
+
+    if (state.isPlaying) {
+      dispatch({ type: "TOGGLE_PLAY" });
+    }
+  }
+
   return {
     videoRef,
     ...state,
@@ -387,5 +402,6 @@ export function useVideo({ src }: UseVideoProps) {
     handlePlaybackRateChange,
     lyrics,
     updateCurrentLyricIndex,
+    handlePause,
   };
 }

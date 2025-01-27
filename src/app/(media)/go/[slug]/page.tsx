@@ -14,6 +14,7 @@ import {
 
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
+import { useEffect } from "react";
 
 type Word = {
   word: string;
@@ -51,10 +52,13 @@ export default function GoPage() {
     handleProgressChange,
     handlePlaybackRateChange,
     lyrics,
-    updateCurrentLyricIndex
+    updateCurrentLyricIndex,
+    handlePause,
   } = useVideo({ src });
 
-  
+  useEffect(() => {
+    console.log("duration", duration);
+  }, [duration]);
 
   return (
     <>
@@ -67,6 +71,7 @@ export default function GoPage() {
         togglePlay={togglePlay}
         lyrics={lyrics}
         updateCurrentLyricIndex={updateCurrentLyricIndex}
+        handlePause={handlePause}
       />
     </>
   );
