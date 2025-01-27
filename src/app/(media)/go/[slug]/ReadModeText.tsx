@@ -1,11 +1,23 @@
 import { useEffect, useRef } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import ReadModeTextTranslation from "./ReadModeTextTranslation";
 
 type Word = {
   word: string;
   index: number;
 };
 
-type Lyric = { start_time: number; end_time: number; text: string; ipa: string; translation: string };
+type Lyric = {
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
 
 type ReadModeTextProps = {
   lyrics: Lyric[];
@@ -13,6 +25,7 @@ type ReadModeTextProps = {
   updateCurrentLyricIndex: (index: number) => void;
   showIPA: boolean;
 };
+
 export default function ReadModeText({
   lyrics,
   currentTime,
@@ -70,10 +83,14 @@ export default function ReadModeText({
             </span>
           </div>
         ));
+
         return (
-          <div key={index} className="flex flex-wrap">
-            {wordsElement}
-          </div>
+        <ReadModeTextTranslation 
+        key={index}
+          index={index}
+          wordsElement={wordsElement}
+          translation={lyric.translation}
+        />
         );
       })}
     </div>
