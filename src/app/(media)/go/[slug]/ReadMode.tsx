@@ -1,9 +1,9 @@
-import { Languages } from "lucide-react";
+import { MessageSquareText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
-import { Ref } from "react";
+import { Ref, useState } from "react";
 import ReadModeText from "./ReadModeText";
 
 type Word = {
@@ -33,6 +33,11 @@ export default function ReadMode({
   lyrics,
   updateCurrentLyricIndex,
 }: ReadModeProps) {
+  const [showIPA, setShowIPA] = useState(false)
+
+  const handleShowIPA =() => {
+    setShowIPA(prev => !prev)
+  }
   return (
     <div className="max-h-full py-4 flex flex-col justify-between">
       <header>
@@ -47,8 +52,8 @@ export default function ReadMode({
             onValueChange={(value) => handleProgressChange(value[0])}
             className="flex-grow"
           />
-          <Button variant="ghost">
-            <Languages className="scale-150" />
+          <Button variant="ghost" onClick={handleShowIPA}>
+            <MessageSquareText className="scale-150" />
           </Button>
         </div>
       </header>
@@ -67,6 +72,7 @@ export default function ReadMode({
           lyrics={lyrics}
           currentTime={progress}
           updateCurrentLyricIndex={updateCurrentLyricIndex}
+          showIPA={showIPA}
         />
       </main>
       <footer>
