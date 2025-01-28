@@ -6,10 +6,10 @@ import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
 import { Ref, useState } from "react";
 import ReadModeText from "./ReadModeText";
 
-type Word = {
-  word: string;
-  index: number;
-};
+// type Word = {
+//   word: string;
+//   index: number;
+// };
 
 type Lyric = { start_time: number; end_time: number; text: string; ipa: string; translation: string };
 

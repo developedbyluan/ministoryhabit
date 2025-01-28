@@ -1,113 +1,171 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { useParams, useSearchParams } from "next/navigation";
-import {
-  Languages,
-  Play,
-  X,
-  TvMinimalPlay,
-  TextSearch,
-  Pause,
-} from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Slider } from "@/components/ui/slider";
+// import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
+// import {
+//   Languages,
+//   Play,
+//   X,
+//   TvMinimalPlay,
+//   TextSearch,
+//   Pause,
+// } from "lucide-react";
 
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
 import { useEffect, useState } from "react";
-import { getAllVideos, getVideo, saveVideo } from "@/utils/indexedDB";
+import { getVideo, saveVideo } from "@/utils/indexedDB";
 
-type Word = {
-  word: string;
-  index: number;
-};
+// type Word = {
+//   word: string;
+//   index: number;
+// };
 
-const lyric = {
-  text: "It's five o'clock and Allen is riding his motorcycle in San Francisco.",
-  ipa: "ɪts faɪv əˈklɑk ænd ˈælən ɪz ˈraɪdɪŋ hɪz ˈmoʊtərˌsaɪkəl ɪn ˌsæn frænˈsɪskoʊ.",
-  translation: "Bây giờ là năm giờ và Allen đang chạy xe máy ở San Francisco.",
-};
+type LessonData = {
+  id: number,
+  media_url: string,
+  paid: boolean,
+  title: string,
+  type: "video" | "audio"
+}
 
 export default function GoPage() {
   const params = useParams<{ slug: string }>();
   const lessonSlug = params.slug;
 
-  const searchParams = useSearchParams();
-  const lineIndex = searchParams.get("i");
+  // const searchParams = useSearchParams();
+  // const lineIndex = searchParams.get("i");
 
   // console.log("Lesson Slug:", lessonSlug);
   // console.log("Line Index:", lineIndex);
 
-  const src =
-    "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
+  // const src =
+  //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
 
-    const [videoSource, setVideoSource] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+  const [videoSource, setVideoSource] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  console.log(isLoading);
+
+  const [lessonData, setLessonData] = useState<LessonData[]>([]);
 
   useEffect(() => {
-    const handleDownload = async (remoteVideoUrl: string, videoName: string) => {
+    if(!lessonSlug) return
+
+    // connect to supabase api
+    const getMediaData = async (slug: string) => {
       try {
-        setIsLoading(true)
-        const response = await fetch(remoteVideoUrl)
-        const videoBlob = await response.blob()
-        await saveVideo(videoBlob, videoName)
+        const supabaseRes = await fetch(`/api/supabase/${slug}`);
+
+        if (!supabaseRes.ok) {
+          throw new Error(`Error fetching data: ${supabaseRes.statusText}`);
+        }
+
+        const lessonData = await supabaseRes.json();
+        return lessonData;
+      } catch (error) {
+        console.error("Failed to fetch media data", error);
+      }
+
+      return null;
+    };
+
+    const fetchData = async () => {
+      try {
+        const data = await getMediaData(lessonSlug) as LessonData[];
+        setLessonData(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        console.log("done");
+      }
+    };
+
+    fetchData();
+  }, [lessonSlug]);
+
+  useEffect(() => {
+    if(!lessonSlug) return
+    if(!lessonData) return
+
+    const handleDownload = async (
+      remoteVideoUrl: string,
+      videoName: string
+    ) => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(remoteVideoUrl);
+        const videoBlob = await response.blob();
+        await saveVideo(videoBlob, videoName);
         // await loadStoredVideos()
         // setIsDownloadDialogOpen(false)
       } catch (err) {
         // setError("Failed to download video")
-        console.error(err)
+        console.error(err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    
+    };
+
     const loadVideo = async (videoName: string) => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         // setError(null)
-  
-        const video = await getVideo(videoName)
+
+        const video = await getVideo(videoName);
         if (video) {
-          alert("Play video from indexedDB")
-          const url = URL.createObjectURL(video.blob)
+          alert("Play video from indexedDB");
+          const url = URL.createObjectURL(video.blob);
           // setVideoUrl(url)
-          setVideoSource(url)
+          setVideoSource(url);
           // setIsOfflineAvailable(true)
           // setCurrentVideoName(name)
         } else {
-          alert("Play video from remote url")
+          alert("Play video from remote url");
           // setVideoUrl(null)
-          const remoteVideoUrl = "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4"
-          setVideoSource(remoteVideoUrl)
-          handleDownload(remoteVideoUrl, lessonSlug)
+          // const remoteVideoUrl =
+          //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
+
+          const remoteVideoUrl = lessonData[0].media_url
+          console.log(remoteVideoUrl)
+          setVideoSource(remoteVideoUrl);
+          handleDownload(remoteVideoUrl, lessonSlug);
           // setIsOfflineAvailable(false)
           // setCurrentVideoName(null)
         }
       } catch (err) {
         // setError("Failed to load video")
-        console.error(err)
+        console.error(err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    
-    loadVideo(lessonSlug)
-  }, [lessonSlug]);
+    };
+
+    loadVideo(lessonSlug);
+  }, [lessonSlug, lessonData]);
+
+  useEffect(() => {
+    if(!lessonData) return
+
+    console.log("Lesson Data:", lessonData);
+  }, [lessonData]);
+
   //
   const {
     videoRef,
     isPlaying,
     progress,
     duration,
-    playbackRate,
-    currentLyric,
+    // playbackRate,
+    // currentLyric,
     togglePlay,
     handleProgressChange,
-    handlePlaybackRateChange,
+    // handlePlaybackRateChange,
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-  } = useVideo({ src: videoSource});
+  } = useVideo({ src: videoSource });
 
   return (
     <>

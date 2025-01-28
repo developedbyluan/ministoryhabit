@@ -13,11 +13,20 @@ app.get("/supabase/:slug", async (c) => {
 
   const { data, error } = await supabase
     .from("media")
-    .select("id, title, type, paid")
+    .select("id, title, type, paid, media_url")
     .eq("slug", slug);
 
   if (error) return c.json({ error: error });
 
+  // [
+  //   {
+  //     "id": 1,
+  //     "title": "President Donald Trump’s full 2025 inauguration speech",
+  //     "type": "video",
+  //     "paid": true,
+  //     "media_url": "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4"
+  //   }
+  // ]
   return c.json(data);
 });
 
