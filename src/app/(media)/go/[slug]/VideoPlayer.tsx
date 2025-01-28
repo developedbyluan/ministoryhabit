@@ -20,7 +20,7 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
-  } = useVideo({ src });
+  } = useVideo({ src, text: "" });
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);

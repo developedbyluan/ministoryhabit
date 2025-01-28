@@ -28,7 +28,8 @@ type LessonData = {
   media_url: string,
   paid: boolean,
   title: string,
-  type: "video" | "audio"
+  type: "video" | "audio",
+  body: string
 }
 
 export default function GoPage() {
@@ -49,6 +50,8 @@ export default function GoPage() {
   console.log(isLoading);
 
   const [lessonData, setLessonData] = useState<LessonData[]>([]);
+
+  const [text, setText] = useState<string>("")
 
   useEffect(() => {
     if(!lessonSlug) return
@@ -87,7 +90,11 @@ export default function GoPage() {
 
   useEffect(() => {
     if(!lessonSlug) return
-    if(!lessonData) return
+    if(!lessonData ) return
+
+    if(lessonData.length <= 0) return
+    setText(lessonData[0].body)
+    console.log("lessonData", lessonData)
 
     const handleDownload = async (
       remoteVideoUrl: string,
@@ -122,7 +129,7 @@ export default function GoPage() {
           // setIsOfflineAvailable(true)
           // setCurrentVideoName(name)
         } else {
-          alert("Play video from remote url");
+          alert(`Play video from remote url: ${lessonData.length}`);
           // setVideoUrl(null)
           // const remoteVideoUrl =
           //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
@@ -165,7 +172,7 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-  } = useVideo({ src: videoSource });
+  } = useVideo({ src: videoSource, text: text });
 
   return (
     <>

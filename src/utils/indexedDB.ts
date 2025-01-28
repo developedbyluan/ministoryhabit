@@ -24,15 +24,21 @@ export function initDB(): Promise<IDBDatabase> {
 }
 
 export async function saveVideo(videoBlob: Blob, name: string): Promise<void> {
-  const db = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(["videos"], "readwrite");
-    const store = transaction.objectStore("videos");
-    const request = store.put({ blob: videoBlob, name });
-
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
+  try {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(["videos"], "readwrite");
+      const store = transaction.objectStore("videos");
+      const request = store.put({ blob: videoBlob, name });
+  
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  } catch(error) {
+    alert(`Failed to save video: ${error}`)
+    // throw error
+  }
+  
 }
 
 export async function getVideo(

@@ -5,7 +5,7 @@ import supabase from "@/utils/supabase";
 
 export const runtime = "edge";
 
-const app = new Hono().basePath("/api");
+const app = new Hono().basePath("/supabase");
 
 app.get("/supabase/:slug", async (c) => {
   const slug = c.req.param("slug");
@@ -13,7 +13,7 @@ app.get("/supabase/:slug", async (c) => {
 
   const { data, error } = await supabase
     .from("media")
-    .select("id, title, type, paid, media_url, body")
+    .select("id, title, type, paid, media_url")
     .eq("slug", slug);
 
   if (error) return c.json({ error: error });
