@@ -5,36 +5,38 @@ import {
 } from "@/components/ui/popover";
 
 type Lyric = {
-    start_time: number;
-    end_time: number;
-    text: string;
-    ipa: string;
-    translation: string;
-  };
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
 
 type ReadModeTextTranslationProps = {
   index: number;
   wordsElement: React.ReactElement[];
   lyric: Lyric;
-  handlePause: (startTime: number, index: number) => void
+  handlePause: (startTime: number, index: number) => void;
 };
-
 
 export default function ReadModeTextTranslation({
   index,
   wordsElement,
   lyric,
-  handlePause
+  handlePause,
 }: ReadModeTextTranslationProps) {
   return (
     <Popover>
-      <PopoverTrigger onClick={() => handlePause(lyric.start_time, index)} asChild>
+      <PopoverTrigger
+        onClick={() => handlePause(lyric.start_time, index)}
+        asChild
+      >
         <div className="flex flex-wrap">{wordsElement}</div>
       </PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="space-y-2">
           <p className="font-semibold">Translation:</p>
-          <p>{lyric.translation}</p>
+          <p>{lyric.translation === "" ? "<unavailable>" : lyric.translation}</p>
         </div>
       </PopoverContent>
     </Popover>
