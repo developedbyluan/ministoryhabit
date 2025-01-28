@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import ReadModeTextTranslation from "./ReadModeTextTranslation";
+import ReadModeBadge from "./ReadModeBadge";
 
 type Word = {
   word: string;
@@ -56,6 +57,11 @@ export default function ReadModeText({
       ref={lyricsArrayRef}
       className="max-w-[576px] w-[95%] mx-auto px-6 space-y-8 flex flex-col"
     >
+      <ReadModeBadge
+        imageUrl="https://res.cloudinary.com/dqssqzt3y/image/upload/v1738044857/hq720_n1kejk.avif"
+        title="Bài phát biểu nhậm chức đầy đủ năm 2025 của Tổng thống Donald Trump"
+        seriesTitle="Học tiếng Anh với loạt nội dung thôi miên"
+      />
       {lyrics.map((lyric, index) => {
         const words: Word[] = lyric.text
           .split(" ")

@@ -18,6 +18,8 @@ import ReadMode from "./ReadMode";
 import { useEffect, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
 
+export const runtime = 'edge';
+
 // type Word = {
 //   word: string;
 //   index: number;
