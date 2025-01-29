@@ -324,9 +324,10 @@ function videoReducer(state: VideoState, action: VideoAction): VideoState {
 interface UseVideoProps {
   src: string;
   text: string;
+  lineIndex: number | null;
 }
 
-export function useVideo({ src, text }: UseVideoProps) {
+export function useVideo({ src, text, lineIndex }: UseVideoProps) {
   const [state, dispatch] = useReducer(videoReducer, initialState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -367,6 +368,16 @@ export function useVideo({ src, text }: UseVideoProps) {
       // video.addEventListener("canplay", updateDuration)
     };
   }, [src, text]);
+
+  useEffect(() => {
+    if(!lineIndex) return
+    if(!state.lyrics) return
+    // console.log(lineIndex)
+    const startTime = state.lyrics[lineIndex]?.start_time
+    // console.log(startTime)
+    if(!startTime) return
+    handlePause(startTime, lineIndex)
+  }, [lineIndex, state.lyrics])
 
   const togglePlay = () => {
     if (videoRef.current) {

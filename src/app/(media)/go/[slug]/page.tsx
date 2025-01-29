@@ -3,7 +3,7 @@
 // import { Button } from "@/components/ui/button";
 // import { Slider } from "@/components/ui/slider";
 // import { useParams, useSearchParams } from "next/navigation";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 // import {
 //   Languages,
 //   Play,
@@ -40,8 +40,8 @@ export default function GoPage() {
   const params = useParams<{ slug: string }>();
   const lessonSlug = params.slug;
 
-  // const searchParams = useSearchParams();
-  // const lineIndex = searchParams.get("i");
+  const searchParams = useSearchParams();
+  const lineIndex = searchParams.get("i");
 
   // console.log("Lesson Slug:", lessonSlug);
   // console.log("Line Index:", lineIndex);
@@ -156,12 +156,6 @@ export default function GoPage() {
     loadVideo(lessonSlug);
   }, [lessonSlug, lessonData]);
 
-  useEffect(() => {
-    if(!lessonData) return
-
-    // console.log("Lesson Data:", lessonData[0]);
-  }, [lessonData]);
-
   //
   const {
     videoRef,
@@ -176,7 +170,13 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-  } = useVideo({ src: videoSource, text: text });
+  } = useVideo({ src: videoSource, text: text, lineIndex: parseInt(lineIndex || "0") });
+
+
+  useEffect(() => {
+    if(!lyrics) return
+
+  }, [lyrics])
 
   return (
     <>
