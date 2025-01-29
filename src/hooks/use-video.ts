@@ -264,13 +264,13 @@ import { storeIndexToLocalStorage } from "@/utils/storeIndexToLocalStorage";
 // ];
 
 type SubtitleItem = {
-  id: number,
-  start_time: number,
-  end_time: number,
-  text: string,
-  ipa: string,
-  translation: string
-}
+  id: number;
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
 
 interface VideoState {
   isPlaying: boolean;
@@ -279,7 +279,7 @@ interface VideoState {
   playbackRate: number;
   currentLyric: string;
   currentLyricIndex: number;
-  lyrics: SubtitleItem[]
+  lyrics: SubtitleItem[];
 }
 
 type VideoAction =
@@ -289,7 +289,7 @@ type VideoAction =
   | { type: "SET_PLAYBACK_RATE"; payload: number }
   | { type: "SET_CURRENT_LYRIC"; payload: string }
   | { type: "SET_CURRENT_LYRIC_INDEX"; payload: number }
-  | { type: "SET_LYRICS"; payload: SubtitleItem[]};
+  | { type: "SET_LYRICS"; payload: SubtitleItem[] };
 
 const initialState: VideoState = {
   isPlaying: false,
@@ -298,7 +298,7 @@ const initialState: VideoState = {
   playbackRate: 1,
   currentLyric: "",
   currentLyricIndex: 0,
-  lyrics: []
+  lyrics: [],
 };
 
 function videoReducer(state: VideoState, action: VideoAction): VideoState {
@@ -315,8 +315,8 @@ function videoReducer(state: VideoState, action: VideoAction): VideoState {
       return { ...state, currentLyric: action.payload };
     case "SET_CURRENT_LYRIC_INDEX":
       return { ...state, currentLyricIndex: action.payload };
-      case "SET_LYRICS":
-        return {...state, lyrics: action.payload}
+    case "SET_LYRICS":
+      return { ...state, lyrics: action.payload };
     default:
       return state;
   }
@@ -326,7 +326,7 @@ interface UseVideoProps {
   src: string;
   text: string;
   lineIndex: number | null;
-  lessonSlug: string
+  lessonSlug: string;
 }
 
 export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
@@ -341,7 +341,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
     // console.log("sub", subCrafter(text));
     const subtitleArr: SubtitleItem[] = subCrafter(text);
-    dispatch({type: "SET_LYRICS", payload: subtitleArr})
+    dispatch({ type: "SET_LYRICS", payload: subtitleArr });
 
     const video = videoRef.current;
     if (!video) return;
@@ -372,20 +372,29 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   }, [src, text]);
 
   useEffect(() => {
-    if(!lineIndex) return
-    if(!state.lyrics) return
+    if (!lineIndex) return;
+    if (!state.lyrics) return;
     // console.log(lineIndex)
-    const startTime = state.lyrics[lineIndex]?.start_time
+    const startTime = state.lyrics[lineIndex]?.start_time;
     // console.log(startTime)
-    if(!startTime) return
-    handlePause(startTime, lineIndex)
-  }, [lineIndex, state.lyrics])
+    if (!startTime) return;
+    handlePause(startTime, lineIndex);
+  }, [lineIndex, state.lyrics]);
+
+  // useEffect(() => {
+  //   if(!lessonSlug) return
+  //   if(state.progress <= 0) return
+  //   storeIndexToLocalStorage(lessonSlug, state.progress)
+  // }, [state.progress, lessonSlug])
 
   useEffect(() => {
-    if(!lessonSlug) return
-    if(state.progress <= 0) return 
-    storeIndexToLocalStorage(lessonSlug, state.progress) 
-  }, [state.progress, lessonSlug])
+    if (!lessonSlug) return;
+    if (!state.currentLyricIndex) return;
+
+    if (state.currentLyricIndex > 0) {
+      storeIndexToLocalStorage(lessonSlug, state.currentLyricIndex);
+    }
+  }, [state.currentLyricIndex, lessonSlug]);
 
   const togglePlay = () => {
     if (videoRef.current) {
