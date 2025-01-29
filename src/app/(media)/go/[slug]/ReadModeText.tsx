@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import ReadModeTextTranslation from "./ReadModeTextTranslation";
 import ReadModeBadge from "./ReadModeBadge";
+import { storeIndexToLocalStorage } from "@/utils/storeIndexToLocalStorage";
 
 type Word = {
   word: string;

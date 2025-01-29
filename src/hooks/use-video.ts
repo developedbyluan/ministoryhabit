@@ -1,6 +1,7 @@
 import { useReducer, useRef, useEffect } from "react";
 
 import { subCrafter } from "@/utils/subcrafter";
+import { storeIndexToLocalStorage } from "@/utils/storeIndexToLocalStorage";
 
 // const lyrics = [
 //   {
@@ -325,9 +326,10 @@ interface UseVideoProps {
   src: string;
   text: string;
   lineIndex: number | null;
+  lessonSlug: string
 }
 
-export function useVideo({ src, text, lineIndex }: UseVideoProps) {
+export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   const [state, dispatch] = useReducer(videoReducer, initialState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -378,6 +380,12 @@ export function useVideo({ src, text, lineIndex }: UseVideoProps) {
     if(!startTime) return
     handlePause(startTime, lineIndex)
   }, [lineIndex, state.lyrics])
+
+  useEffect(() => {
+    if(!lessonSlug) return
+    if(state.progress <= 0) return 
+    storeIndexToLocalStorage(lessonSlug, state.progress) 
+  }, [state.progress, lessonSlug])
 
   const togglePlay = () => {
     if (videoRef.current) {

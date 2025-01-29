@@ -18,7 +18,7 @@ import ReadMode from "./ReadMode";
 import { useEffect, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 // type Word = {
 //   word: string;
@@ -26,15 +26,15 @@ export const runtime = 'edge';
 // };
 
 type LessonData = {
-  id: number,
-  media_url: string,
-  paid: boolean,
-  title: string,
-  type: "video" | "audio",
-  body: string,
-  thumbnail_url: string,
-  seriesId: number
-}
+  id: number;
+  media_url: string;
+  paid: boolean;
+  title: string;
+  type: "video" | "audio";
+  body: string;
+  thumbnail_url: string;
+  seriesId: number;
+};
 
 export default function GoPage() {
   const params = useParams<{ slug: string }>();
@@ -55,10 +55,10 @@ export default function GoPage() {
 
   const [lessonData, setLessonData] = useState<LessonData[]>([]);
 
-  const [text, setText] = useState<string>("")
+  const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    if(!lessonSlug) return
+    if (!lessonSlug) return;
 
     // connect to supabase api
     const getMediaData = async (slug: string) => {
@@ -80,7 +80,7 @@ export default function GoPage() {
 
     const fetchData = async () => {
       try {
-        const data = await getMediaData(lessonSlug) as LessonData[];
+        const data = (await getMediaData(lessonSlug)) as LessonData[];
         setLessonData(data);
       } catch (err) {
         console.error(err);
@@ -93,11 +93,11 @@ export default function GoPage() {
   }, [lessonSlug]);
 
   useEffect(() => {
-    if(!lessonSlug) return
-    if(!lessonData ) return
+    if (!lessonSlug) return;
+    if (!lessonData) return;
 
-    if(lessonData.length <= 0) return
-    setText(lessonData[0].body)
+    if (lessonData.length <= 0) return;
+    setText(lessonData[0].body);
     // console.log("lessonData", lessonData)
 
     const handleDownload = async (
@@ -138,8 +138,8 @@ export default function GoPage() {
           // const remoteVideoUrl =
           //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
 
-          const remoteVideoUrl = lessonData[0].media_url
-          console.log(remoteVideoUrl)
+          const remoteVideoUrl = lessonData[0].media_url;
+          console.log(remoteVideoUrl);
           setVideoSource(remoteVideoUrl);
           handleDownload(remoteVideoUrl, lessonSlug);
           // setIsOfflineAvailable(false)
@@ -170,13 +170,12 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-  } = useVideo({ src: videoSource, text: text, lineIndex: parseInt(lineIndex || "0") });
-
-
-  useEffect(() => {
-    if(!lyrics) return
-
-  }, [lyrics])
+  } = useVideo({
+    src: videoSource,
+    text: text,
+    lineIndex: parseInt(lineIndex || "0"),
+    lessonSlug: lessonSlug
+  });
 
   return (
     <>
