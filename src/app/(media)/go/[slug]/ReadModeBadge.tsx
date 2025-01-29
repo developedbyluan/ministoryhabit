@@ -1,14 +1,15 @@
+import { idToSeriesText } from "@/utils/idToSeriesText";
 import Image from "next/image";
 
 type ReadModeBadgeProps = {
   imageUrl: string;
   title: string;
-  seriesTitle: string;
+  seriesId: number;
 };
 export default function ReadModeBadge({
   imageUrl,
   title,
-  seriesTitle,
+  seriesId,
 }: ReadModeBadgeProps) {
   return (
     <div>
@@ -22,7 +23,7 @@ export default function ReadModeBadge({
         />
         <div className="max-w-[200px] space-y-1">
           <h2 className="truncate font-semibold">{title}</h2>
-          <p className="truncate text-sm text-slate-600">{seriesTitle}</p>
+          <p className="truncate text-sm text-slate-600">{idToSeriesText(seriesId)}</p>
         </div>
       </div>
     </div>

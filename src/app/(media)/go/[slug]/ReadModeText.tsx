@@ -15,12 +15,24 @@ type Lyric = {
   translation: string;
 };
 
+type LessonData = {
+  id: number,
+  media_url: string,
+  paid: boolean,
+  title: string,
+  type: "video" | "audio",
+  body: string,
+  thumbnail_url: string,
+  seriesId: number
+}
+
 type ReadModeTextProps = {
   lyrics: Lyric[];
   currentTime: number;
   updateCurrentLyricIndex: (index: number) => void;
   showIPA: boolean;
   handlePause: (startTime: number, index: number) => void;
+  lessonData: LessonData[]
 };
 
 export default function ReadModeText({
@@ -29,6 +41,7 @@ export default function ReadModeText({
   updateCurrentLyricIndex,
   showIPA,
   handlePause,
+  lessonData
 }: ReadModeTextProps) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
   const prevLyricIndexRef = useRef<number>(0);
@@ -57,11 +70,11 @@ export default function ReadModeText({
       ref={lyricsArrayRef}
       className="max-w-[576px] w-[95%] mx-auto px-6 space-y-8 flex flex-col"
     >
-      <ReadModeBadge
-        imageUrl="https://res.cloudinary.com/dqssqzt3y/image/upload/v1738044857/hq720_n1kejk.avif"
-        title="Bài phát biểu nhậm chức đầy đủ năm 2025 của Tổng thống Donald Trump"
-        seriesTitle="Học tiếng Anh với loạt nội dung thôi miên"
-      />
+      {lessonData.length > 0 && <ReadModeBadge
+        imageUrl={lessonData[0].thumbnail_url}
+        title={lessonData[0].title}
+        seriesId={lessonData[0].seriesId}
+      />}
       {lyrics.map((lyric, index) => {
         const words: Word[] = lyric.text
           .split(" ")

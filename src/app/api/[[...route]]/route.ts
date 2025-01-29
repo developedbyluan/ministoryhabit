@@ -13,10 +13,12 @@ app.get("/supabase/:slug", async (c) => {
 
   const { data, error } = await supabase
     .from("media")
-    .select("id, title, type, paid, media_url, body")
+    .select("id, title, type, paid, media_url, body, seriesId, thumbnail_url")
     .eq("slug", slug);
 
   if (error) return c.json({ error: error });
+
+  console.log(data)
 
   // [
   //   {

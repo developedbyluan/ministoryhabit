@@ -31,7 +31,9 @@ type LessonData = {
   paid: boolean,
   title: string,
   type: "video" | "audio",
-  body: string
+  body: string,
+  thumbnail_url: string,
+  seriesId: number
 }
 
 export default function GoPage() {
@@ -83,7 +85,7 @@ export default function GoPage() {
       } catch (err) {
         console.error(err);
       } finally {
-        console.log("done");
+        // console.log("done");
       }
     };
 
@@ -96,7 +98,7 @@ export default function GoPage() {
 
     if(lessonData.length <= 0) return
     setText(lessonData[0].body)
-    console.log("lessonData", lessonData)
+    // console.log("lessonData", lessonData)
 
     const handleDownload = async (
       remoteVideoUrl: string,
@@ -157,7 +159,7 @@ export default function GoPage() {
   useEffect(() => {
     if(!lessonData) return
 
-    console.log("Lesson Data:", lessonData);
+    // console.log("Lesson Data:", lessonData[0]);
   }, [lessonData]);
 
   //
@@ -188,6 +190,7 @@ export default function GoPage() {
         lyrics={lyrics}
         updateCurrentLyricIndex={updateCurrentLyricIndex}
         handlePause={handlePause}
+        lessonData={lessonData}
       />
     </>
   );

@@ -336,7 +336,7 @@ export function useVideo({ src, text }: UseVideoProps) {
 
     // console.log("text:", text)
 
-    console.log("sub", subCrafter(text));
+    // console.log("sub", subCrafter(text));
     const subtitleArr: SubtitleItem[] = subCrafter(text);
     dispatch({type: "SET_LYRICS", payload: subtitleArr})
 

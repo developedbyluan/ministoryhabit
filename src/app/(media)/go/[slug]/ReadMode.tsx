@@ -11,7 +11,24 @@ import ReadModeText from "./ReadModeText";
 //   index: number;
 // };
 
-type Lyric = { start_time: number; end_time: number; text: string; ipa: string; translation: string };
+type Lyric = {
+  start_time: number;
+  end_time: number;
+  text: string;
+  ipa: string;
+  translation: string;
+};
+
+type LessonData = {
+  id: number;
+  media_url: string;
+  paid: boolean;
+  title: string;
+  type: "video" | "audio";
+  body: string;
+  thumbnail_url: string
+  seriesId: number
+};
 
 type ReadModeProps = {
   videoRef: Ref<HTMLVideoElement>;
@@ -22,7 +39,8 @@ type ReadModeProps = {
   togglePlay: () => void;
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
-  handlePause: (startTime: number, index: number) => void
+  handlePause: (startTime: number, index: number) => void;
+  lessonData: LessonData[];
 };
 export default function ReadMode({
   videoRef,
@@ -33,16 +51,21 @@ export default function ReadMode({
   togglePlay,
   lyrics,
   updateCurrentLyricIndex,
-  handlePause
+  handlePause,
+  lessonData,
 }: ReadModeProps) {
-  const [showIPA, setShowIPA] = useState(false)
+  const [showIPA, setShowIPA] = useState(false);
 
-  const handleShowIPA =() => {
-    setShowIPA(prev => !prev)
-  }
+  const handleShowIPA = () => {
+    setShowIPA((prev) => !prev);
+  };
   return (
     <div className="max-h-full py-4 flex flex-col justify-between">
-      {!duration && <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">Download Lesson...</div>}
+      {!duration && (
+        <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">
+          Download Lesson...
+        </div>
+      )}
       <header>
         <div className="max-w-[576px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
           <Button variant="ghost">
@@ -77,6 +100,7 @@ export default function ReadMode({
           updateCurrentLyricIndex={updateCurrentLyricIndex}
           showIPA={showIPA}
           handlePause={handlePause}
+          lessonData={lessonData}
         />
       </main>
       <footer>
