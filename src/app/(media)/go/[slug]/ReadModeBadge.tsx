@@ -21,7 +21,7 @@ export default function ReadModeBadge({
           width={64}
           height={64}
         />
-        <div className="max-w-[200px] space-y-1">
+        <div className="max-w-[250px] space-y-1">
           <h2 className="truncate font-semibold">{title}</h2>
           <p className="truncate text-sm text-slate-600">{idToSeriesText(seriesId)}</p>
         </div>

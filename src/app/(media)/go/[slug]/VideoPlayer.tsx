@@ -7,6 +7,7 @@ import { LyricsDisplay } from "./LyricsDisplay";
 
 interface VideoPlayerProps {
   src: string;
+  text: string
 }
 
 export function VideoPlayer({ src }: VideoPlayerProps) {
@@ -20,7 +21,7 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
-  } = useVideo({ src, text: "" });
+  } = useVideo({ src, text: "", lineIndex: 1, lessonSlug: "trump" });
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);

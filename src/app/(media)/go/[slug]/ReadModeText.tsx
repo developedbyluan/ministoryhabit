@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import ReadModeTextTranslation from "./ReadModeTextTranslation";
 import ReadModeBadge from "./ReadModeBadge";
-import { storeIndexToLocalStorage } from "@/utils/storeIndexToLocalStorage";
 
 type Word = {
   word: string;
@@ -17,15 +16,15 @@ type Lyric = {
 };
 
 type LessonData = {
-  id: number,
-  media_url: string,
-  paid: boolean,
-  title: string,
-  type: "video" | "audio",
-  body: string,
-  thumbnail_url: string,
-  seriesId: number
-}
+  id: number;
+  media_url: string;
+  paid: boolean;
+  title: string;
+  type: "video" | "audio";
+  body: string;
+  thumbnail_url: string;
+  seriesId: number;
+};
 
 type ReadModeTextProps = {
   lyrics: Lyric[];
@@ -33,7 +32,7 @@ type ReadModeTextProps = {
   updateCurrentLyricIndex: (index: number) => void;
   showIPA: boolean;
   handlePause: (startTime: number, index: number) => void;
-  lessonData: LessonData[]
+  lessonData: LessonData[];
 };
 
 export default function ReadModeText({
@@ -42,7 +41,7 @@ export default function ReadModeText({
   updateCurrentLyricIndex,
   showIPA,
   handlePause,
-  lessonData
+  lessonData,
 }: ReadModeTextProps) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
   const prevLyricIndexRef = useRef<number>(0);
@@ -71,11 +70,13 @@ export default function ReadModeText({
       ref={lyricsArrayRef}
       className="max-w-[576px] w-[95%] mx-auto px-6 space-y-8 flex flex-col"
     >
-      {lessonData.length > 0 && <ReadModeBadge
-        imageUrl={lessonData[0].thumbnail_url}
-        title={lessonData[0].title}
-        seriesId={lessonData[0].seriesId}
-      />}
+      {lessonData.length > 0 && (
+        <ReadModeBadge
+          imageUrl={lessonData[0].thumbnail_url}
+          title={lessonData[0].title}
+          seriesId={lessonData[0].seriesId}
+        />
+      )}
       {lyrics.map((lyric, index) => {
         const words: Word[] = lyric.text
           .split(" ")
