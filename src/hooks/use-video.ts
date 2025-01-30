@@ -1,7 +1,10 @@
 import { useReducer, useRef, useEffect } from "react";
 
 import { subCrafter } from "@/utils/subcrafter";
-import { storeIndexToLocalStorage } from "@/utils/storeIndexToLocalStorage";
+import {
+  getIndexFromLocalStorage,
+  storeIndexToLocalStorage,
+} from "@/utils/storeIndexToLocalStorage";
 
 // const lyrics = [
 //   {
@@ -372,14 +375,24 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   }, [src, text]);
 
   useEffect(() => {
-    if (!lineIndex) return;
+    // if (!lineIndex) return;
     if (!state.lyrics) return;
     // console.log(lineIndex)
-    const startTime = state.lyrics[lineIndex]?.start_time;
-    // console.log(startTime)
+
+    if (lineIndex) {
+      const startTime = state.lyrics[lineIndex]?.start_time;
+      if (!startTime) return;
+      handlePause(startTime, lineIndex);
+      return;
+    }
+
+    const previousIndex = getIndexFromLocalStorage(lessonSlug);
+    // console.log("previousIndex", previousIndex);
+
+    const startTime = state.lyrics[previousIndex]?.start_time;
     if (!startTime) return;
-    handlePause(startTime, lineIndex);
-  }, [lineIndex, state.lyrics]);
+    handlePause(startTime, previousIndex);
+  }, [lineIndex, state.lyrics, lessonSlug]);
 
   // useEffect(() => {
   //   if(!lessonSlug) return
