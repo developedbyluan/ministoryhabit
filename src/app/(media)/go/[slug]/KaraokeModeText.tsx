@@ -41,7 +41,7 @@ export default function KaraokeModeText({
       return currentTime >= lyric.start_time && currentTime < lyric.end_time;
     });
 
-    // if (currentLyricIndex === prevLyricIndexRef.current) return;
+    if (currentLyricIndex === prevLyricIndexRef.current) return;
 
     prevLyricIndexRef.current = currentLyricIndex;
 
@@ -57,7 +57,7 @@ export default function KaraokeModeText({
   return (
     <div
       ref={lyricsArrayRef}
-      className="max-w-[576px] w-full mx-auto px-6 space-y-8 flex flex-col overflow-y-auto h-72"
+      className="max-w-[396px] w-full mx-auto px-6 space-y-8 flex flex-col overflow-y-auto"
     >
       {lyrics.map((lyric, index) => {
         const { text, translation } = lyric;

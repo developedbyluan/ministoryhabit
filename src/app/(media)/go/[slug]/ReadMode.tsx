@@ -37,7 +37,6 @@ type ReadModeProps = {
   handlePause: (startTime: number, index: number) => void;
   lessonData: LessonData[];
   handleShowKaraokeMode: () => void;
-  showKaraokeMode: boolean
 };
 export default function ReadMode({
   progress,
@@ -50,7 +49,6 @@ export default function ReadMode({
   handlePause,
   lessonData,
   handleShowKaraokeMode,
-  showKaraokeMode
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false);
 
@@ -58,14 +56,14 @@ export default function ReadMode({
     setShowIPA((prev) => !prev);
   };
   return (
-    <div className={`${showKaraokeMode ? "hidden": ""} min-h-full py-4 flex flex-col justify-between`}>
+    <div className="h-full flex flex-col justify-between">
       {!duration && (
         <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">
           Download Lesson...
         </div>
       )}
       <header>
-        <div className="max-w-[576px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
+        <div className="flex-shrink max-w-[396px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
           <Button variant="ghost">
             <X className="scale-150" />
           </Button>
@@ -82,11 +80,6 @@ export default function ReadMode({
         </div>
       </header>
       <main className="flex-grow overflow-y-auto">
-        <div className="max-w-[576px] w-[95%] mx-auto px-6 space-y-4">
-          <div className="max-w-3xl mx-auto">
-            
-          </div>
-        </div>
         <ReadModeText
           lyrics={lyrics}
           currentTime={progress}
@@ -97,7 +90,7 @@ export default function ReadMode({
         />
       </main>
       <footer>
-        <div className="max-w-[576px] w-[95%] mx-auto px-4 pt-4">
+        <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4">
           <div className="play-pause-toggler flex justify-between items-center">
             <Button variant="outline" size="sm" onClick={handleShowKaraokeMode}>
               <TvMinimalPlay className="scale-150" />

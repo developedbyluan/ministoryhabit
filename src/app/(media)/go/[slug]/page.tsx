@@ -182,44 +182,49 @@ export default function GoPage() {
     setKaraokeMode((prev) => !prev);
   };
   return (
-    <>
-      <video
-        ref={videoRef}
-        className={`${
-          showKaraokeMode ? "mt-4" : "hidden"
-        } w-[95%] max-w-[576px] mx-auto rounded-lg shadow-lg`}
-        playsInline
-      />
-      <KaraokeMode
-        videoRef={videoRef}
-        isPlaying={isPlaying}
-        togglePlay={togglePlay}
-        handleShowKaraokeMode={handleShowKaraokeMode}
-        showKaraokeMode={showKaraokeMode}
-        lyrics={lyrics}
-        handlePause={handlePause}
-        lessonData={lessonData}
-        progress={progress}
-        updateCurrentLyricIndex={updateCurrentLyricIndex}
-        handleProgressChange={handleProgressChange}
-        duration={duration}
-        playbackRate={playbackRate}
-        handlePlaybackRateChange={handlePlaybackRateChange}
-      />
-      <ReadMode
-        videoRef={videoRef}
-        progress={progress}
-        isPlaying={isPlaying}
-        duration={duration}
-        handleProgressChange={handleProgressChange}
-        togglePlay={togglePlay}
-        lyrics={lyrics}
-        updateCurrentLyricIndex={updateCurrentLyricIndex}
-        handlePause={handlePause}
-        lessonData={lessonData}
-        handleShowKaraokeMode={handleShowKaraokeMode}
-        showKaraokeMode={showKaraokeMode}
-      />
-    </>
+    <div className="h-dvh py-4">
+      <div className={`${showKaraokeMode ? "h-1/3" : "h-0"}`}>
+        <video
+          ref={videoRef}
+          className={`${
+            showKaraokeMode ? "" : "hidden"
+          } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-lg overflow-hidden`}
+          playsInline
+        />
+      </div>
+      <div className={`${showKaraokeMode ? "h-2/3" : "h-full"}`}>
+        {showKaraokeMode ? (
+          <KaraokeMode
+            videoRef={videoRef}
+            isPlaying={isPlaying}
+            togglePlay={togglePlay}
+            handleShowKaraokeMode={handleShowKaraokeMode}
+            lyrics={lyrics}
+            handlePause={handlePause}
+            lessonData={lessonData}
+            progress={progress}
+            updateCurrentLyricIndex={updateCurrentLyricIndex}
+            handleProgressChange={handleProgressChange}
+            duration={duration}
+            playbackRate={playbackRate}
+            handlePlaybackRateChange={handlePlaybackRateChange}
+          />
+        ) : (
+          <ReadMode
+            videoRef={videoRef}
+            progress={progress}
+            isPlaying={isPlaying}
+            duration={duration}
+            handleProgressChange={handleProgressChange}
+            togglePlay={togglePlay}
+            lyrics={lyrics}
+            updateCurrentLyricIndex={updateCurrentLyricIndex}
+            handlePause={handlePause}
+            lessonData={lessonData}
+            handleShowKaraokeMode={handleShowKaraokeMode}
+          />
+        )}
+      </div>
+    </div>
   );
 }

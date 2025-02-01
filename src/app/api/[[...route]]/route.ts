@@ -9,7 +9,6 @@ const app = new Hono().basePath("/api");
 
 app.get("/supabase/:slug", async (c) => {
   const slug = c.req.param("slug");
-  // console.log(slug)
 
   const { data, error } = await supabase
     .from("media")
@@ -17,8 +16,6 @@ app.get("/supabase/:slug", async (c) => {
     .eq("slug", slug);
 
   if (error) return c.json({ error: error });
-
-  console.log(data)
 
   // [
   //   {
@@ -36,7 +33,6 @@ app.post("/supabase/addToPlaylist", async (c) => {
   // https://supabase.com/docs/reference/javascript/using-filters
   // https://supabase.com/docs/reference/javascript/upsert
   const body = await c.req.json();
-  // console.log(body)
   const { data, error } = await supabase
     .from("users_playlist")
     .upsert(

@@ -83,25 +83,19 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     if (!src) return;
     if (!text) return;
 
-    // console.log("text:", text)
-
-    // console.log("sub", subCrafter(text));
     const subtitleArr: SubtitleItem[] = subCrafter(text);
     dispatch({ type: "SET_LYRICS", payload: subtitleArr });
 
     const video = videoRef.current;
-    console.log(video)
     if (!video) return;
     video.src = src;
     video.preload = "auto";
     const updateProgress = () => {
-      // console.log(video.duration)
       dispatch({ type: "SET_PROGRESS", payload: video.currentTime });
       updateLyrics(video.currentTime);
     };
 
     const updateDuration = () => {
-      //   console.log(video.duration);
       dispatch({ type: "SET_DURATION", payload: video.duration });
     };
 
@@ -149,7 +143,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
   useEffect(() => {
     if (state.isPlaying) {
-      console.log("start", Date.now());
       videoStartTimeRef.current = Date.now();
     } else {
       if (videoStartTimeRef.current === 0) return;
@@ -196,7 +189,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   };
 
   const updateCurrentLyricIndex = (index: number) => {
-    // console.log(index);
     dispatch({ type: "SET_CURRENT_LYRIC_INDEX", payload: index });
   };
 
@@ -207,7 +199,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
     videoElement.pause();
     handleProgressChange(startTime);
-    // dispatch({type: "SET_PROGRESS", payload: startTime})
     dispatch({ type: "SET_CURRENT_LYRIC_INDEX", payload: index });
 
     if (state.isPlaying) {
@@ -221,7 +212,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     togglePlay,
     handleProgressChange,
     handlePlaybackRateChange,
-    // lyrics,
     updateCurrentLyricIndex,
     handlePause,
   };

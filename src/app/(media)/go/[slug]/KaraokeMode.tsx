@@ -35,7 +35,6 @@ type KaraokeModeProps = {
   isPlaying: boolean;
   togglePlay: () => void;
   handleShowKaraokeMode: () => void;
-  showKaraokeMode: boolean;
   progress: number;
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
@@ -52,7 +51,6 @@ export default function KaraokeMode({
   isPlaying,
   togglePlay,
   handleShowKaraokeMode,
-  showKaraokeMode,
   lyrics,
   progress,
   updateCurrentLyricIndex,
@@ -74,22 +72,9 @@ export default function KaraokeMode({
   }, [videoRef]);
   return (
     <div
-      className={`${
-        showKaraokeMode ? "" : "hidden"
-      } py-4 flex flex-col justify-between border`}
+      className="h-full flex flex-col"
     >
-      <header>
-        <div className="max-w-[576px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4"></div>
-      </header>
-      <main>
-        {/* <ReadModeText
-          lyrics={lyrics}
-          currentTime={progress}
-          updateCurrentLyricIndex={updateCurrentLyricIndex}
-          showIPA={showIPA}
-          handlePause={handlePause}
-          lessonData={lessonData}
-        /> */}
+      <main className="flex-grow overflow-y-auto">
         <KaraokeModeText
           lyrics={lyrics}
           currentTime={progress}
@@ -98,8 +83,8 @@ export default function KaraokeMode({
           showTranslation={showTranslation}
         />
       </main>
-      <footer className="mt-auto">
-        <div className="max-w-[576px] w-[95%] mx-auto px-4 pt-4">
+      <footer className="">
+        <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4 space-y-4">
           <div className="space-y-2">
             <Slider
               value={[progress]}
@@ -124,7 +109,7 @@ export default function KaraokeMode({
             <select
               value={playbackRate}
               onChange={(e) => handlePlaybackRateChange(Number(e.target.value))}
-              className="cursor-pointer hover:bg-slate-100 rounded-md px-2 py-1 text-center font-semibold appearance-none bg-transparent outline-none text-lg"
+              className="cursor-pointer hover:bg-slate-100 rounded-md text-center font-semibold appearance-none bg-transparent outline-none text-lg"
             >
               {[0.5, 0.66, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2].map(
                 (rate) => (
