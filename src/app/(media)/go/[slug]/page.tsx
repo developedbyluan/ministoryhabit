@@ -2,7 +2,6 @@
 
 // import { Button } from "@/components/ui/button";
 // import { Slider } from "@/components/ui/slider";
-// import { useParams, useSearchParams } from "next/navigation";
 import { useParams, useSearchParams } from "next/navigation";
 // import {
 //   Languages,
@@ -17,6 +16,7 @@ import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
 import { useEffect, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
+import KaraokeMode from "./KaraokeMode";
 
 export const runtime = "edge";
 
@@ -43,12 +43,6 @@ export default function GoPage() {
   const searchParams = useSearchParams();
   const lineIndex = searchParams.get("i");
 
-  // console.log("Lesson Slug:", lessonSlug);
-  // console.log("Line Index:", lineIndex);
-
-  // const src =
-  //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
-
   const [videoSource, setVideoSource] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   console.log(isLoading);
@@ -56,6 +50,8 @@ export default function GoPage() {
   const [lessonData, setLessonData] = useState<LessonData[]>([]);
 
   const [text, setText] = useState<string>("");
+
+  const [showKaraokeMode, setKaraokeMode] = useState(false);
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -126,14 +122,14 @@ export default function GoPage() {
 
         const video = await getVideo(videoName);
         if (video) {
-          alert("Play video from indexedDB");
+          // alert("Play video from indexedDB");
           const url = URL.createObjectURL(video.blob);
           // setVideoUrl(url)
           setVideoSource(url);
           // setIsOfflineAvailable(true)
           // setCurrentVideoName(name)
         } else {
-          alert(`Play video from remote url: ${lessonData.length}`);
+          // alert(`Play video from remote url: ${lessonData.length}`);
           // setVideoUrl(null)
           // const remoteVideoUrl =
           //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
@@ -162,11 +158,11 @@ export default function GoPage() {
     isPlaying,
     progress,
     duration,
-    // playbackRate,
     // currentLyric,
     togglePlay,
     handleProgressChange,
-    // handlePlaybackRateChange,
+    playbackRate,
+    handlePlaybackRateChange,
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
@@ -174,11 +170,42 @@ export default function GoPage() {
     src: videoSource,
     text: text,
     lineIndex: parseInt(lineIndex || "0"),
-    lessonSlug: lessonSlug
+    lessonSlug: lessonSlug,
   });
 
+  const handleShowKaraokeMode = () => {
+    // const remoteVideoUrl = lessonData[0].media_url;
+    // setVideoSource(remoteVideoUrl);
+    if (!isPlaying) {
+      togglePlay();
+    }
+    setKaraokeMode((prev) => !prev);
+  };
   return (
     <>
+      <video
+        ref={videoRef}
+        className={`${
+          showKaraokeMode ? "mt-4" : "hidden"
+        } w-[95%] max-w-[576px] mx-auto rounded-lg shadow-lg`}
+        playsInline
+      />
+      <KaraokeMode
+        videoRef={videoRef}
+        isPlaying={isPlaying}
+        togglePlay={togglePlay}
+        handleShowKaraokeMode={handleShowKaraokeMode}
+        showKaraokeMode={showKaraokeMode}
+        lyrics={lyrics}
+        handlePause={handlePause}
+        lessonData={lessonData}
+        progress={progress}
+        updateCurrentLyricIndex={updateCurrentLyricIndex}
+        handleProgressChange={handleProgressChange}
+        duration={duration}
+        playbackRate={playbackRate}
+        handlePlaybackRateChange={handlePlaybackRateChange}
+      />
       <ReadMode
         videoRef={videoRef}
         progress={progress}
@@ -190,6 +217,8 @@ export default function GoPage() {
         updateCurrentLyricIndex={updateCurrentLyricIndex}
         handlePause={handlePause}
         lessonData={lessonData}
+        handleShowKaraokeMode={handleShowKaraokeMode}
+        showKaraokeMode={showKaraokeMode}
       />
     </>
   );

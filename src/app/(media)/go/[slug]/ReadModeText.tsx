@@ -52,14 +52,14 @@ export default function ReadModeText({
     });
     // console.log(currentLyricIndex)
 
-    if (currentLyricIndex === prevLyricIndexRef.current) return;
+    // if (currentLyricIndex === prevLyricIndexRef.current) return;
 
     prevLyricIndexRef.current = currentLyricIndex;
 
     if (currentLyricIndex != -1 && lyricsArrayRef.current) {
       const lyricElement = lyricsArrayRef.current.children[currentLyricIndex];
 
-      lyricElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      lyricElement.scrollIntoView({ behavior: "instant", block: "nearest" });
 
       updateCurrentLyricIndex(currentLyricIndex);
     }
@@ -68,7 +68,7 @@ export default function ReadModeText({
   return (
     <div
       ref={lyricsArrayRef}
-      className="max-w-[576px] w-[95%] mx-auto px-6 space-y-8 flex flex-col"
+      className="max-w-[576px] w-[95%] mx-auto px-6 space-y-8 flex flex-col h-96"
     >
       {lessonData.length > 0 && (
         <ReadModeBadge

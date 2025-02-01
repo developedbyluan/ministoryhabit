@@ -6,11 +6,6 @@ import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
 import { Ref, useState } from "react";
 import ReadModeText from "./ReadModeText";
 
-// type Word = {
-//   word: string;
-//   index: number;
-// };
-
 type Lyric = {
   start_time: number;
   end_time: number;
@@ -26,8 +21,8 @@ type LessonData = {
   title: string;
   type: "video" | "audio";
   body: string;
-  thumbnail_url: string
-  seriesId: number
+  thumbnail_url: string;
+  seriesId: number;
 };
 
 type ReadModeProps = {
@@ -41,9 +36,10 @@ type ReadModeProps = {
   updateCurrentLyricIndex: (index: number) => void;
   handlePause: (startTime: number, index: number) => void;
   lessonData: LessonData[];
+  handleShowKaraokeMode: () => void;
+  showKaraokeMode: boolean
 };
 export default function ReadMode({
-  videoRef,
   progress,
   isPlaying,
   duration,
@@ -53,6 +49,8 @@ export default function ReadMode({
   updateCurrentLyricIndex,
   handlePause,
   lessonData,
+  handleShowKaraokeMode,
+  showKaraokeMode
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false);
 
@@ -60,7 +58,7 @@ export default function ReadMode({
     setShowIPA((prev) => !prev);
   };
   return (
-    <div className="max-h-full py-4 flex flex-col justify-between">
+    <div className={`${showKaraokeMode ? "hidden": ""} min-h-full py-4 flex flex-col justify-between`}>
       {!duration && (
         <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">
           Download Lesson...
@@ -86,12 +84,7 @@ export default function ReadMode({
       <main className="flex-grow overflow-y-auto">
         <div className="max-w-[576px] w-[95%] mx-auto px-6 space-y-4">
           <div className="max-w-3xl mx-auto">
-            <video
-              ref={videoRef}
-              // src={src}
-              className="w-full rounded-lg shadow-lg hidden"
-              playsInline
-            />
+            
           </div>
         </div>
         <ReadModeText
@@ -106,12 +99,12 @@ export default function ReadMode({
       <footer>
         <div className="max-w-[576px] w-[95%] mx-auto px-4 pt-4">
           <div className="play-pause-toggler flex justify-between items-center">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleShowKaraokeMode}>
               <TvMinimalPlay className="scale-150" />
             </Button>
             <Button
               size="icon"
-              className="bg-white hover:bg-slate-100 border w-12 h-12 rounded-full"
+              className="bg-white hover:bg-slate-100 border border-black w-12 h-12 rounded-full"
               onClick={togglePlay}
             >
               {isPlaying ? (

@@ -90,6 +90,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     dispatch({ type: "SET_LYRICS", payload: subtitleArr });
 
     const video = videoRef.current;
+    console.log(video)
     if (!video) return;
     video.src = src;
     video.preload = "auto";
