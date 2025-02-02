@@ -153,6 +153,12 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     }
   }, [state.isPlaying, lessonSlug]);
 
+  useEffect(() => {
+    if(state.progress >= state.duration) {
+      handlePause(0, 0)
+    }
+  }, [state.progress, state.duration])
+
   const togglePlay = () => {
     if (videoRef.current) {
       if (state.isPlaying) {
