@@ -89,7 +89,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     const video = videoRef.current;
     if (!video) return;
     // for iOS
-    video.load()
+    video.load();
 
     video.src = src;
     video.preload = "auto";
@@ -157,10 +157,10 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   }, [state.isPlaying, lessonSlug]);
 
   useEffect(() => {
-    if(state.progress >= state.duration) {
-      handlePause(0, 0)
+    if (state.progress >= state.duration) {
+      handlePause(0, 0);
     }
-  }, [state.progress, state.duration])
+  }, [state.progress, state.duration]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -215,6 +215,18 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     }
   }
 
+  // Karaoke Mode
+  function handlePlay(startTime: number, index: number) {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+    handleProgressChange(startTime);
+    if (videoElement.paused) {
+      videoElement.play();
+      dispatch({ type: "TOGGLE_PLAY" });
+    }
+    updateCurrentLyricIndex(index);
+  }
+
   return {
     videoRef,
     ...state,
@@ -223,5 +235,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     handlePlaybackRateChange,
     updateCurrentLyricIndex,
     handlePause,
+    handlePlay,
   };
 }

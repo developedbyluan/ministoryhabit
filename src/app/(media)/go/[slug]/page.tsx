@@ -166,6 +166,7 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
+    handlePlay
   } = useVideo({
     src: videoSource,
     text: text,
@@ -208,6 +209,7 @@ export default function GoPage() {
             duration={duration}
             playbackRate={playbackRate}
             handlePlaybackRateChange={handlePlaybackRateChange}
+            handlePlay={handlePlay}
           />
         ) : (
           <ReadMode

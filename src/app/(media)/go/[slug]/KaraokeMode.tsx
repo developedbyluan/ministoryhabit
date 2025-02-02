@@ -44,6 +44,7 @@ type KaraokeModeProps = {
   handleProgressChange: (newProgress: number) => void;
   playbackRate: number;
   handlePlaybackRateChange: (newRate: number) => void;
+  handlePlay: (startTime: number, index: number) => void;
 };
 
 export default function KaraokeMode({
@@ -59,6 +60,7 @@ export default function KaraokeMode({
   duration,
   playbackRate,
   handlePlaybackRateChange,
+  handlePlay
 }: KaraokeModeProps) {
   const [showTranslation, setShowTranslation] = useState(false);
 
@@ -81,6 +83,7 @@ export default function KaraokeMode({
           lessonData={lessonData}
           updateCurrentLyricIndex={updateCurrentLyricIndex}
           showTranslation={showTranslation}
+          handlePlay={handlePlay}
         />
       </main>
       <footer className="">

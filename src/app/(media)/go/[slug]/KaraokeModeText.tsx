@@ -25,6 +25,7 @@ type KaraokeModeTextProps = {
   updateCurrentLyricIndex: (index: number) => void;
   lessonData: LessonData[];
   showTranslation: boolean;
+  handlePlay: (startTime: number, index: number) => void;
 };
 
 export default function KaraokeModeText({
@@ -32,6 +33,7 @@ export default function KaraokeModeText({
   currentTime,
   updateCurrentLyricIndex,
   showTranslation,
+  handlePlay
 }: KaraokeModeTextProps) {
   const lyricsArrayRef = useRef<HTMLDivElement>(null);
   const prevLyricIndexRef = useRef<number>(0);
@@ -64,6 +66,8 @@ export default function KaraokeModeText({
         return (
           <div
             key={index}
+            role="button"
+            onClick={() => handlePlay(lyric.start_time, index)}
             className={`${
               currentTime >= lyric.start_time && currentTime < lyric.end_time
                 ? "font-bold text-2xl"
