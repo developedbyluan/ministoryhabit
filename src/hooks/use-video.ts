@@ -88,6 +88,9 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
     const video = videoRef.current;
     if (!video) return;
+    // for iOS
+    video.load()
+
     video.src = src;
     video.preload = "auto";
     const updateProgress = () => {
