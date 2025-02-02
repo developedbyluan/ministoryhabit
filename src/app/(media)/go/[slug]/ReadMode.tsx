@@ -56,7 +56,7 @@ export default function ReadMode({
     setShowIPA((prev) => !prev);
   };
   return (
-    <div className="h-full flex flex-col justify-between">
+    <>
       {!duration && (
         <div className="absolute inset-0 bg-green-50 z-50 flex items-center justify-center">
           Download Lesson...
@@ -112,6 +112,6 @@ export default function ReadMode({
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

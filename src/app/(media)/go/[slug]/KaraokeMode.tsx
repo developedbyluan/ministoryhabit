@@ -1,9 +1,4 @@
-import {
-  Book,
-  Languages,
-  Pause,
-  TextSearch,
-} from "lucide-react";
+import { Book, Languages, Pause, TextSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { Ref, useEffect, useState } from "react";
@@ -60,7 +55,7 @@ export default function KaraokeMode({
   duration,
   playbackRate,
   handlePlaybackRateChange,
-  handlePlay
+  handlePlay,
 }: KaraokeModeProps) {
   const [showTranslation, setShowTranslation] = useState(false);
 
@@ -73,9 +68,7 @@ export default function KaraokeMode({
     console.log(videoRef);
   }, [videoRef]);
   return (
-    <div
-      className="h-full flex flex-col"
-    >
+    <>
       <main className="flex-grow overflow-y-auto">
         <KaraokeModeText
           lyrics={lyrics}
@@ -142,6 +135,6 @@ export default function KaraokeMode({
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

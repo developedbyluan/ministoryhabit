@@ -166,7 +166,7 @@ export default function GoPage() {
     lyrics,
     updateCurrentLyricIndex,
     handlePause,
-    handlePlay
+    handlePlay,
   } = useVideo({
     src: videoSource,
     text: text,
@@ -183,50 +183,47 @@ export default function GoPage() {
     setKaraokeMode((prev) => !prev);
   };
   return (
-    <div className="h-dvh py-4">
-      <div className={`${showKaraokeMode ? "h-1/3" : "h-0"}`}>
-        <video
-          ref={videoRef}
-          className={`${
-            showKaraokeMode ? "" : "hidden"
-          } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-lg overflow-hidden`}
-          playsInline
+    <div className="h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
+      <video
+        ref={videoRef}
+        className={`${
+          showKaraokeMode ? "" : "hidden"
+        } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-md max-h-full`}
+        playsInline
+      />
+
+      {showKaraokeMode ? (
+        <KaraokeMode
+          videoRef={videoRef}
+          isPlaying={isPlaying}
+          togglePlay={togglePlay}
+          handleShowKaraokeMode={handleShowKaraokeMode}
+          lyrics={lyrics}
+          handlePause={handlePause}
+          lessonData={lessonData}
+          progress={progress}
+          updateCurrentLyricIndex={updateCurrentLyricIndex}
+          handleProgressChange={handleProgressChange}
+          duration={duration}
+          playbackRate={playbackRate}
+          handlePlaybackRateChange={handlePlaybackRateChange}
+          handlePlay={handlePlay}
         />
-      </div>
-      <div className={`${showKaraokeMode ? "h-2/3" : "h-full"}`}>
-        {showKaraokeMode ? (
-          <KaraokeMode
-            videoRef={videoRef}
-            isPlaying={isPlaying}
-            togglePlay={togglePlay}
-            handleShowKaraokeMode={handleShowKaraokeMode}
-            lyrics={lyrics}
-            handlePause={handlePause}
-            lessonData={lessonData}
-            progress={progress}
-            updateCurrentLyricIndex={updateCurrentLyricIndex}
-            handleProgressChange={handleProgressChange}
-            duration={duration}
-            playbackRate={playbackRate}
-            handlePlaybackRateChange={handlePlaybackRateChange}
-            handlePlay={handlePlay}
-          />
-        ) : (
-          <ReadMode
-            videoRef={videoRef}
-            progress={progress}
-            isPlaying={isPlaying}
-            duration={duration}
-            handleProgressChange={handleProgressChange}
-            togglePlay={togglePlay}
-            lyrics={lyrics}
-            updateCurrentLyricIndex={updateCurrentLyricIndex}
-            handlePause={handlePause}
-            lessonData={lessonData}
-            handleShowKaraokeMode={handleShowKaraokeMode}
-          />
-        )}
-      </div>
+      ) : (
+        <ReadMode
+          videoRef={videoRef}
+          progress={progress}
+          isPlaying={isPlaying}
+          duration={duration}
+          handleProgressChange={handleProgressChange}
+          togglePlay={togglePlay}
+          lyrics={lyrics}
+          updateCurrentLyricIndex={updateCurrentLyricIndex}
+          handlePause={handlePause}
+          lessonData={lessonData}
+          handleShowKaraokeMode={handleShowKaraokeMode}
+        />
+      )}
     </div>
   );
 }
