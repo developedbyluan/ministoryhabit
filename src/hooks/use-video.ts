@@ -1,4 +1,4 @@
-import { useReducer, useRef, useEffect } from "react";
+import { useReducer, useRef, useEffect} from "react";
 
 import { subCrafter } from "@/utils/subcrafter";
 import {
@@ -79,6 +79,8 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
   const videoStartTimeRef = useRef<number>(0);
 
+  const endTimeRef = useRef<number>(-1);
+
   useEffect(() => {
     if (!src) return;
     if (!text) return;
@@ -156,7 +158,24 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     }
   }, [state.isPlaying, lessonSlug]);
 
+  useEffect(
+    () => () => {
+      if (!endTimeRef.current) return;
+      if (!state.lyrics) return;
+
+      if (state.progress >= endTimeRef.current && endTimeRef.current > -1) {
+        const currentLyric = state.lyrics[state.currentLyricIndex];
+        handlePause(currentLyric.start_time, state.currentLyricIndex);
+        // Handle edge case: isPlaying state not turning into false
+        // after playInRange finished
+        endTimeRef.current = -1;
+      }
+    },
+    [state.progress, state.lyrics, state.currentLyricIndex, state.isPlaying]
+  );
+
   useEffect(() => {
+    console.log(state.duration)
     if (state.progress >= state.duration) {
       handlePause(0, 0);
     }
@@ -227,6 +246,25 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     updateCurrentLyricIndex(index);
   }
 
+  // Sentence Mode
+  function playInRange(startTime: number, endTime: number) {
+    console.log(endTimeRef.current);
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    dispatch({ type: "TOGGLE_PLAY" });
+
+    if (videoElement.paused) {
+      handleProgressChange(startTime);
+      videoElement.play();
+      endTimeRef.current = endTime;
+      return;
+    }
+
+    videoElement.pause();
+    handleProgressChange(startTime);
+  }
+
   return {
     videoRef,
     ...state,
@@ -236,5 +274,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     updateCurrentLyricIndex,
     handlePause,
     handlePlay,
+    playInRange,
   };
 }

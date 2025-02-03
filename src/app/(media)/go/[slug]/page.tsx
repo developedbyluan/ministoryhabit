@@ -17,6 +17,7 @@ import ReadMode from "./ReadMode";
 import { useEffect, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
 import KaraokeMode from "./KaraokeMode";
+import SentenceMode from "./SentenceMode";
 
 export const runtime = "edge";
 
@@ -52,6 +53,8 @@ export default function GoPage() {
   const [text, setText] = useState<string>("");
 
   const [showKaraokeMode, setKaraokeMode] = useState(false);
+
+  const [showSentenceMode, setShowSentenceMode] = useState(false);
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -167,6 +170,8 @@ export default function GoPage() {
     updateCurrentLyricIndex,
     handlePause,
     handlePlay,
+    playInRange,
+    currentLyricIndex,
   } = useVideo({
     src: videoSource,
     text: text,
@@ -182,17 +187,32 @@ export default function GoPage() {
     }
     setKaraokeMode((prev) => !prev);
   };
+
+  const handleShowSentenceMode = () => {
+    const currentLyric = lyrics[currentLyricIndex];
+
+    if (isPlaying) {
+      handlePause(currentLyric.start_time, currentLyricIndex);
+    }
+
+    setShowSentenceMode(true);
+
+    if(showKaraokeMode) {
+      setKaraokeMode(false)
+    }
+  };
+
   return (
     <div className="h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
       <video
         ref={videoRef}
         className={`${
-          showKaraokeMode ? "" : "hidden"
+          showKaraokeMode || showSentenceMode ? "" : "hidden"
         } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-md max-h-full`}
         playsInline
       />
 
-      {showKaraokeMode ? (
+      {showKaraokeMode && (
         <KaraokeMode
           videoRef={videoRef}
           isPlaying={isPlaying}
@@ -208,8 +228,11 @@ export default function GoPage() {
           playbackRate={playbackRate}
           handlePlaybackRateChange={handlePlaybackRateChange}
           handlePlay={handlePlay}
+          handleShowSentenceMode={handleShowSentenceMode}
         />
-      ) : (
+      )}
+
+      {!showKaraokeMode && !showSentenceMode && (
         <ReadMode
           videoRef={videoRef}
           progress={progress}
@@ -222,6 +245,17 @@ export default function GoPage() {
           handlePause={handlePause}
           lessonData={lessonData}
           handleShowKaraokeMode={handleShowKaraokeMode}
+          handleShowSentenceMode={handleShowSentenceMode}
+        />
+      )}
+
+      {showSentenceMode && (
+        <SentenceMode
+          isPlaying={isPlaying}
+          playInRange={playInRange}
+          lyrics={lyrics}
+          currentLyricIndex={currentLyricIndex}
+          updateCurrentLyricIndex={updateCurrentLyricIndex}
         />
       )}
     </div>

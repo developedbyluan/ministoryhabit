@@ -37,6 +37,7 @@ type ReadModeProps = {
   handlePause: (startTime: number, index: number) => void;
   lessonData: LessonData[];
   handleShowKaraokeMode: () => void;
+  handleShowSentenceMode: () => void;
 };
 export default function ReadMode({
   progress,
@@ -49,6 +50,7 @@ export default function ReadMode({
   handlePause,
   lessonData,
   handleShowKaraokeMode,
+  handleShowSentenceMode,
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false);
 
@@ -106,7 +108,7 @@ export default function ReadMode({
                 <Play fill="black" strokeWidth={4} stroke="black" />
               )}
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleShowSentenceMode}>
               <TextSearch className="scale-150" />
             </Button>
           </div>

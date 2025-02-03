@@ -40,6 +40,7 @@ type KaraokeModeProps = {
   playbackRate: number;
   handlePlaybackRateChange: (newRate: number) => void;
   handlePlay: (startTime: number, index: number) => void;
+  handleShowSentenceMode: () => void;
 };
 
 export default function KaraokeMode({
@@ -56,6 +57,7 @@ export default function KaraokeMode({
   playbackRate,
   handlePlaybackRateChange,
   handlePlay,
+  handleShowSentenceMode,
 }: KaraokeModeProps) {
   const [showTranslation, setShowTranslation] = useState(false);
 
@@ -79,7 +81,7 @@ export default function KaraokeMode({
           handlePlay={handlePlay}
         />
       </main>
-      <footer className="">
+      <footer>
         <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4 space-y-4">
           <div className="space-y-2">
             <Slider
@@ -129,7 +131,11 @@ export default function KaraokeMode({
             <Button variant="ghost" onClick={handleShowTranslation}>
               <Languages className="scale-150" />
             </Button>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShowSentenceMode}
+            >
               <TextSearch className="scale-150" />
             </Button>
           </div>
