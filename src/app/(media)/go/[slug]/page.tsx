@@ -215,7 +215,7 @@ export default function GoPage() {
         ref={videoRef}
         className={`${
           showKaraokeMode || showSentenceMode ? "" : "hidden"
-        } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-md max-h-full`}
+        } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-md`}
         playsInline
       />
 

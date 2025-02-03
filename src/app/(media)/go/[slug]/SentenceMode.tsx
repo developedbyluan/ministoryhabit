@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   CornerDownLeft,
   MessageCircleQuestion,
+  Mic,
   Pause,
   Play,
   StepForward,
@@ -65,8 +66,7 @@ export default function SentenceMode({
 
   return (
     <>
-      <main>
-        <div>{previousMode}</div>
+      <main className="overflow-y-auto">
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
           <p>{currentLyric.text}</p>
           <div>
@@ -74,11 +74,11 @@ export default function SentenceMode({
           </div>
         </div>
       </main>
-      <footer>
+      <footer className="mt-auto">
         <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4 space-y-4">
           <div className="play-pause-toggler flex justify-between items-center">
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleGoBackToPreviousMode}
             >
@@ -106,6 +106,12 @@ export default function SentenceMode({
               onClick={() => handlePlayNextLyric(currentLyricIndex)}
             >
               <StepForward className="scale-150" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+            >
+              <Mic className="scale-150" />
             </Button>
           </div>
         </div>
