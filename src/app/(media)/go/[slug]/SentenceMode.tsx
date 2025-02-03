@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { MessageCircleQuestion, Pause, Play, StepForward } from "lucide-react";
+import {
+  CornerDownLeft,
+  MessageCircleQuestion,
+  Pause,
+  Play,
+  StepForward,
+} from "lucide-react";
 
 type Lyric = {
   start_time: number;
@@ -15,6 +21,9 @@ type SentenceModeProps = {
   lyrics: Lyric[];
   currentLyricIndex: number;
   updateCurrentLyricIndex: (index: number) => void;
+  handleShowKaraokeMode: (mode: "karaoke" | "read") => void;
+  handleShowSentenceMode: (mode: "karaoke" | "read") => void;
+  previousMode: "karaoke" | "read" | "";
 };
 
 export default function SentenceMode({
@@ -23,6 +32,9 @@ export default function SentenceMode({
   lyrics,
   currentLyricIndex,
   updateCurrentLyricIndex,
+  handleShowKaraokeMode,
+  handleShowSentenceMode,
+  previousMode,
 }: SentenceModeProps) {
   const currentLyric = lyrics[currentLyricIndex];
 
@@ -38,14 +50,26 @@ export default function SentenceMode({
     playInRange(nextLyric.start_time, nextLyric.end_time);
   };
 
+  const handleGoBackToPreviousMode = () => {
+    if (previousMode === "karaoke") {
+      console.log("back to karaoke");
+      handleShowKaraokeMode("karaoke");
+      return;
+    }
+
+    if (previousMode === "read") {
+      console.log("back to read");
+      handleShowSentenceMode("read");
+    }
+  };
+
   return (
     <>
       <main>
+        <div>{previousMode}</div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
-          {" "}
-          <p>{currentLyric.text}</p>{" "}
+          <p>{currentLyric.text}</p>
           <div>
-            {" "}
             <p className="text-sm text-slate-400">{currentLyric.translation}</p>
           </div>
         </div>
@@ -56,7 +80,11 @@ export default function SentenceMode({
             <Button
               variant="ghost"
               size="sm"
+              onClick={handleGoBackToPreviousMode}
             >
+              <CornerDownLeft className="scale-150" />
+            </Button>
+            <Button variant="ghost" size="sm">
               <MessageCircleQuestion className="scale-150" />
             </Button>
             <Button

@@ -29,7 +29,7 @@ type KaraokeModeProps = {
   videoRef: Ref<HTMLVideoElement>;
   isPlaying: boolean;
   togglePlay: () => void;
-  handleShowKaraokeMode: () => void;
+  handleShowKaraokeMode: (mode: "karaoke" | "read") => void;
   progress: number;
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
@@ -40,7 +40,7 @@ type KaraokeModeProps = {
   playbackRate: number;
   handlePlaybackRateChange: (newRate: number) => void;
   handlePlay: (startTime: number, index: number) => void;
-  handleShowSentenceMode: () => void;
+  handleShowSentenceMode: (mode: "karaoke" | "read") => void;
 };
 
 export default function KaraokeMode({
@@ -101,7 +101,7 @@ export default function KaraokeMode({
             </div>
           </div>
           <div className="play-pause-toggler flex justify-between items-center">
-            <Button variant="outline" size="sm" onClick={handleShowKaraokeMode}>
+            <Button variant="outline" size="sm" onClick={() => handleShowKaraokeMode("karaoke")}>
               <Book className="scale-150" />
             </Button>
             <select
@@ -134,7 +134,7 @@ export default function KaraokeMode({
             <Button
               variant="outline"
               size="sm"
-              onClick={handleShowSentenceMode}
+              onClick={() => handleShowSentenceMode("karaoke")}
             >
               <TextSearch className="scale-150" />
             </Button>

@@ -36,9 +36,10 @@ type ReadModeProps = {
   updateCurrentLyricIndex: (index: number) => void;
   handlePause: (startTime: number, index: number) => void;
   lessonData: LessonData[];
-  handleShowKaraokeMode: () => void;
-  handleShowSentenceMode: () => void;
+  handleShowKaraokeMode: (mode: "karaoke" | "read") => void;
+  handleShowSentenceMode: (mode: "karaoke" | "read") => void;
 };
+
 export default function ReadMode({
   progress,
   isPlaying,
@@ -94,7 +95,7 @@ export default function ReadMode({
       <footer>
         <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4">
           <div className="play-pause-toggler flex justify-between items-center">
-            <Button variant="outline" size="sm" onClick={handleShowKaraokeMode}>
+            <Button variant="outline" size="sm" onClick={() => handleShowKaraokeMode("read")}>
               <TvMinimalPlay className="scale-150" />
             </Button>
             <Button
@@ -108,7 +109,7 @@ export default function ReadMode({
                 <Play fill="black" strokeWidth={4} stroke="black" />
               )}
             </Button>
-            <Button variant="outline" size="sm" onClick={handleShowSentenceMode}>
+            <Button variant="outline" size="sm" onClick={() => handleShowSentenceMode("read")}>
               <TextSearch className="scale-150" />
             </Button>
           </div>

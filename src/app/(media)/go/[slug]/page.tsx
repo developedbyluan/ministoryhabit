@@ -14,7 +14,7 @@ import { useParams, useSearchParams } from "next/navigation";
 
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
 import KaraokeMode from "./KaraokeMode";
 import SentenceMode from "./SentenceMode";
@@ -55,6 +55,8 @@ export default function GoPage() {
   const [showKaraokeMode, setKaraokeMode] = useState(false);
 
   const [showSentenceMode, setShowSentenceMode] = useState(false);
+
+  const previousModeRef = useRef<"karaoke" | "read" | "">("")
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -179,27 +181,32 @@ export default function GoPage() {
     lessonSlug: lessonSlug,
   });
 
-  const handleShowKaraokeMode = () => {
+  const handleShowKaraokeMode = (mode: "karaoke" | "read") => {
     // const remoteVideoUrl = lessonData[0].media_url;
     // setVideoSource(remoteVideoUrl);
     if (!isPlaying) {
       togglePlay();
     }
     setKaraokeMode((prev) => !prev);
+    previousModeRef.current = mode 
+
+    setShowSentenceMode(false)
   };
 
-  const handleShowSentenceMode = () => {
+  const handleShowSentenceMode = (mode: "karaoke" | "read") => {
     const currentLyric = lyrics[currentLyricIndex];
 
     if (isPlaying) {
       handlePause(currentLyric.start_time, currentLyricIndex);
     }
 
-    setShowSentenceMode(true);
+    setShowSentenceMode(prev => !prev);
 
     if(showKaraokeMode) {
       setKaraokeMode(false)
     }
+
+    previousModeRef.current = mode 
   };
 
   return (
@@ -256,6 +263,9 @@ export default function GoPage() {
           lyrics={lyrics}
           currentLyricIndex={currentLyricIndex}
           updateCurrentLyricIndex={updateCurrentLyricIndex}
+          handleShowKaraokeMode={handleShowKaraokeMode}
+          handleShowSentenceMode={handleShowSentenceMode}
+          previousMode={previousModeRef.current}
         />
       )}
     </div>
