@@ -184,7 +184,13 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   useEffect(() => {
     console.log(state.duration);
     if (state.progress >= state.duration) {
-      handlePause(0, 0);
+      // handlePause(state.duration, -1);
+      videoRef.current?.pause()
+      handleProgressChange(state.duration)
+      if (state.isPlaying) {
+        dispatch({ type: "TOGGLE_PLAY" });
+      }
+      // dispatch({type:"TOGGLE_PLAY"})
       // console.log("restart")
     }
   }, [state.progress, state.duration]);

@@ -3,6 +3,8 @@ import {
   CornerDownLeft,
   MessageCircleQuestion,
   Mic,
+  MonitorDown,
+  MonitorUp,
   Pause,
   Play,
   StepForward,
@@ -25,6 +27,8 @@ type SentenceModeProps = {
   handleShowKaraokeMode: (mode: "karaoke" | "read") => void;
   handleShowSentenceMode: (mode: "karaoke" | "read") => void;
   previousMode: "karaoke" | "read" | "";
+  showVideoInSentenceMode: () => void;
+  showVideo: boolean;
 };
 
 export default function SentenceMode({
@@ -36,6 +40,8 @@ export default function SentenceMode({
   handleShowKaraokeMode,
   handleShowSentenceMode,
   previousMode,
+  showVideoInSentenceMode,
+  showVideo,
 }: SentenceModeProps) {
   const currentLyric = lyrics[currentLyricIndex];
 
@@ -66,7 +72,16 @@ export default function SentenceMode({
 
   return (
     <>
-      <main className="overflow-y-auto">
+      <main className="overflow-y-auto space-y-4 border">
+        <div className="flex justify-center">
+          <Button variant="outline" size="sm" onClick={showVideoInSentenceMode}>
+            {showVideo ? (
+              <MonitorDown className="scale-150" />
+            ) : (
+              <MonitorUp className="scale-150" />
+            )}
+          </Button>
+        </div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
           <p>{currentLyric.text}</p>
           <div>
@@ -107,10 +122,7 @@ export default function SentenceMode({
             >
               <StepForward className="scale-150" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-            >
+            <Button variant="ghost" size="sm">
               <Mic className="scale-150" />
             </Button>
           </div>

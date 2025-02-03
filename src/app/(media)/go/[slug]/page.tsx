@@ -56,6 +56,8 @@ export default function GoPage() {
 
   const [showSentenceMode, setShowSentenceMode] = useState(false);
 
+  const [showVideo, setShowVideo] = useState<boolean>(false)
+
   const previousModeRef = useRef<"karaoke" | "read" | "">("")
 
   useEffect(() => {
@@ -209,12 +211,16 @@ export default function GoPage() {
     previousModeRef.current = mode 
   };
 
+  const handleShowVideoInSentenceMode = () => {
+    setShowVideo(prev => !prev)
+  }
+
   return (
     <div className="h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
       <video
         ref={videoRef}
         className={`${
-          showKaraokeMode || showSentenceMode ? "" : "hidden"
+          showKaraokeMode || (showSentenceMode && showVideo) ? "" : "hidden"
         } w-[95%] max-w-[396px] mx-auto rounded-lg shadow-md`}
         playsInline
       />
@@ -266,6 +272,8 @@ export default function GoPage() {
           handleShowKaraokeMode={handleShowKaraokeMode}
           handleShowSentenceMode={handleShowSentenceMode}
           previousMode={previousModeRef.current}
+          showVideoInSentenceMode={handleShowVideoInSentenceMode}
+          showVideo={showVideo}
         />
       )}
     </div>
