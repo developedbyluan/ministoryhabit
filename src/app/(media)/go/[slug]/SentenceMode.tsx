@@ -9,6 +9,7 @@ import {
   Play,
   StepForward,
 } from "lucide-react";
+import { useState } from "react";
 
 type Lyric = {
   start_time: number;
@@ -44,6 +45,7 @@ export default function SentenceMode({
   showVideo,
 }: SentenceModeProps) {
   const currentLyric = lyrics[currentLyricIndex];
+  const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
   //   useEffect(() => {
   //     console.log(currentLyric)
@@ -72,8 +74,8 @@ export default function SentenceMode({
 
   return (
     <>
-      <main className="overflow-y-auto space-y-4 border">
-        <div className="flex justify-center">
+      <main className="overflow-y-auto space-y-4">
+        <div className="flex justify-center mb-auto">
           <Button variant="outline" size="sm" onClick={showVideoInSentenceMode}>
             {showVideo ? (
               <MonitorDown className="scale-150" />
@@ -83,9 +85,28 @@ export default function SentenceMode({
           </Button>
         </div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
-          <p>{currentLyric.text}</p>
+          <p className="text-lg">{currentLyric.text}</p>
           <div>
-            <p className="text-sm text-slate-400">{currentLyric.translation}</p>
+            {showTranslation ? (
+              <p
+                role="button"
+                aria-label="hide translation"
+                className="text-slate-500 hover:font-semibold text-xs"
+                onClick={() => setShowTranslation(false)}
+              >
+                {currentLyric.translation}
+              </p>
+            ) : (
+
+              <p
+                role="button"
+                aria-label="show translation"
+                className="text-slate-500 hover:font-semibold text-xs"
+                onClick={() => setShowTranslation(true)}
+              >
+              Translate Sentence
+              </p>
+            )}
           </div>
         </div>
       </main>
