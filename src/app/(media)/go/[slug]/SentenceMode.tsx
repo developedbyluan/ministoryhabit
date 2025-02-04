@@ -7,11 +7,10 @@ import {
   MonitorUp,
   Pause,
   Play,
-  Plus,
   StepForward,
 } from "lucide-react";
 import { useState } from "react";
-import SentenceModeLookUpChunk from "./SentenceModeLookUpChunk";
+import { TranslatableText } from "./SentenceModeTranslatableText";
 
 type Lyric = {
   start_time: number;
@@ -87,10 +86,7 @@ export default function SentenceMode({
           </Button>
         </div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
-          <p className="text-lg">{currentLyric.text}</p>
-          <div className="text-sm space-y-4">
-            <SentenceModeLookUpChunk text="heello" definition="xin chao" />
-          </div>
+          <TranslatableText text={currentLyric.text} />
           <div>
             {showTranslation ? (
               <p
