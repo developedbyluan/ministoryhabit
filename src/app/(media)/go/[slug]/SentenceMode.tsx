@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { TranslatableText } from "./SentenceModeTranslatableText";
+import VoiceRecorder from "./SentenceModeVoiceRecorder";
 
 type Lyric = {
   start_time: number;
@@ -47,10 +48,7 @@ export default function SentenceMode({
 }: SentenceModeProps) {
   const currentLyric = lyrics[currentLyricIndex];
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
-
-  //   useEffect(() => {
-  //     console.log(currentLyric)
-  //   }, [currentLyricIndex, currentLyric]);
+  const [showVoiceRecorder, setShowVoiceRecorder] = useState<boolean>(false);
 
   const handlePlayNextLyric = (currentLyricIndex: number) => {
     if (isPlaying || currentLyricIndex > lyrics.length - 1) return;
@@ -73,6 +71,10 @@ export default function SentenceMode({
     }
   };
 
+  const handleShowVoiceRecorder = () => {
+    setShowVoiceRecorder((prev) => !prev);
+  };
+
   return (
     <>
       <main className="relative overflow-y-auto space-y-4 px-4">
@@ -86,7 +88,8 @@ export default function SentenceMode({
           </Button>
         </div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
-          <TranslatableText text={currentLyric.text} />
+          {isPlaying ? <span className="leading-relaxed text-lg">{currentLyric.text}</span> : <TranslatableText text={currentLyric.text} />}
+          {showVoiceRecorder && <VoiceRecorder />}
           <div>
             {showTranslation ? (
               <p
@@ -143,7 +146,7 @@ export default function SentenceMode({
             >
               <StepForward className="scale-150" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={handleShowVoiceRecorder}>
               <Mic className="scale-150" />
             </Button>
           </div>
