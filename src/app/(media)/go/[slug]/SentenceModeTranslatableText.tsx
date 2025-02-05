@@ -4,6 +4,8 @@ import * as React from "react"
 import { HoverableText } from "./SentenceModeHoverableText"
 import { SavedTranslations } from "./SentenceModeSavedTranslations"
 import { translateText } from "@/app/actions/translate"
+import { openaiApiLogs } from "@/app/actions/openai-api-logs"
+import { useParams } from "next/navigation"
 
 interface TranslatableTextProps {
   text: string
@@ -19,6 +21,9 @@ export function TranslatableText({ text }: TranslatableTextProps) {
   const [selectedRange, setSelectedRange] = React.useState<[number, number] | null>(null)
   const [firstClick, setFirstClick] = React.useState<number | null>(null)
   const [savedTranslations, setSavedTranslations] = React.useState<Translation[]>([])
+
+  const params: {slug: string} = useParams()
+  // console.log(params.slug)
 
   const handleWordClick = async (index: number) => {
     if (firstClick === null) {
@@ -86,6 +91,8 @@ export function TranslatableText({ text }: TranslatableTextProps) {
           : item,
       ),
     )
+
+    await openaiApiLogs(params.slug, original, "kp_e15445a4c1334aa3a592809f9444e9d9")
   }
 
   return (
