@@ -60,5 +60,17 @@ app.post("/supabase/addToPlaylist", async (c) => {
   return c.json(data);
 });
 
+app.post("/supabase_vocab", async (c) => {
+  const body = await c.req.json();
+  const { data, error } = await supabase
+    .from("collected_vocab")
+    .select("vocab_array")
+    .eq("kinde_id", body.kinde_auth_id);
+
+  if (error) return c.json({ error: error });
+
+  return c.json({data: data});
+});
+
 export const GET = handle(app);
 export const POST = handle(app);
