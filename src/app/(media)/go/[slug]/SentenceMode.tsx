@@ -13,6 +13,9 @@ import { useState } from "react";
 import { TranslatableText } from "./SentenceModeTranslatableText";
 import VoiceRecorder from "./SentenceModeVoiceRecorder";
 
+import { addToGoldlist } from "@/app/actions/add-to-goldlist";
+import { useParams } from "next/navigation";
+
 type Lyric = {
   start_time: number;
   end_time: number;
@@ -75,6 +78,32 @@ export default function SentenceMode({
     setShowVoiceRecorder((prev) => !prev);
   };
 
+  const params: { slug: string } = useParams();
+  const handleAddToGoldlist = async (
+    originalChunk: string,
+    newChunk: string
+  ) => {
+    const { error } = await addToGoldlist(
+      currentLyric.text,
+      originalChunk,
+      newChunk,
+      params.slug,
+      currentLyricIndex,
+      "kp_e15445a4c1334aa3a592809f9444e9d9",
+      currentLyric.start_time,
+      currentLyric.end_time
+    );
+
+    if (error) {
+      // console.log(error);
+      // setErrorMessage
+      return false;
+    }
+
+    // console.log(data);
+    return true;
+  };
+
   return (
     <>
       <main className="relative overflow-y-auto space-y-4 px-4">
@@ -88,7 +117,14 @@ export default function SentenceMode({
           </Button>
         </div>
         <div className="max-w-[396px] w-full px-2 mx-auto space-y-4 flex flex-col overflow-y-auto">
-          {isPlaying ? <span className="leading-relaxed text-lg">{currentLyric.text}</span> : <TranslatableText text={currentLyric.text} />}
+          {isPlaying ? (
+            <span className="leading-relaxed text-lg">{currentLyric.text}</span>
+          ) : (
+            <TranslatableText
+              text={currentLyric.text}
+              handleAddToGoldlist={handleAddToGoldlist}
+            />
+          )}
           {showVoiceRecorder && <VoiceRecorder />}
           <div>
             {showTranslation ? (

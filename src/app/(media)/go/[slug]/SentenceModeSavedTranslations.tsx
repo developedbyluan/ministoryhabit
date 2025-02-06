@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
+import { useState } from "react";
 
 interface Translation {
   original: string;
@@ -10,16 +11,59 @@ interface Translation {
 
 interface SavedTranslationsProps {
   translations: Translation[];
+  handleAddToGoldlist: (
+    originalChunk: string,
+    newChunk: string
+  ) => Promise<boolean>;
 }
 
-export function SavedTranslations({ translations }: SavedTranslationsProps) {
+export function SavedTranslations({
+  translations,
+  handleAddToGoldlist,
+}: SavedTranslationsProps) {
+  const [addedToGoldlist, setAddedToGoldlist] = useState<Set<number>>(
+    new Set()
+  );
+
+  const handleButtonClick = async (
+    index: number,
+    original: string,
+    translation: string
+  ) => {
+    if (addedToGoldlist.has(index)) return;
+
+    const result = await handleAddToGoldlist(original, translation);
+    if (result) {
+      setAddedToGoldlist((prev) => new Set(prev).add(index));
+    }
+  };
+
   return (
     <ScrollArea className="w-full rounded-md p-4">
       <div className="space-y-4">
         {translations.map((item, index) => (
-          <div key={index} className="border-b pb-2 last:border-b-0 flex items-start gap-2">
-            <Button variant="outline" className="h-6 p-1 rounded-full">
-              <Plus />
+          <div
+            key={index}
+            className="border-b pb-2 last:border-b-0 flex items-start gap-2"
+          >
+            <Button
+              data-index={index}
+              variant="outline"
+              className={`h-6 p-1 rounded-full ${
+                addedToGoldlist.has(index)
+                  ? "bg-green-200 border border-green-500"
+                  : ""
+              }`}
+              disabled={item.isLoading || addedToGoldlist.has(index)}
+              onClick={() =>
+                handleButtonClick(index, item.original, item.translation)
+              }
+            >
+              {addedToGoldlist.has(index) ? (
+                <Check stroke="green" strokeWidth={4} />
+              ) : (
+                <Plus />
+              )}
             </Button>
             <div>
               <p className="font-medium">{item.original}</p>
