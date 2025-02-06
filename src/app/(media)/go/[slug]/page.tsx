@@ -159,6 +159,8 @@ export default function GoPage() {
     loadVideo(lessonSlug);
   }, [lessonSlug, lessonData]);
 
+
+
   //
   const {
     videoRef,

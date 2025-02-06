@@ -6,6 +6,7 @@ import {
   storeIndexToLocalStorage,
   storeTotalPlayTimeToLocalStorage,
 } from "@/utils/storeDataToLocalStorage";
+import { addSentenceToLocalStorage } from "@/utils/addSentenceToLocalStorage";
 
 type SubtitleItem = {
   id: number;
@@ -81,7 +82,6 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
   const endTimeRef = useRef<number>(-1);
 
-
   useEffect(() => {
     if (!src) return;
     if (!text) return;
@@ -148,6 +148,15 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   }, [state.currentLyricIndex, lessonSlug]);
 
   useEffect(() => {
+    if(!state.currentLyricIndex) return
+    const oneLyric = state.lyrics[state.currentLyricIndex];
+
+    if (state.progress > oneLyric.end_time) {
+      addSentenceToLocalStorage(oneLyric.text)
+    }
+  }, [state.progress, state.currentLyricIndex]);
+
+  useEffect(() => {
     if (state.isPlaying) {
       videoStartTimeRef.current = Date.now();
     } else {
@@ -163,16 +172,16 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     () => () => {
       if (!endTimeRef.current) return;
       if (!state.lyrics) return;
-      
-      const videoElement = videoRef.current
-      if(!videoElement) return
+
+      const videoElement = videoRef.current;
+      if (!videoElement) return;
 
       if (state.progress >= endTimeRef.current && endTimeRef.current !== -1) {
-        console.log("end")
+        console.log("end");
         const currentLyric = state.lyrics[state.currentLyricIndex];
         handlePause(currentLyric.start_time, state.currentLyricIndex);
-       videoElement.pause() 
-      //  dispatch({type:"TOGGLE_PLAY"})
+        videoElement.pause();
+        //  dispatch({type:"TOGGLE_PLAY"})
         // Handle edge case: isPlaying state not turning into false
         // after playInRange finished
         endTimeRef.current = -1;
@@ -185,8 +194,8 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
     console.log(state.duration);
     if (state.progress >= state.duration) {
       // handlePause(state.duration, -1);
-      videoRef.current?.pause()
-      handleProgressChange(state.duration)
+      videoRef.current?.pause();
+      handleProgressChange(state.duration);
       if (state.isPlaying) {
         dispatch({ type: "TOGGLE_PLAY" });
       }
@@ -236,7 +245,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
 
   // Read Mode
   function handlePause(startTime: number, index: number) {
-    console.log(startTime, index)
+    console.log(startTime, index);
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
