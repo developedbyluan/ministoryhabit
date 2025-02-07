@@ -11,7 +11,7 @@ app.get("/supabase/:slug", async (c) => {
   const slug = c.req.param("slug");
 
   const { data, error } = await supabase
-    .from("media")
+    .from("songs")
     .select("id, title, type, paid, media_url, body, seriesId, thumbnail_url")
     .eq("slug", slug);
 

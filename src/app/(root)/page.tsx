@@ -3,27 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { fetchGenresData } from "@/app/actions/actions";
+import { Genre, Playlist } from "@/types";
+import Image from "next/image";
 
-export const runtime = 'edge';
-
-export interface Song {
-  id: string
-  title: string
-  artist: string
-}
-
-export interface Playlist {
-  id: string
-  name: string
-  songs: Song[]
-}
-
-export interface Genre {
-  id: string
-  name: string
-  playlists: Playlist[]
-  activeTab: "playlists" | "songs"
-}
+export const runtime = "edge";
 
 export default function FavoriteSongs() {
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -111,13 +94,21 @@ function PlaylistsTab({ playlists }: PlaylistsTabProps) {
           <div className="overflow-x-auto">
             <div className="flex space-x-4 pb-4">
               {playlist.songs.map((song) => (
-                <div
+                <Link
                   key={song.id}
-                  className="flex-shrink-0 w-64 p-4 bg-white rounded shadow"
+                  href={`/go/${song.slug}`}
+                  className="flex-shrink-0 w-64 p-4 bg-white rounded shadow hover:shadow-md transition-shadow duration-200"
                 >
+                  <Image
+                    src={song.thumbnail_url}
+                    width={300}
+                    height={200}
+                    alt="thumbnail"
+                    className="rounded-md"
+                  />
                   <p className="font-semibold">{song.title}</p>
                   <p className="text-gray-600">{song.artist}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -136,8 +127,9 @@ function SongsTab({ playlists }: SongsTabProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {playlists.flatMap((playlist) =>
         playlist.songs.map((song) => (
-          <div
+          <Link
             key={song.id}
+            href={`/go/${song.slug}`}
             className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
           >
             <div className="p-4">
@@ -165,7 +157,7 @@ function SongsTab({ playlists }: SongsTabProps) {
                 </button>
               </div>
             </div>
-          </div>
+          </Link>
         ))
       )}
     </div>

@@ -1,20 +1,8 @@
 import supabase from "@/utils/supabase";
 import Link from "next/link";
+import { Playlist, Song } from "@/types";
 
-export const runtime = 'edge';
-
-export interface Song {
-  id: string;
-  title: string;
-  artist: string;
-}
-
-export interface Playlist {
-  id: string;
-  name: string;
-  songs: Song[];
-}
-
+export const runtime = "edge";
 
 async function fetchPlaylist(id: string): Promise<Playlist | null> {
   const { data: playlist, error } = await supabase
@@ -31,11 +19,10 @@ async function fetchPlaylist(id: string): Promise<Playlist | null> {
   return playlist as Playlist;
 }
 
-
-type Params = Promise<{ id: string }>
+type Params = Promise<{ id: string }>;
 
 interface PlaylistPageProps {
-  params: Params 
+  params: Params;
 }
 
 export default async function PlaylistPage({ params }: PlaylistPageProps) {
@@ -77,15 +64,16 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
             </p>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {playlist.songs.map((song: Song) => (
-                <div
+                <Link
                   key={song.id}
+                  href={`/go/${song.slug}`}
                   className="bg-gray-50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
                   <h2 className="text-xl font-semibold mb-2 text-gray-800">
                     {song.title}
                   </h2>
                   <p className="text-gray-600">{song.artist}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
