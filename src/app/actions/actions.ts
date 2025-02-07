@@ -2,6 +2,25 @@
 
 import supabase from "@/utils/supabase"
 
+export interface Song {
+  id: string
+  title: string
+  artist: string
+}
+
+export interface Playlist {
+  id: string
+  name: string
+  songs: Song[]
+}
+
+export interface Genre {
+  id: string
+  name: string
+  playlists: Playlist[]
+  activeTab: "playlists" | "songs"
+}
+
 export async function getVocabulary() {
   try {
     const { data, error } = await supabase
@@ -18,4 +37,16 @@ export async function getVocabulary() {
     return { error: `Failed to fetch vocabulary ${error}` }
   }
 }
+
+export async function fetchGenresData(): Promise<Genre[]> {
+  const { data: genres, error: genresError } = await supabase.from("genres").select("*, playlists(*, songs(*))")
+
+  if (genresError) {
+    console.error("Error fetching genres:", genresError)
+    throw new Error("Failed to fetch genres data")
+  }
+
+  return genres as Genre[]
+}
+
 
