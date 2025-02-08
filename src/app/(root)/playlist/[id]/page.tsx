@@ -34,7 +34,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="max-w-xl mx-auto min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <Link
           href="/"
@@ -62,7 +62,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
             <p className="text-gray-600 mb-6">
               Total songs: {playlist.songs.length}
             </p>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex gap-4 md:grid-cols-2 lg:grid-cols-3">
               {playlist.songs.map((song: Song) => (
                 <Link
                   key={song.id}

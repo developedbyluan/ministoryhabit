@@ -2,7 +2,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="max-w-xl mx-auto flex flex-col h-screen">
+    <div className="bg-slate-400 mx-auto flex flex-col min-h-screen">
       {children}
     </div>
   );

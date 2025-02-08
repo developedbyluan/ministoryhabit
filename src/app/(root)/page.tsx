@@ -34,8 +34,8 @@ export default function FavoriteSongs() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">My Favorite Songs</h1>
+    <div className="max-w-xl bg-white container mx-auto px-4 py-8">
+      {/* <h1 className="text-3xl font-bold mb-8">Dot Habit</h1> */}
       {genres.map((genre) => (
         <div key={genre.id} className="mb-8 h-screen overflow-y-auto">
           <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2">
@@ -82,7 +82,7 @@ function PlaylistsTab({ playlists }: PlaylistsTabProps) {
   return (
     <>
       {playlists.map((playlist) => (
-        <div key={playlist.id} className="mb-6">
+        <div key={playlist.id} className="mb-6 border-0 border-t-2 border-gray-50 p-4">
           <h3 className="text-xl font-medium mb-2">
             <Link
               href={`/playlist/${playlist.id}`}
@@ -124,7 +124,7 @@ interface SongsTabProps {
 
 function SongsTab({ playlists }: SongsTabProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {playlists.flatMap((playlist) =>
         playlist.songs.map((song) => (
           <Link

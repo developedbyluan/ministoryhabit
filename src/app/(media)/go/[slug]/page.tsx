@@ -21,11 +21,6 @@ import SentenceMode from "./SentenceMode";
 
 export const runtime = "edge";
 
-// type Word = {
-//   word: string;
-//   index: number;
-// };
-
 type LessonData = {
   id: number;
   media_url: string;
@@ -217,8 +212,12 @@ export default function GoPage() {
     setShowVideo(prev => !prev)
   }
 
+  if(isLoading) {
+    return "Loading"
+  }
+
   return (
-    <div className="h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
+    <div className="bg-white max-w-xl mx-auto h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
       <video
         ref={videoRef}
         className={`${

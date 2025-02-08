@@ -1,3 +1,5 @@
+"use client"
+
 import { MessageSquareText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -5,6 +7,8 @@ import { Slider } from "@/components/ui/slider";
 import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
 import { Ref, useState } from "react";
 import ReadModeText from "./ReadModeText";
+
+import { useRouter } from 'next/navigation';
 
 type Lyric = {
   start_time: number;
@@ -54,10 +58,16 @@ export default function ReadMode({
   handleShowSentenceMode,
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false);
+  const router = useRouter();
 
   const handleShowIPA = () => {
     setShowIPA((prev) => !prev);
   };
+
+  const handleGoBack = () => {
+    router.back(); // Navigate back to the previous page
+  };
+
   return (
     <>
       {!duration && (
@@ -67,7 +77,7 @@ export default function ReadMode({
       )}
       <header>
         <div className="flex-shrink max-w-[396px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={handleGoBack}>
             <X className="scale-150" />
           </Button>
           <Slider
