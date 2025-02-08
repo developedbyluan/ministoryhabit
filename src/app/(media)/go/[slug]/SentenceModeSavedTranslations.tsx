@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Check, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Translation {
   original: string;
@@ -24,6 +24,7 @@ export function SavedTranslations({
   const [addedToGoldlist, setAddedToGoldlist] = useState<Set<number>>(
     new Set()
   );
+  const [isTranslated, setIsTranslated] = useState<boolean>(false)
 
   const handleButtonClick = async (
     index: number,
@@ -31,6 +32,10 @@ export function SavedTranslations({
     translation: string
   ) => {
     if (addedToGoldlist.has(index)) return;
+    if(translation === "Translation failed") {
+      setIsTranslated(false)
+      return
+    }
 
     const result = await handleAddToGoldlist(original, translation);
     if (result) {
@@ -54,7 +59,7 @@ export function SavedTranslations({
                   ? "bg-green-200 border border-green-500"
                   : ""
               }`}
-              disabled={item.isLoading || addedToGoldlist.has(index)}
+              disabled={item.isLoading || addedToGoldlist.has(index) || !isTranslated}
               onClick={() =>
                 handleButtonClick(index, item.original, item.translation)
               }
