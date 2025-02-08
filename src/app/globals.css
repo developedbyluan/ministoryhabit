@@ -6,6 +6,19 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* handle show/hide video in /notes page */
+#toggle {
+  display: none; /* Hide the checkbox */
+}
+
+.toggle-video {
+  display: none; /* Hide the video by default */
+}
+
+#toggle:checked ~ .toggle-video {
+  display: block; /* Show the paragraph when the checkbox is checked */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
