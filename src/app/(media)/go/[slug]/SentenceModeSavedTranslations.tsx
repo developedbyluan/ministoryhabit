@@ -2,6 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Check, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import EditableText from "./SentenceModeEditableText";
 
 interface Translation {
   original: string;
@@ -24,7 +25,8 @@ export function SavedTranslations({
   const [addedToGoldlist, setAddedToGoldlist] = useState<Set<number>>(
     new Set()
   );
-  const [isTranslated, setIsTranslated] = useState<boolean>(false)
+  const [editedText, setEditedText] = useState<string>("");
+  const [isTranslated, setIsTranslated] = useState<boolean>(false);
 
   const handleButtonClick = async (
     index: number,
@@ -32,15 +34,27 @@ export function SavedTranslations({
     translation: string
   ) => {
     if (addedToGoldlist.has(index)) return;
-    if(translation === "Translation failed") {
-      setIsTranslated(false)
-      return
+
+    if (translation === "Translation failed") {
+      setIsTranslated(false);
+      return;
     }
 
-    const result = await handleAddToGoldlist(original, translation);
+    let result;
+
+    if (editedText !== "") {
+      result = await handleAddToGoldlist(original, editedText);
+    } else {
+      result = await handleAddToGoldlist(original, translation);
+    }
+
     if (result) {
       setAddedToGoldlist((prev) => new Set(prev).add(index));
     }
+  };
+
+  const handleTextChange = (newText: string) => {
+    setEditedText(newText);
   };
 
   return (
@@ -59,7 +73,9 @@ export function SavedTranslations({
                   ? "bg-green-200 border border-green-500"
                   : ""
               }`}
-              disabled={item.isLoading || addedToGoldlist.has(index) || !isTranslated}
+              disabled={
+                item.isLoading || addedToGoldlist.has(index) || !isTranslated
+              }
               onClick={() =>
                 handleButtonClick(index, item.original, item.translation)
               }
@@ -72,16 +88,20 @@ export function SavedTranslations({
             </Button>
             <div>
               <p className="font-medium">{item.original}</p>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 {item.isLoading ? (
                   <span className="inline-flex items-center">
                     <span className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
                     Translating...
                   </span>
                 ) : (
-                  item.translation
+                  <EditableText
+                    initialText={item.translation}
+                    className="text-sm font-semibold"
+                    onTextChange={(newText) => handleTextChange(newText)}
+                  />
                 )}
-              </p>
+              </div>
             </div>
           </div>
         ))}

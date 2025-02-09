@@ -191,7 +191,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   );
 
   useEffect(() => {
-    console.log(state.duration);
+    // console.log(state.duration);
     if (state.progress >= state.duration) {
       // handlePause(state.duration, -1);
       videoRef.current?.pause();
