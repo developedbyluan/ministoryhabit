@@ -14,6 +14,7 @@ import {
   groupDataByPeriod,
 } from "@/utils/continue-studying";
 import { StatsChart } from "./StatsChart";
+import {getKindeServerSession, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/server";
 
 type Song = {
     id: any;
@@ -49,6 +50,9 @@ interface PlaylistGroup {
 export default async function ProgressLogger() {
   const { data: logs, error: logsError } = await fetchLogs();
   const { data: statsData, error: statsError } = await fetchStats();
+  const {getUser} = getKindeServerSession();
+  const user = await getUser();
+  console.log(user);
 
   const processedLogs = logs
     ? logs.reduce<Record<string, ProcessedLog>>((acc, log) => {
@@ -112,6 +116,7 @@ export default async function ProgressLogger() {
         >
           <Button type="submit">Insert Sample Data</Button>
         </form>
+        <LogoutLink><Button>Logout</Button></LogoutLink>
         {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
         {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
         <Tabs defaultValue="all-lessons" className="w-full">
