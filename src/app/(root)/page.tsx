@@ -3,10 +3,15 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchLogs, fetchStats } from "@/app/actions/continue-studying";
+import { Button } from "@/components/ui/button";
+import {
+  fetchLogs,
+  fetchStats,
+  insertUserProgress,
+} from "@/app/actions/continue-studying";
 import { groupDataByPeriod } from "@/utils/continue-studying";
 import { StatsChart } from "./StatsChart";
-import { ProgressForm } from "./ProgressForm";
+// import { ProgressForm } from "./ProgressForm";
 import { LessonCard } from "./LessonCard";
 import { PlaylistCard } from "./PlaylistCard";
 
@@ -31,6 +36,41 @@ export default function ContinueStudying() {
   const [logsError, setLogsError] = useState<string | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSyncSuccessful, setIsSyncSuccessful] = useState<boolean>(false);
+
+  const handleInsertUserProgress = async () => {
+    try {
+      const storedData = localStorage.getItem("stats");
+      const localData = storedData ? JSON.parse(storedData) : [];
+
+      if (!Array.isArray(localData) || localData.length === 0) {
+        setIsSyncSuccessful(true);
+        return;
+      }
+
+      const result = await insertUserProgress(localData);
+      // console.log(result.success);
+      if (result.success) {
+        setIsSyncSuccessful(true);
+        localStorage.setItem("stats", "[]");
+      }
+    } catch (error) {
+      throw new Error("Error parsing or inserting data:", error!);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const storedData = localStorage.getItem("stats");
+      const localData = storedData ? JSON.parse(storedData) : [];
+
+      if(localData.length <= 0) {
+        setIsSyncSuccessful(true)
+      }
+    } catch (error) {
+      throw new Error("Error parsing or inserting data:", error!);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,7 +167,10 @@ export default function ContinueStudying() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Continue Studying</h1>
-      <ProgressForm setLogs={setLogs} />
+      {!isSyncSuccessful && (
+        <Button onClick={handleInsertUserProgress}>Sync</Button>
+      )}
+      {/* <ProgressForm setLogs={setLogs} /> */}
       {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
       {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
       <Tabs defaultValue="all-lessons" className="w-full">
