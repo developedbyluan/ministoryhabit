@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   fetchLogs,
@@ -11,7 +12,6 @@ import {
 } from "@/app/actions/continue-studying";
 import { groupDataByPeriod } from "@/utils/continue-studying";
 import { StatsChart } from "./StatsChart";
-// import { ProgressForm } from "./ProgressForm";
 import { LessonCard } from "./LessonCard";
 import { PlaylistCard } from "./PlaylistCard";
 
@@ -29,6 +29,22 @@ type Log = {
 };
 
 type StatsResult = { date: string; total_playing_time: number };
+
+type ProcessedLog = {
+  lesson_slug: string;
+  playlist_name: string;
+  song_title: string;
+  latest_date: string;
+  latest_time: number;
+  total_playing_time: number;
+};
+
+type Lesson = {
+  title: string;
+  slug: string;
+  latestTime: number;
+  totalPlayingTime: number;
+};
 
 export default function ContinueStudying() {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -64,8 +80,8 @@ export default function ContinueStudying() {
       const storedData = localStorage.getItem("stats");
       const localData = storedData ? JSON.parse(storedData) : [];
 
-      if(localData.length <= 0) {
-        setIsSyncSuccessful(true)
+      if (localData.length <= 0) {
+        setIsSyncSuccessful(true);
       }
     } catch (error) {
       throw new Error("Error parsing or inserting data:", error!);
@@ -85,6 +101,7 @@ export default function ContinueStudying() {
 
         const statsResult = await fetchStats();
         if (statsResult.success) {
+          console.log(statsResult.data);
           setStatsData(statsResult.data);
         } else {
           setStatsError(statsResult.error || null);
@@ -102,7 +119,7 @@ export default function ContinueStudying() {
   }, []);
 
   const processedLogs = logs
-    ? logs.reduce<Record<string, any>>((acc, log) => {
+    ? logs.reduce<Record<string, ProcessedLog>>((acc, log) => {
         if (!acc[log.lesson_slug]) {
           acc[log.lesson_slug] = {
             lesson_slug: log.lesson_slug,
@@ -130,10 +147,10 @@ export default function ContinueStudying() {
     : {};
 
   const sortedLogs = Object.values(processedLogs).sort(
-    (a: any, b: any) => b.latest_time - a.latest_time
+    (a, b) => b.latest_time - a.latest_time
   );
 
-  const groupedByPlaylist = sortedLogs.reduce((acc, log) => {
+  const groupedByPlaylist = sortedLogs.reduce<Record<string, { lessons: Lesson[]; totalTime: number }>>((acc, log) => {
     if (!acc[log.playlist_name]) {
       acc[log.playlist_name] = { lessons: [], totalTime: 0 };
     }
@@ -161,7 +178,11 @@ export default function ContinueStudying() {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-24">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -181,7 +202,7 @@ export default function ContinueStudying() {
         </TabsList>
         <TabsContent value="all-lessons">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {sortedLogs.map((log: any) => (
+            {sortedLogs.map((log) => (
               <LessonCard key={log.lesson_slug} lesson={log} />
             ))}
           </div>
@@ -189,7 +210,7 @@ export default function ContinueStudying() {
         <TabsContent value="grouped-by-playlist">
           <div className="grid gap-8">
             {Object.entries(groupedByPlaylist).map(
-              ([playlistName, data]: [string, any]) => (
+              ([playlistName, data]) => (
                 <PlaylistCard
                   key={playlistName}
                   playlistName={playlistName}

@@ -32,9 +32,9 @@ export function PlaylistCard({ playlistName, data }: PlaylistCardProps) {
                 <CardTitle className="text-sm">{lesson.title}</CardTitle>
               </CardHeader>
               <CardContent className="pt-2">
-                <p className="text-xs mb-1">
+                {/* <p className="text-xs mb-1">
                   Latest time: {formatTime(lesson.latestTime)}
-                </p>
+                </p> */}
                 <p className="text-xs mb-2">
                   Total time: {formatTime(lesson.totalPlayingTime)}
                 </p>

@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Check, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditableText from "./SentenceModeEditableText";
 
 interface Translation {

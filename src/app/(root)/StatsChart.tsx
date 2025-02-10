@@ -32,7 +32,7 @@ export function StatsChart({
             fontSize={12}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => `${Math.floor(value / 60)}m`}
+            tickFormatter={(value) => `${Math.floor(value / (60 * 1000))}m`}
           />
           <Tooltip
             formatter={(value: number) => formatTime(value)}

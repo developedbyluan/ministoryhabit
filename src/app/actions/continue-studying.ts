@@ -50,41 +50,6 @@ function aggregateLessonData(lessonDataFromLocalStorage: LessonData[]) {
   return Array.from(lessonMap.values());
 }
 
-// export async function insertData(formData: FormData) {
-//   const userData = {
-//     lesson_slug: formData.get("lesson_slug"),
-//     date: formData.get("date"),
-//     latest_time: Number.parseInt(formData.get("latest_time") as string),
-//     total_playing_time: Number.parseInt(
-//       formData.get("total_playing_time") as string
-//     ),
-//     playlist_id: formData.get("playlist_id"),
-//   };
-
-//   try {
-//     const { data, error } = await supabase
-//       .from("users_progress_logs")
-//       .insert([userData]).select(`
-//         id,
-//         lesson_slug,
-//         date,
-//         latest_time,
-//         total_playing_time,
-//         playlists(id, name, songs(id, title, slug))
-//       `);
-
-//     if (error) throw error;
-
-//     return { success: true, data };
-//   } catch (error) {
-//     console.error("Error inserting data:", error);
-//     return {
-//       success: false,
-//       error: "Failed to insert data. Please try again.",
-//     };
-//   }
-// }
-
 export async function insertUserProgress(localLessonData: LessonData[]) {
   try {
     const parsedData = localLessonData.map((item) =>

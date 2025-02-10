@@ -1,3 +1,5 @@
+type StatsResult = { date: string; total_playing_time: number };
+
 export function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
@@ -6,7 +8,8 @@ export function formatDate(dateString: string): string {
   });
 }
 
-export function formatTime(seconds: number): string {
+export function formatTime(milliSeconds: number): string {
+  const seconds = milliSeconds / 1000
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
@@ -15,15 +18,15 @@ export function formatTime(seconds: number): string {
   if (hours > 0) parts.push(`${hours}h`);
   if (minutes > 0) parts.push(`${minutes}m`);
   if (remainingSeconds > 0 || parts.length === 0)
-    parts.push(`${remainingSeconds}s`);
+    parts.push(`${Math.round(remainingSeconds)}s`);
 
   return parts.join(" ");
 }
 
 export function groupDataByPeriod(
-  data: any[],
+  data: StatsResult[],
   period: "day" | "week" | "month"
-): {date: string; total_time: number}[] {
+): { date: string; total_time: number }[] {
   const groupedData = data.reduce<Record<string, number>>((acc, item) => {
     let key;
     const date = new Date(item.date);

@@ -26,9 +26,9 @@ export function LessonCard({ lesson }: LessonCardProps) {
         <p className="text-sm mb-1">
           Latest session: {formatDate(lesson.latest_date)}
         </p>
-        <p className="text-sm mb-1">
+        {/* <p className="text-sm mb-1">
           Time spent: {formatTime(lesson.latest_time)}
-        </p>
+        </p> */}
         <p className="text-sm font-semibold">
           Total time: {formatTime(lesson.total_playing_time)}
         </p>
