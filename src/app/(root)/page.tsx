@@ -1,165 +1,190 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { fetchGenresData } from "@/app/actions/actions";
-import { Genre, Playlist } from "@/types";
-import Image from "next/image";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { fetchLogs, fetchStats } from "@/app/actions/continue-studying";
+import { groupDataByPeriod } from "@/utils/continue-studying";
+import { StatsChart } from "./StatsChart";
+import { ProgressForm } from "./ProgressForm";
+import { LessonCard } from "./LessonCard";
+import { PlaylistCard } from "./PlaylistCard";
 
 export const runtime = "edge";
 
-export default function FavoriteSongs() {
-  const [genres, setGenres] = useState<Genre[]>([]);
+type Song = { id: number; title: string; slug: string };
+type Playlist = { id: number; name: string; songs: Song[] };
+type Log = {
+  id: number;
+  lesson_slug: string;
+  date: string;
+  latest_time: number;
+  total_playing_time: number;
+  playlists: Playlist[];
+};
+
+type StatsResult = { date: string; total_playing_time: number };
+
+export default function ContinueStudying() {
+  const [logs, setLogs] = useState<Log[]>([]);
+  const [statsData, setStatsData] = useState<StatsResult[] | undefined>([]);
+  const [logsError, setLogsError] = useState<string | null>(null);
+  const [statsError, setStatsError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchGenresData()
-      .then((fetchedGenres) => {
-        const genresWithTabs = fetchedGenres.map((genre) => ({
-          ...genre,
-          activeTab: "playlists" as const,
-        }));
-        setGenres(genresWithTabs);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch genres:", error);
-      });
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const logsResult = await fetchLogs();
+        if (logsResult.success) {
+          setLogs(logsResult.data || []);
+        } else {
+          setLogsError(logsResult.error || null);
+        }
+
+        const statsResult = await fetchStats();
+        if (statsResult.success) {
+          setStatsData(statsResult.data);
+        } else {
+          setStatsError(statsResult.error || null);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLogsError("Failed to fetch logs. Please try again.");
+        setStatsError("Failed to fetch stats. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const setGenreActiveTab = (genreId: string, tab: "playlists" | "songs") => {
-    setGenres((prevGenres) =>
-      prevGenres.map((genre) =>
-        genre.id === genreId ? { ...genre, activeTab: tab } : genre
-      )
-    );
-  };
+  const processedLogs = logs
+    ? logs.reduce<Record<string, any>>((acc, log) => {
+        if (!acc[log.lesson_slug]) {
+          acc[log.lesson_slug] = {
+            lesson_slug: log.lesson_slug,
+            playlist_name:
+              (log.playlists as unknown as Playlist)?.name || "Unknown",
+            song_title:
+              (log.playlists as unknown as Playlist)?.songs?.find(
+                (song) => song.slug === log.lesson_slug
+              )?.title || "Unknown",
+            latest_date: log.date,
+            latest_time: log.latest_time,
+            total_playing_time: 0,
+          };
+        }
 
-  return (
-    <div className="max-w-xl bg-white container mx-auto px-4 py-8">
-      {/* <h1 className="text-3xl font-bold mb-8">Dot Habit</h1> */}
-      {genres.map((genre) => (
-        <div key={genre.id} className="mb-8 h-screen overflow-y-auto">
-          <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2">
-            {genre.name}
-          </h2>
-          <div className="mb-4">
-            <button
-              className={`mr-4 px-4 py-2 rounded ${
-                genre.activeTab === "playlists"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => setGenreActiveTab(genre.id, "playlists")}
-            >
-              Playlists
-            </button>
-            <button
-              className={`px-4 py-2 rounded ${
-                genre.activeTab === "songs"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => setGenreActiveTab(genre.id, "songs")}
-            >
-              Songs
-            </button>
-          </div>
-          {genre.activeTab === "playlists" ? (
-            <PlaylistsTab playlists={genre.playlists} />
-          ) : (
-            <SongsTab playlists={genre.playlists} />
-          )}
-        </div>
-      ))}
-    </div>
+        acc[log.lesson_slug].total_playing_time += log.total_playing_time;
+
+        if (log.date > acc[log.lesson_slug].latest_date) {
+          acc[log.lesson_slug].latest_date = log.date;
+          acc[log.lesson_slug].latest_time = log.latest_time;
+        }
+
+        return acc;
+      }, {})
+    : {};
+
+  const sortedLogs = Object.values(processedLogs).sort(
+    (a: any, b: any) => b.latest_time - a.latest_time
   );
-}
 
-interface PlaylistsTabProps {
-  playlists: Playlist[];
-}
+  const groupedByPlaylist = sortedLogs.reduce((acc, log) => {
+    if (!acc[log.playlist_name]) {
+      acc[log.playlist_name] = { lessons: [], totalTime: 0 };
+    }
+    acc[log.playlist_name].lessons.push({
+      title: log.song_title,
+      slug: log.lesson_slug,
+      latestTime: log.latest_time,
+      totalPlayingTime: log.total_playing_time,
+    });
+    acc[log.playlist_name].totalTime += log.total_playing_time;
+    return acc;
+  }, {});
 
-function PlaylistsTab({ playlists }: PlaylistsTabProps) {
-  return (
-    <>
-      {playlists.map((playlist) => (
-        <div key={playlist.id} className="mb-6 border-0 border-t-2 border-gray-50 p-4">
-          <h3 className="text-xl font-medium mb-2">
-            <Link
-              href={`/playlist/${playlist.id}`}
-              className="text-blue-600 hover:underline"
-            >
-              {playlist.name}
-            </Link>
-          </h3>
-          <div className="overflow-x-auto">
-            <div className="flex space-x-4 pb-4">
-              {playlist.songs.map((song) => (
-                <Link
-                  key={song.id}
-                  href={`/go/${song.slug}`}
-                  className="flex-shrink-0 w-64 p-4 bg-white rounded shadow hover:shadow-md transition-shadow duration-200"
-                >
-                  <Image
-                    src={song.thumbnail_url}
-                    width={300}
-                    height={200}
-                    alt="thumbnail"
-                    className="rounded-md"
-                  />
-                  <p className="font-semibold">{song.title}</p>
-                  <p className="text-gray-600">{song.artist}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
-    </>
+  const dailyData: { date: string; total_time: number }[] = groupDataByPeriod(
+    statsData || [],
+    "day"
   );
-}
+  const weeklyData: { date: string; total_time: number }[] = groupDataByPeriod(
+    statsData || [],
+    "week"
+  );
+  const monthlyData: { date: string; total_time: number }[] = groupDataByPeriod(
+    statsData || [],
+    "month"
+  );
 
-interface SongsTabProps {
-  playlists: Playlist[];
-}
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-function SongsTab({ playlists }: SongsTabProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {playlists.flatMap((playlist) =>
-        playlist.songs.map((song) => (
-          <Link
-            key={song.id}
-            href={`/go/${song.slug}`}
-            className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
-          >
-            <div className="p-4">
-              <h4 className="text-lg font-semibold text-gray-800 mb-1 truncate">
-                {song.title}
-              </h4>
-              <p className="text-sm text-gray-600 mb-2">{song.artist}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                  {playlist.name}
-                </span>
-                <button className="text-blue-500 hover:text-blue-700 transition-colors duration-300">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </Link>
-        ))
-      )}
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Continue Studying</h1>
+      <ProgressForm setLogs={setLogs} />
+      {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
+      {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
+      <Tabs defaultValue="all-lessons" className="w-full">
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
+          <TabsTrigger value="all-lessons">All Lessons</TabsTrigger>
+          <TabsTrigger value="grouped-by-playlist">Courses</TabsTrigger>
+          <TabsTrigger value="stats">Stats</TabsTrigger>
+        </TabsList>
+        <TabsContent value="all-lessons">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {sortedLogs.map((log: any) => (
+              <LessonCard key={log.lesson_slug} lesson={log} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="grouped-by-playlist">
+          <div className="grid gap-8">
+            {Object.entries(groupedByPlaylist).map(
+              ([playlistName, data]: [string, any]) => (
+                <PlaylistCard
+                  key={playlistName}
+                  playlistName={playlistName}
+                  data={data}
+                />
+              )
+            )}
+          </div>
+        </TabsContent>
+        <TabsContent value="stats">
+          <div className="grid gap-8">
+            <Card className="w-full max-w-md mx-auto">
+              <CardHeader>
+                <CardTitle>Daily Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <StatsChart data={dailyData} />
+              </CardContent>
+            </Card>
+            <Card className="w-full max-w-md mx-auto">
+              <CardHeader>
+                <CardTitle>Weekly Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <StatsChart data={weeklyData} />
+              </CardContent>
+            </Card>
+            <Card className="w-full max-w-md mx-auto">
+              <CardHeader>
+                <CardTitle>Monthly Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <StatsChart data={monthlyData} />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

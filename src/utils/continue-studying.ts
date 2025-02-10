@@ -21,40 +21,37 @@ export function formatTime(seconds: number): string {
 }
 
 export function groupDataByPeriod(
-  // Accept an array of data items and a period type
-  data: Array<{ date: string; total_playing_time: number }>,
+  data: any[],
   period: "day" | "week" | "month"
-): Array<{ date: string; total_time: number }> {
-  // First, reduce the data into groups based on the specified period
-  const groupedData = data.reduce((acc: Record<string, number>, item) => {
-    // Create a Date object from the item's date string
+): {date: string; total_time: number}[] {
+  const groupedData = data.reduce<Record<string, number>>((acc, item) => {
+    let key;
     const date = new Date(item.date);
 
-    // Determine the appropriate key based on the period type
-    const key =
-      period === "day"
-        ? // For daily grouping, use YYYY-MM-DD format
-          date.toISOString().split("T")[0]
-        : period === "week"
-        ? // For weekly grouping, find the start of the week (Sunday)
-          // and format as YYYY-MM-DD
-          new Date(date.setDate(date.getDate() - date.getDay()))
-            .toISOString()
-            .split("T")[0]
-        : // For monthly grouping, use YYYY-MM format
-          `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-            2,
-            "0"
-          )}`;
+    if (period === "day") {
+      key = date.toISOString().split("T")[0];
+    } else if (period === "week") {
+      const weekStart = new Date(date.setDate(date.getDate() - date.getDay()));
+      key = weekStart.toISOString().split("T")[0];
+    } else if (period === "month") {
+      key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}`;
+    }
 
-    // Add the current item's playing time to the accumulated total
-    // If this is the first item for this key, initialize with 0
-    acc[key] = (acc[key] || 0) + item.total_playing_time;
+    if (key !== undefined) {
+      acc[key] = (acc[key] || 0) + item.total_playing_time;
+    }
+
+    // if (!acc[key]) {
+    //   acc[key] = 0;
+    // }
+    // acc[key] += item.total_playing_time;
 
     return acc;
   }, {});
 
-  // Convert the grouped data object into an array of date/total_time objects
   return Object.entries(groupedData).map(([date, total_time]) => ({
     date,
     total_time,
