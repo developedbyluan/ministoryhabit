@@ -14,7 +14,7 @@ export default function SqueezePage() {
             no boring textbooks, confusing grammar rules or endless memorization required 
           </p>
         </div>
-       <SignupForm redirectURL="/continue-studying"/>
+       <SignupForm redirectURL="/"/>
       </div>
     </div>
   );

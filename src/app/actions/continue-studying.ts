@@ -2,6 +2,7 @@
 
 import supabase from "@/utils/supabase";
 import { z } from "zod"; // Type validation
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 type LessonData = {
   lesson_slug: string;
@@ -20,7 +21,10 @@ const LessonDataSchema = z.object({
   playlist_id: z.string().uuid(), // Ensure valid UUID
 });
 
-function aggregateLessonData(lessonDataFromLocalStorage: LessonData[]) {
+function aggregateLessonData(
+  lessonDataFromLocalStorage: LessonData[],
+  kindeId: string
+) {
   // Create a map to group lessons by their unique combination of slug and date
   const lessonMap = new Map();
 
@@ -42,6 +46,7 @@ function aggregateLessonData(lessonDataFromLocalStorage: LessonData[]) {
         latest_time: lesson.time,
         total_playing_time: lesson.playing_time,
         playlist_id: lesson.playlist_id,
+        kinde_id: kindeId,
       });
     }
   });
@@ -57,15 +62,20 @@ export async function insertUserProgress(localLessonData: LessonData[]) {
     );
 
     // TODO: Attach user ID to each record to the aggregated data
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    // console.log(user);
 
     const { data, error } = await supabase
       .from("users_progress_logs")
-      .insert(aggregateLessonData(parsedData)).select(`
+      .insert(aggregateLessonData(parsedData, user.id)).select(`
         id,
         lesson_slug,
         date,
         latest_time,
         total_playing_time,
+        kinde_id,
         playlists(id, name, songs(id, title, slug))
       `);
 
@@ -83,6 +93,10 @@ export async function insertUserProgress(localLessonData: LessonData[]) {
 
 export async function fetchLogs() {
   try {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    // console.log(user);
     const { data, error } = await supabase.from("users_progress_logs").select(`
       id,
       lesson_slug,
@@ -90,7 +104,7 @@ export async function fetchLogs() {
       latest_time,
       total_playing_time,
       playlists(id, name, songs(id, title, slug))
-    `);
+    `).eq("kinde_id", user.id);
 
     if (error) throw error;
 
@@ -103,9 +117,15 @@ export async function fetchLogs() {
 
 export async function fetchStats() {
   try {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    // console.log(user);
+
     const { data, error } = await supabase
       .from("users_progress_logs")
       .select("date, total_playing_time")
+      .eq("kinde_id", user.id)
       .order("date", { ascending: true });
 
     if (error) throw error;
