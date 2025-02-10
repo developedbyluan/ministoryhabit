@@ -59,16 +59,13 @@ export default function ContinueStudying() {
       const storedData = localStorage.getItem("stats");
       const localData = storedData ? JSON.parse(storedData) : [];
 
-      if (!Array.isArray(localData) || localData.length === 0) {
-        setIsSyncSuccessful(true);
-        return;
-      }
+      if (!Array.isArray(localData) || localData.length === 0) return;
 
       const result = await insertUserProgress(localData);
       // console.log(result.success);
       if (result.success) {
-        setIsSyncSuccessful(true);
         localStorage.setItem("stats", "[]");
+        window.location.reload();
       }
     } catch (error) {
       throw new Error("Error parsing or inserting data:", error!);
@@ -150,7 +147,9 @@ export default function ContinueStudying() {
     (a, b) => b.latest_time - a.latest_time
   );
 
-  const groupedByPlaylist = sortedLogs.reduce<Record<string, { lessons: Lesson[]; totalTime: number }>>((acc, log) => {
+  const groupedByPlaylist = sortedLogs.reduce<
+    Record<string, { lessons: Lesson[]; totalTime: number }>
+  >((acc, log) => {
     if (!acc[log.playlist_name]) {
       acc[log.playlist_name] = { lessons: [], totalTime: 0 };
     }
@@ -187,10 +186,14 @@ export default function ContinueStudying() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Continue Studying</h1>
-      {!isSyncSuccessful && (
-        <Button onClick={handleInsertUserProgress}>Sync</Button>
-      )}
+      <div className="flex justify-between items-baseline">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Continue Studying
+        </h1>
+        {!isSyncSuccessful && (
+          <Button onClick={handleInsertUserProgress}>Sync</Button>
+        )}
+      </div>
       {/* <ProgressForm setLogs={setLogs} /> */}
       {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
       {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
@@ -209,15 +212,13 @@ export default function ContinueStudying() {
         </TabsContent>
         <TabsContent value="grouped-by-playlist">
           <div className="grid gap-8">
-            {Object.entries(groupedByPlaylist).map(
-              ([playlistName, data]) => (
-                <PlaylistCard
-                  key={playlistName}
-                  playlistName={playlistName}
-                  data={data}
-                />
-              )
-            )}
+            {Object.entries(groupedByPlaylist).map(([playlistName, data]) => (
+              <PlaylistCard
+                key={playlistName}
+                playlistName={playlistName}
+                data={data}
+              />
+            ))}
           </div>
         </TabsContent>
         <TabsContent value="stats">

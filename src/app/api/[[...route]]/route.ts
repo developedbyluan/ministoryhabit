@@ -29,6 +29,35 @@ app.get("/supabase/:slug", async (c) => {
   return c.json(data);
 });
 
+app.get("/supabase_extra/:slug", async (c) => {
+  const slug = c.req.param("slug");
+
+  const { data, error } = await supabase
+    .from("songs")
+    .select(
+      "id, title, type, paid, media_url, body, thumbnail_url, playlists(id, name)"
+    )
+    .eq("slug", slug)
+    .single();
+
+  if (error) return c.json({ error: error });
+
+  // {
+  //   "id": "7dcbb5f3-3f52-407d-94ff-8c3de7c82792",
+  //   "title": "Bài phát biểu nhậm chức đầy đủ năm 2025 của Tổng thống Donald Trump",
+  //   "type": "video",
+  //   "paid": false,
+  //   "body": "..."
+  //   "media_url": "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4",
+  //   "thumbnail_url": "https://res.cloudinary.com/dqssqzt3y/image/upload/v1738924547/trump-inaguration-thumbnail_zh49yt.jpg",
+  //   "playlists": {
+  //     "id": "490944ad-4474-44d7-bc29-5e00877466b6",
+  //     "name": "Unshakable Confidence"
+  //   }
+  // }
+  return c.json(data);
+});
+
 app.post("/supabase/addToPlaylist", async (c) => {
   // https://supabase.com/docs/reference/javascript/using-filters
   // https://supabase.com/docs/reference/javascript/upsert
@@ -69,7 +98,7 @@ app.post("/supabase_vocab", async (c) => {
 
   if (error) return c.json({ error: error });
 
-  return c.json({data: data});
+  return c.json({ data: data });
 });
 
 export const GET = handle(app);

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatTime } from "@/utils/continue-studying";
+import { Button } from "@/components/ui/button";
 
 type PlaylistCardProps = {
   playlistName: string;
@@ -35,14 +36,14 @@ export function PlaylistCard({ playlistName, data }: PlaylistCardProps) {
                 {/* <p className="text-xs mb-1">
                   Latest time: {formatTime(lesson.latestTime)}
                 </p> */}
-                <p className="text-xs mb-2">
+                <p className="text-xs mb-4">
                   Total time: {formatTime(lesson.totalPlayingTime)}
                 </p>
                 <Link
                   href={`/go/${lesson.slug}`}
                   className="text-primary hover:underline text-xs"
                 >
-                  Go to lesson
+                  <Button>Go to lesson</Button>
                 </Link>
               </CardContent>
             </Card>

@@ -72,9 +72,10 @@ interface UseVideoProps {
   text: string;
   lineIndex: number | null;
   lessonSlug: string;
+  playlistId: string
 }
 
-export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
+export function useVideo({ src, text, lineIndex, lessonSlug, playlistId }: UseVideoProps) {
   const [state, dispatch] = useReducer(videoReducer, initialState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -157,6 +158,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
   }, [state.progress, state.currentLyricIndex]);
 
   useEffect(() => {
+    if(!playlistId) return
     if (state.isPlaying) {
       videoStartTimeRef.current = Date.now();
     } else {
@@ -164,7 +166,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug }: UseVideoProps) {
       const playingTime = Date.now() - videoStartTimeRef.current;
       // console.log("playingTime in seconds", playingTime / 1000)
 
-      storeTotalPlayTimeToLocalStorage(lessonSlug, playingTime);
+      storeTotalPlayTimeToLocalStorage(lessonSlug, playingTime, playlistId);
     }
   }, [state.isPlaying, lessonSlug]);
 

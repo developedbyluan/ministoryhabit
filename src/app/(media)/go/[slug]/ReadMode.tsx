@@ -10,23 +10,14 @@ import ReadModeText from "./ReadModeText";
 
 import { useRouter } from 'next/navigation';
 
+import { LessonData } from "@/types";
+
 type Lyric = {
   start_time: number;
   end_time: number;
   text: string;
   ipa: string;
   translation: string;
-};
-
-type LessonData = {
-  id: number;
-  media_url: string;
-  paid: boolean;
-  title: string;
-  type: "video" | "audio";
-  body: string;
-  thumbnail_url: string;
-  seriesId: number;
 };
 
 type ReadModeProps = {
@@ -39,7 +30,7 @@ type ReadModeProps = {
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
   handlePause: (startTime: number, index: number) => void;
-  lessonData: LessonData[];
+  lessonData: LessonData;
   handleShowKaraokeMode: (mode: "karaoke" | "read") => void;
   handleShowSentenceMode: (mode: "karaoke" | "read") => void;
 };

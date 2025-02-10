@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import type { LessonData } from "@/types";
 
 type Lyric = {
   start_time: number;
@@ -8,22 +9,11 @@ type Lyric = {
   translation: string;
 };
 
-type LessonData = {
-  id: number;
-  media_url: string;
-  paid: boolean;
-  title: string;
-  type: "video" | "audio";
-  body: string;
-  thumbnail_url: string;
-  seriesId: number;
-};
-
 type KaraokeModeTextProps = {
   lyrics: Lyric[];
   currentTime: number;
   updateCurrentLyricIndex: (index: number) => void;
-  lessonData: LessonData[];
+  lessonData: LessonData;
   showTranslation: boolean;
   handlePlay: (startTime: number, index: number) => void;
 };

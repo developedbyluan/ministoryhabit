@@ -3,7 +3,7 @@ export interface Song {
   title: string;
   artist: string;
   slug: string;
-  thumbnail_url: string
+  thumbnail_url: string;
 }
 
 export interface Playlist {
@@ -18,3 +18,17 @@ export interface Genre {
   playlists: Playlist[];
   activeTab: "playlists" | "songs";
 }
+
+export type LessonData = {
+  id: string;
+  media_url: string;
+  paid: boolean;
+  title: string;
+  type: "video" | "audio";
+  body: string;
+  thumbnail_url: string;
+  playlists: {
+    id: string;
+    name: string;
+  }
+};

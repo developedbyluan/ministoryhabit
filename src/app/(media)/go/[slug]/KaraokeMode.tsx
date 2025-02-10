@@ -5,6 +5,7 @@ import { Ref, useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import KaraokeModeText from "./KaraokeModeText";
 import { formatTime } from "./formatTime";
+import type { LessonData } from "@/types";
 
 type Lyric = {
   start_time: number;
@@ -12,17 +13,6 @@ type Lyric = {
   text: string;
   ipa: string;
   translation: string;
-};
-
-type LessonData = {
-  id: number;
-  media_url: string;
-  paid: boolean;
-  title: string;
-  type: "video" | "audio";
-  body: string;
-  thumbnail_url: string;
-  seriesId: number;
 };
 
 type KaraokeModeProps = {
@@ -33,7 +23,7 @@ type KaraokeModeProps = {
   progress: number;
   lyrics: Lyric[];
   updateCurrentLyricIndex: (index: number) => void;
-  lessonData: LessonData[];
+  lessonData: LessonData;
   handlePause: (startTime: number, index: number) => void;
   duration: number;
   handleProgressChange: (newProgress: number) => void;

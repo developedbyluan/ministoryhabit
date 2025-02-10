@@ -34,7 +34,8 @@ const formattedDate = `${year}-${month}-${day}`;
 
 const storeTotalPlayTimeToLocalStorage = (
   lessonSlug: string,
-  totalPlayTime: number
+  totalPlayTime: number,
+  playlistId: string
 ) => {
   // console.log(formattedDate); // e.g., "2023-10-05"
 
@@ -43,6 +44,7 @@ const storeTotalPlayTimeToLocalStorage = (
     date: formattedDate,
     time: Date.now(),
     playing_time: totalPlayTime,
+    playlist_id: playlistId
   };
 
   const previousStats = localStorage.getItem("stats");

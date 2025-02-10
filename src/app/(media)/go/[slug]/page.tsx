@@ -1,16 +1,6 @@
 "use client";
 
-// import { Button } from "@/components/ui/button";
-// import { Slider } from "@/components/ui/slider";
 import { useParams, useSearchParams } from "next/navigation";
-// import {
-//   Languages,
-//   Play,
-//   X,
-//   TvMinimalPlay,
-//   TextSearch,
-//   Pause,
-// } from "lucide-react";
 
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
@@ -18,19 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { getVideo, saveVideo } from "@/utils/indexedDB";
 import KaraokeMode from "./KaraokeMode";
 import SentenceMode from "./SentenceMode";
+import type { LessonData } from "@/types";
 
 export const runtime = "edge";
-
-type LessonData = {
-  id: number;
-  media_url: string;
-  paid: boolean;
-  title: string;
-  type: "video" | "audio";
-  body: string;
-  thumbnail_url: string;
-  seriesId: number;
-};
 
 export default function GoPage() {
   const params = useParams<{ slug: string }>();
@@ -41,9 +21,21 @@ export default function GoPage() {
 
   const [videoSource, setVideoSource] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log(isLoading);
+  // console.log(isLoading);
 
-  const [lessonData, setLessonData] = useState<LessonData[]>([]);
+  const [lessonData, setLessonData] = useState<LessonData>({
+    id: "",
+    media_url: "",
+    paid: true,
+    title: "",
+    type: "video",
+    body: "",
+    thumbnail_url: "",
+    playlists: {
+      id: "",
+      name: "",
+    },
+  });
 
   const [text, setText] = useState<string>("");
 
@@ -51,9 +43,9 @@ export default function GoPage() {
 
   const [showSentenceMode, setShowSentenceMode] = useState(false);
 
-  const [showVideo, setShowVideo] = useState<boolean>(false)
+  const [showVideo, setShowVideo] = useState<boolean>(false);
 
-  const previousModeRef = useRef<"karaoke" | "read" | "">("")
+  const previousModeRef = useRef<"karaoke" | "read" | "">("");
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -61,7 +53,7 @@ export default function GoPage() {
     // connect to supabase api
     const getMediaData = async (slug: string) => {
       try {
-        const supabaseRes = await fetch(`/api/supabase/${slug}`);
+        const supabaseRes = await fetch(`/api/supabase_extra/${slug}`);
 
         if (!supabaseRes.ok) {
           throw new Error(`Error fetching data: ${supabaseRes.statusText}`);
@@ -78,7 +70,7 @@ export default function GoPage() {
 
     const fetchData = async () => {
       try {
-        const data = (await getMediaData(lessonSlug)) as LessonData[];
+        const data = (await getMediaData(lessonSlug)) as LessonData;
         setLessonData(data);
       } catch (err) {
         console.error(err);
@@ -94,8 +86,8 @@ export default function GoPage() {
     if (!lessonSlug) return;
     if (!lessonData) return;
 
-    if (lessonData.length <= 0) return;
-    setText(lessonData[0].body);
+    if (!lessonData) return;
+    setText(lessonData.body);
     // console.log("lessonData", lessonData)
 
     const handleDownload = async (
@@ -136,7 +128,7 @@ export default function GoPage() {
           // const remoteVideoUrl =
           //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
 
-          const remoteVideoUrl = lessonData[0].media_url;
+          const remoteVideoUrl = lessonData.media_url;
           console.log(remoteVideoUrl);
           setVideoSource(remoteVideoUrl);
           handleDownload(remoteVideoUrl, lessonSlug);
@@ -153,8 +145,6 @@ export default function GoPage() {
 
     loadVideo(lessonSlug);
   }, [lessonSlug, lessonData]);
-
-
 
   //
   const {
@@ -178,6 +168,7 @@ export default function GoPage() {
     text: text,
     lineIndex: parseInt(lineIndex || "0"),
     lessonSlug: lessonSlug,
+    playlistId: lessonData.playlists.id
   });
 
   const handleShowKaraokeMode = (mode: "karaoke" | "read") => {
@@ -187,9 +178,9 @@ export default function GoPage() {
       togglePlay();
     }
     setKaraokeMode((prev) => !prev);
-    previousModeRef.current = mode 
+    previousModeRef.current = mode;
 
-    setShowSentenceMode(false)
+    setShowSentenceMode(false);
   };
 
   const handleShowSentenceMode = (mode: "karaoke" | "read") => {
@@ -199,21 +190,21 @@ export default function GoPage() {
       handlePause(currentLyric.start_time, currentLyricIndex);
     }
 
-    setShowSentenceMode(prev => !prev);
+    setShowSentenceMode((prev) => !prev);
 
-    if(showKaraokeMode) {
-      setKaraokeMode(false)
+    if (showKaraokeMode) {
+      setKaraokeMode(false);
     }
 
-    previousModeRef.current = mode 
+    previousModeRef.current = mode;
   };
 
   const handleShowVideoInSentenceMode = () => {
-    setShowVideo(prev => !prev)
-  }
+    setShowVideo((prev) => !prev);
+  };
 
-  if(isLoading) {
-    return "Loading"
+  if (isLoading) {
+    return "Loading";
   }
 
   return (

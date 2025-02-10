@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate, formatTime } from "@/utils/continue-studying";
+import { Button } from "@/components/ui/button";
 
 type LessonCardProps = {
   lesson: {
@@ -21,7 +22,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
       </CardHeader>
       <CardContent className="pt-4">
         <p className="text-sm text-muted-foreground mb-2">
-          Playlist: {lesson.playlist_name}
+          Course: {lesson.playlist_name}
         </p>
         <p className="text-sm mb-1">
           Latest session: {formatDate(lesson.latest_date)}
@@ -34,9 +35,11 @@ export function LessonCard({ lesson }: LessonCardProps) {
         </p>
         <Link
           href={`/go/${lesson.lesson_slug}`}
-          className="text-primary hover:underline text-sm mt-2 inline-block"
+          className="text-primary mt-4 inline-block"
         >
+          <Button>
           Go to lesson
+          </Button>
         </Link>
       </CardContent>
     </Card>
