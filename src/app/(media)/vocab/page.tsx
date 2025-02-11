@@ -11,7 +11,7 @@ import WordFrequencyGrid from "./WordFrequencyGrid";
 import { addToCollectedVocab } from "@/app/actions/add-to-collected-vocab";
 import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import SqueezePage from "@/app/(root)/squeeze-page/page";
+import SqueezePage from "@/components/squeeze-form";
 import Link from "next/link";
 
 export const runtime = "edge";
@@ -125,9 +125,7 @@ export default function StatsPage() {
                       onClick={handleStoreExposureWords}
                       disabled={isLoading}
                     >
-                      {isLoading
-                        ? "Loading..."
-                        : "My HF Vocabulary"}
+                      {isLoading ? "Loading..." : "My HF Vocabulary"}
                     </Button>
                   )}
                 </div>

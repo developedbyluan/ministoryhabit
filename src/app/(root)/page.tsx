@@ -15,11 +15,8 @@ import { StatsChart } from "./StatsChart";
 import { LessonCard } from "./LessonCard";
 import { PlaylistCard } from "./PlaylistCard";
 
-import {
-  useKindeBrowserClient,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs";
-import SqueezePage from "./squeeze-page/page";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import SqueezePage from "../../components/squeeze-form";
 import Header from "@/components/Header";
 
 export const runtime = "edge";

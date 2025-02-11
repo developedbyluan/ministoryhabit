@@ -31,6 +31,7 @@ export default function HamburgerMenu() {
         const data: { count: number } = await response.json();
         setCount(data.count);
       } catch (err) {
+        console.log(err)
         setError("Failed to load data");
       } finally {
         setIsLoading(false);
