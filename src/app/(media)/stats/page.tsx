@@ -6,7 +6,7 @@ import {
   createResultObject,
 } from "@/utils/getUniqueWords";
 import { words3000 } from "../words3000";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import WordFrequencyGrid from "./WordFrequencyGrid";
 import { addToCollectedVocab } from "@/app/actions/add-to-collected-vocab";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ export default function StatsPage() {
         words = getWords(JSON.parse(exposureListRaw));
       } catch (err) {
         words = [];
+        console.log(err)
       }
 
       if (words.length > 0) {

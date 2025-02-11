@@ -33,6 +33,8 @@ export function TranslatableText({
     Translation[]
   >([]);
 
+  const [isTranslating, setIsTranslating] = React.useState<boolean>(false);
+
   const params: { slug: string } = useParams();
   // console.log(params.slug)
 
@@ -90,8 +92,8 @@ export function TranslatableText({
       .map((match) => match[0])
       .join(" ");
   };
-
   const handleSaveTranslation = async (original: string) => {
+    setIsTranslating(true);
     setSavedTranslations((prev) => [
       ...prev,
       { original, translation: "", isLoading: true },
@@ -110,6 +112,7 @@ export function TranslatableText({
           : item
       )
     );
+    setIsTranslating(false);
 
     // const { data, error } = await openaiApiLogs(
     //   params.slug,
@@ -128,10 +131,15 @@ export function TranslatableText({
     );
   };
 
+  console.log(isTranslating);
   return (
     <div className="space-y-4">
       <div className="relative">
-        <p className="leading-relaxed text-lg">{processText(text)}</p>
+        {isTranslating ? (
+          <p className="leading-relaxed text-lg">{text}</p>
+        ) : (
+          <p className="leading-relaxed text-lg">{processText(text)}</p>
+        )}
       </div>
       {savedTranslations.length > 0 && (
         <div>
