@@ -12,6 +12,7 @@ import { addToCollectedVocab } from "@/app/actions/add-to-collected-vocab";
 import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "@/app/(root)/squeeze-page/page";
+import Link from "next/link";
 
 export const runtime = "edge";
 
@@ -105,24 +106,40 @@ export default function StatsPage() {
   return (
     <>
       {!isAuthenticated ? (
-        <SqueezePage />
+        <SqueezePage redirectURL="/vocab" />
       ) : (
-        <div className="max-w-2xl mx-auto">
+        <div>
+          <header className="bg-white shadow-sm">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex-shrink-0">
+                  <Link href="/" className="text-2xl font-bold text-indigo-600">
+                    Vocabulary
+                  </Link>
+                </div>
+                <div>
+                  {Object.entries(wordFrequency).length === 0 && (
+                    <Button
+                      variant="outline"
+                      className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
+                      onClick={handleStoreExposureWords}
+                      disabled={isLoading}
+                    >
+                      {isLoading
+                        ? "Loading..."
+                        : "My HF Vocabulary"}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </header>
           <div>
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-            {Object.entries(wordFrequency).length === 0 ? (
-              <div className="my-4 flex justify-center items-center">
-                <Button
-                  variant="outline"
-                  className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
-                  onClick={handleStoreExposureWords}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Loading..." : "View My High Frequency Words"}
-                </Button>
+            {Object.entries(wordFrequency).length !== 0 && (
+              <div className="max-w-2xl mx-auto">
+                <WordFrequencyGrid data={wordFrequency} />
               </div>
-            ) : (
-              <WordFrequencyGrid data={wordFrequency} />
             )}
           </div>
         </div>

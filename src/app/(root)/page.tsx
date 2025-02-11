@@ -20,6 +20,7 @@ import {
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "./squeeze-page/page";
+import Header from "@/components/Header";
 
 export const runtime = "edge";
 
@@ -195,83 +196,92 @@ export default function ContinueStudying() {
   return (
     <>
       {!isAuthenticated ? (
-        <SqueezePage />
+        <SqueezePage redirectURL="/" />
       ) : (
-        <div className="container mx-auto p-4">
-          <div className="flex justify-between items-baseline">
-            <h1 className="text-2xl md:text-3xl font-bold mb-6">
+        <>
+          <Header logoText="Continue Learning" />
+          <div className="container mx-auto py-4">
+            {/* <h1 className="">
               Continue Studying
             </h1>
             <div>
               <LogoutLink>
                 <Button>Log out</Button>
               </LogoutLink>
+            </div> */}
+            {/* <ProgressForm setLogs={setLogs} /> */}
+            <div className="my-4 flex justify-center">
+              {!isSyncSuccessful && (
+                <Button
+                  variant="outline"
+                  className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
+                  onClick={handleInsertUserProgress}
+                >
+                  Save My Progress to Cloud
+                </Button>
+              )}
             </div>
-          </div>
-          {/* <ProgressForm setLogs={setLogs} /> */}
-          <div className="my-4 flex justify-center">
-            {!isSyncSuccessful && (
-              <Button variant="outline" className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold" onClick={handleInsertUserProgress}>Save My Progress to Cloud</Button>
+            {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
+            {statsError && (
+              <p className="text-red-500 mt-2 mb-4">{statsError}</p>
             )}
+            <Tabs defaultValue="all-lessons" className="w-full px-4 md:px-8">
+              <TabsList className="grid w-full mx-auto grid-cols-3 mb-8">
+                <TabsTrigger value="all-lessons">All Lessons</TabsTrigger>
+                <TabsTrigger value="grouped-by-playlist">Courses</TabsTrigger>
+                <TabsTrigger value="stats">Stats</TabsTrigger>
+              </TabsList>
+              <TabsContent value="all-lessons">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {sortedLogs.map((log) => (
+                    <LessonCard key={log.lesson_slug} lesson={log} />
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="grouped-by-playlist">
+                <div className="grid gap-8">
+                  {Object.entries(groupedByPlaylist).map(
+                    ([playlistName, data]) => (
+                      <PlaylistCard
+                        key={playlistName}
+                        playlistName={playlistName}
+                        data={data}
+                      />
+                    )
+                  )}
+                </div>
+              </TabsContent>
+              <TabsContent value="stats">
+                <div className="grid gap-8">
+                  <Card className="w-full mx-auto">
+                    <CardHeader>
+                      <CardTitle>Daily Progress</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <StatsChart data={dailyData} />
+                    </CardContent>
+                  </Card>
+                  <Card className="w-full mx-auto">
+                    <CardHeader>
+                      <CardTitle>Weekly Progress</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <StatsChart data={weeklyData} />
+                    </CardContent>
+                  </Card>
+                  <Card className="w-full mx-auto">
+                    <CardHeader>
+                      <CardTitle>Monthly Progress</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <StatsChart data={monthlyData} />
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
-          {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
-          {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
-          <Tabs defaultValue="all-lessons" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
-              <TabsTrigger value="all-lessons">All Lessons</TabsTrigger>
-              <TabsTrigger value="grouped-by-playlist">Courses</TabsTrigger>
-              <TabsTrigger value="stats">Stats</TabsTrigger>
-            </TabsList>
-            <TabsContent value="all-lessons">
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {sortedLogs.map((log) => (
-                  <LessonCard key={log.lesson_slug} lesson={log} />
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="grouped-by-playlist">
-              <div className="grid gap-8">
-                {Object.entries(groupedByPlaylist).map(
-                  ([playlistName, data]) => (
-                    <PlaylistCard
-                      key={playlistName}
-                      playlistName={playlistName}
-                      data={data}
-                    />
-                  )
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="stats">
-              <div className="grid gap-8">
-                <Card className="w-full max-w-md mx-auto">
-                  <CardHeader>
-                    <CardTitle>Daily Progress</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <StatsChart data={dailyData} />
-                  </CardContent>
-                </Card>
-                <Card className="w-full max-w-md mx-auto">
-                  <CardHeader>
-                    <CardTitle>Weekly Progress</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <StatsChart data={weeklyData} />
-                  </CardContent>
-                </Card>
-                <Card className="w-full max-w-md mx-auto">
-                  <CardHeader>
-                    <CardTitle>Monthly Progress</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <StatsChart data={monthlyData} />
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+        </>
       )}
     </>
   );
