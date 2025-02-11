@@ -203,15 +203,17 @@ export default function ContinueStudying() {
               Continue Studying
             </h1>
             <div>
-              {!isSyncSuccessful && (
-                <Button onClick={handleInsertUserProgress}>Sync</Button>
-              )}
               <LogoutLink>
                 <Button>Log out</Button>
               </LogoutLink>
             </div>
           </div>
           {/* <ProgressForm setLogs={setLogs} /> */}
+          <div className="my-4 flex justify-center">
+            {!isSyncSuccessful && (
+              <Button variant="outline" className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold" onClick={handleInsertUserProgress}>Save My Progress to Cloud</Button>
+            )}
+          </div>
           {logsError && <p className="text-red-500 mt-2 mb-4">{logsError}</p>}
           {statsError && <p className="text-red-500 mt-2 mb-4">{statsError}</p>}
           <Tabs defaultValue="all-lessons" className="w-full">

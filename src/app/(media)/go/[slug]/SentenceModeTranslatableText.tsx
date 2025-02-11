@@ -114,7 +114,7 @@ export function TranslatableText({
     // const { data, error } = await openaiApiLogs(
     //   params.slug,
     //   original,
-    //   "kp_e15445a4c1334aa3a592809f9444e9d9"
+    //   "kp_xxx"
     // );
     // if (error) {
     //   console.error(error);

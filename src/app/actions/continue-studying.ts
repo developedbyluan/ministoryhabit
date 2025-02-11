@@ -66,6 +66,9 @@ export async function insertUserProgress(localLessonData: LessonData[]) {
     const user = await getUser();
 
     // console.log(user);
+    if (!user || !user.id) {
+      return { success: false, error: "User not authenticated." };
+    }
 
     const { data, error } = await supabase
       .from("users_progress_logs")
@@ -97,14 +100,19 @@ export async function fetchLogs() {
     const user = await getUser();
 
     // console.log(user);
-    const { data, error } = await supabase.from("users_progress_logs").select(`
+    const { data, error } = await supabase
+      .from("users_progress_logs")
+      .select(
+        `
       id,
       lesson_slug,
       date,
       latest_time,
       total_playing_time,
       playlists(id, name, songs(id, title, slug))
-    `).eq("kinde_id", user.id);
+    `
+      )
+      .eq("kinde_id", user.id);
 
     if (error) throw error;
 

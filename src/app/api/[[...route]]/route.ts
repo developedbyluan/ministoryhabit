@@ -3,6 +3,8 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import supabase from "@/utils/supabase";
 
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
 export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
@@ -62,12 +64,21 @@ app.post("/supabase/addToPlaylist", async (c) => {
   // https://supabase.com/docs/reference/javascript/using-filters
   // https://supabase.com/docs/reference/javascript/upsert
   const body = await c.req.json();
+
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user || !user.id) {
+    return c.json({ error: "User not authenticated." });
+  }
+
   const { data, error } = await supabase
     .from("users_playlist")
     .upsert(
       {
         media_id: body.media_id,
-        kinde_auth_id: body.kinde_auth_id,
+        // kinde_auth_id: body.kinde_auth_id,
+        kinde_auth_id: user.id,
         updated_at: new Date().toISOString(),
       },
       {
@@ -75,26 +86,28 @@ app.post("/supabase/addToPlaylist", async (c) => {
       }
     )
     .eq("media_id", body.media_id)
-    .eq("kinde_auth_id", body.kinde_auth_id)
+    // .eq("kinde_auth_id", body.kinde_auth_id)
+    .eq("kinde_auth_id", user.id)
     .select();
 
   if (error) return c.json({ error: error });
-
-  // const { error } = await supabase
-  //   .from("users_playlist")
-  //   .insert({ kinde_auth_id: 1, playlist: JSON.stringify({"media_id": 1}) })
-
-  // return c.json(error)
 
   return c.json(data);
 });
 
 app.post("/supabase_vocab", async (c) => {
-  const body = await c.req.json();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user || !user.id) {
+    return c.json({ error: "User not authenticated." });
+  }
+  // const body = await c.req.json();
   const { data, error } = await supabase
     .from("collected_vocab")
     .select("vocab_array")
-    .eq("kinde_id", body.kinde_auth_id);
+    .eq("kinde_id", user.id);
+    // .eq("kinde_id", body.kinde_auth_id);
 
   if (error) return c.json({ error: error });
 
