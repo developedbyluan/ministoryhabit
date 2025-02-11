@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -8,26 +8,48 @@ import { Button } from "./ui/button";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 const menuItems = [
-  //   { name: "Home", href: "/" },
-  { name: "Courses", href: "/courses" },
   { name: "Vocabulary", href: "/vocab" },
-  //   { name: "Progress", href: "/progress" },
-  //   { name: "Settings", href: "/settings" },
+  { name: "Courses", href: "/courses" }
 ];
 
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const [count, setCount] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    async function fetchCount() {
+      try {
+        const response = await fetch("/api/supabase_goldlist_count");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data: { count: number } = await response.json();
+        setCount(data.count);
+      } catch (err) {
+        setError("Failed to load data");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchCount();
+  }, []);
 
   return (
     <div className="relative">
-      <Button
-        variant="outline"
-        className="absolute z-50 -right-2 -top-2 h-6 px-1 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
-      >
-        10
-      </Button>
+      {count && count > 0 && (
+        <Button
+          variant="outline"
+          className="absolute z-50 -right-2 -top-2 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
+        >
+          {isLoading ? <p>0</p> : error ? <>{error}</> : <>{count}</>}
+        </Button>
+      )}
       <button
         onClick={toggleMenu}
         className="p-2 text-gray-500 hover:text-gray-600 focus:outline-none focus:ring"
@@ -46,7 +68,10 @@ export default function HamburgerMenu() {
               onClick={toggleMenu}
             >
               {item.name}
-              {item.name === "Vocabulary" && ` (${10})`}
+              {item.name === "Vocabulary" &&
+                count &&
+                count > 0 &&
+                (isLoading ? <p>0</p> : error ? <>{error}</> : <> ({count})</>)}
             </Link>
           ))}
           <LogoutLink className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

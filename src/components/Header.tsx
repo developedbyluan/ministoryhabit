@@ -1,5 +1,6 @@
 import Link from "next/link";
 import HamburgerMenu from "@/components/HamburgerMenu";
+import { useEffect, useState } from "react"
 
 export default function Header({logoText} : {logoText: string}) {
   return (
