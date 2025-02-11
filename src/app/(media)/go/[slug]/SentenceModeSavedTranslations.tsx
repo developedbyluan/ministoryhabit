@@ -95,11 +95,18 @@ export function SavedTranslations({
                     Translating...
                   </span>
                 ) : (
-                  <EditableText
-                    initialText={item.translation}
-                    className="text-sm font-semibold"
-                    onTextChange={(newText) => handleTextChange(newText)}
-                  />
+                  <>
+                    {isTranslated ? (
+                      <EditableText
+                        isDisabled={true}
+                        initialText={item.translation}
+                        className="text-sm font-semibold"
+                        onTextChange={(newText) => handleTextChange(newText)}
+                      />
+                    ) : (
+                      item.translation
+                    )}
+                  </>
                 )}
               </div>
             </div>

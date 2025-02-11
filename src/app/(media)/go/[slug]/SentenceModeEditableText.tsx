@@ -1,17 +1,19 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface EditableTextProps {
   initialText: string;
   className?: string;
   onTextChange?: (text: string) => void;
+  isDisabled: boolean;
 }
 
-export default function EditableText({ 
-  initialText, 
-  className = '', 
-  onTextChange 
+export default function EditableText({
+  initialText,
+  className = "",
+  onTextChange,
+  isDisabled,
 }: EditableTextProps) {
   const [text, setText] = useState(initialText);
   const [isEditing, setIsEditing] = useState(false);
@@ -24,11 +26,12 @@ export default function EditableText({
   if (isEditing) {
     return (
       <input
+        disabled={isDisabled}
         type="text"
         value={text}
         onChange={(e) => handleTextChange(e.target.value)}
         onBlur={() => setIsEditing(false)}
-        onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
+        onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
         className={`p-2 border rounded ${className}`}
         autoFocus
       />
@@ -36,7 +39,7 @@ export default function EditableText({
   }
 
   return (
-    <h1 
+    <h1
       className={`cursor-pointer hover:bg-gray-100 p-2 rounded ${className}`}
       onClick={() => setIsEditing(true)}
     >
