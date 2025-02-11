@@ -10,6 +10,8 @@ import { useState } from "react";
 import WordFrequencyGrid from "./WordFrequencyGrid";
 import { addToCollectedVocab } from "@/app/actions/add-to-collected-vocab";
 import { Button } from "@/components/ui/button";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import SqueezePage from "@/app/(root)/squeeze-page/page";
 
 export const runtime = "edge";
 
@@ -25,6 +27,8 @@ export default function StatsPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { isAuthenticated } = useKindeBrowserClient();
+
   // TODO: handleInsertExposureWords
   const handleStoreExposureWords = async () => {
     setIsLoading(true);
@@ -38,16 +42,14 @@ export default function StatsPage() {
         words = getWords(JSON.parse(exposureListRaw));
       } catch (err) {
         words = [];
-        console.log(err)
+        console.log(err);
       }
 
       if (words.length > 0) {
         // setError("No words to store.");
 
         // Attempt to insert the words into the database.
-        const insertSuccess = await addToCollectedVocab(
-          words,
-        );
+        const insertSuccess = await addToCollectedVocab(words);
 
         if (!insertSuccess) {
           setError("Failed to insert words into Supabase.");
@@ -101,26 +103,30 @@ export default function StatsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-        {Object.entries(wordFrequency).length === 0 ? (
-          <div className="my-4 flex justify-center items-center">
-            <Button
-              variant="outline"
-              className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
-              onClick={handleStoreExposureWords}
-              disabled={isLoading}
-            >
-              {isLoading
-                ? "Loading..."
-                : "View My High Frequency Words"}
-            </Button>
+    <>
+      {!isAuthenticated ? (
+        <SqueezePage />
+      ) : (
+        <div className="max-w-2xl mx-auto">
+          <div>
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+            {Object.entries(wordFrequency).length === 0 ? (
+              <div className="my-4 flex justify-center items-center">
+                <Button
+                  variant="outline"
+                  className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
+                  onClick={handleStoreExposureWords}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "View My High Frequency Words"}
+                </Button>
+              </div>
+            ) : (
+              <WordFrequencyGrid data={wordFrequency} />
+            )}
           </div>
-        ) : (
-          <WordFrequencyGrid data={wordFrequency} />
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
