@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
 import { useEffect, useRef, useState } from "react";
-import { getVideo, saveVideo } from "@/utils/indexedDB";
+// import { getVideo, saveVideo } from "@/utils/indexedDB";
 import KaraokeMode from "./KaraokeMode";
 import SentenceMode from "./SentenceMode";
 import type { LessonData } from "@/types";
@@ -90,56 +90,47 @@ export default function GoPage() {
     setText(lessonData.body);
     // console.log("lessonData", lessonData)
 
-    const handleDownload = async (
-      remoteVideoUrl: string,
-      videoName: string
-    ) => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(remoteVideoUrl);
-        const videoBlob = await response.blob();
-        await saveVideo(videoBlob, videoName);
-        // await loadStoredVideos()
-        // setIsDownloadDialogOpen(false)
-      } catch (err) {
-        // setError("Failed to download video")
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // const handleDownload = async (
+    //   remoteVideoUrl: string,
+    //   videoName: string
+    // ) => {
+    //   try {
+    //     setIsLoading(true);
+    //     const response = await fetch(remoteVideoUrl);
+    //     const videoBlob = await response.blob();
+    //     await saveVideo(videoBlob, videoName);
+    //     // await loadStoredVideos()
+    //     // setIsDownloadDialogOpen(false)
+    //   } catch (err) {
+    //     // setError("Failed to download video")
+    //     console.error(err);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
 
     const loadVideo = async (videoName: string) => {
       try {
         setIsLoading(true);
         // setError(null)
 
-        const video = await getVideo(videoName);
-        if (video) {
-          // alert("Play video from indexedDB");
-          const url = URL.createObjectURL(video.blob);
-          // setVideoUrl(url)
-          setVideoSource(url);
-          // setIsOfflineAvailable(true)
-          // setCurrentVideoName(name)
-        } else {
-          // alert(`Play video from remote url: ${lessonData.length}`);
-          // setVideoUrl(null)
-          // const remoteVideoUrl =
-          //   "https://res.cloudinary.com/dqssqzt3y/video/upload/v1737861394/xitrum-25-ttpb_vhapji.mp4";
-
-          const remoteVideoUrl = lessonData.media_url;
-          console.log(remoteVideoUrl);
-          setVideoSource(remoteVideoUrl);
-          handleDownload(remoteVideoUrl, lessonSlug);
-          // setIsOfflineAvailable(false)
-          // setCurrentVideoName(null)
-        }
+        // const video = await getVideo(videoName);
+        // if (video) {
+        //   const url = URL.createObjectURL(video.blob);
+        //   setVideoSource(url);
+        // } else {
+        console.log(videoName);
+        const remoteVideoUrl = lessonData.media_url;
+        // console.log(remoteVideoUrl);
+        setVideoSource(remoteVideoUrl);
+        //   handleDownload(remoteVideoUrl, lessonSlug);
+        // }
       } catch (err) {
         // setError("Failed to load video")
         console.error(err);
       } finally {
         setIsLoading(false);
+        console.log(isLoading)
       }
     };
 
@@ -168,7 +159,7 @@ export default function GoPage() {
     text: text,
     lineIndex: parseInt(lineIndex || "0"),
     lessonSlug: lessonSlug,
-    playlistId: lessonData.playlists.id
+    playlistId: lessonData.playlists.id,
   });
 
   const handleShowKaraokeMode = (mode: "karaoke" | "read") => {
@@ -203,9 +194,9 @@ export default function GoPage() {
     setShowVideo((prev) => !prev);
   };
 
-  if (isLoading) {
-    return "Loading";
-  }
+  // if (isLoading) {
+  //   return "Loading";
+  // }
 
   return (
     <div className="bg-white max-w-xl mx-auto h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
