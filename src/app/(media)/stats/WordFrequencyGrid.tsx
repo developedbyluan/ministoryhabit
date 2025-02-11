@@ -67,13 +67,13 @@ const WordFrequencyGrid: React.FC<WordFrequencyGridProps> = ({ data }) => {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-        High Frequency Words Map
+          High Frequency Vocabulary
         </h1>
 
         <div className="mb-6 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="inline-flex rounded-md shadow-sm" role="group">
             <FilterButton
-              label="All Words"
+              label="All Vocab"
               isActive={arrayFilter === "all"}
               onClick={() => setArrayFilter("all")}
               className="rounded-l-lg"
@@ -86,13 +86,13 @@ const WordFrequencyGrid: React.FC<WordFrequencyGridProps> = ({ data }) => {
                 const inArrayWithFrequency = inArrayWords.filter(
                   ([, { frequency }]) => frequency > 0
                 );
-                return `In Array (${inArrayWithFrequency.length}/${inArrayWords.length})`;
+                return `Oxford3000+ (${inArrayWithFrequency.length}/${inArrayWords.length})`;
               })()}
               isActive={arrayFilter === "inArray"}
               onClick={() => setArrayFilter("inArray")}
             />
             <FilterButton
-              label="Not in Array"
+              label="Extra Vocab"
               isActive={arrayFilter === "notInArray"}
               onClick={() => setArrayFilter("notInArray")}
               className="rounded-r-lg"
@@ -101,18 +101,18 @@ const WordFrequencyGrid: React.FC<WordFrequencyGridProps> = ({ data }) => {
 
           <div className="inline-flex rounded-md shadow-sm" role="group">
             <FilterButton
-              label="All Frequencies"
+              label="All Freq."
               isActive={frequencyFilter === "all"}
               onClick={() => setFrequencyFilter("all")}
               className="rounded-l-lg"
             />
             <FilterButton
-              label="Frequency = 0"
+              label="=0"
               isActive={frequencyFilter === "zero"}
               onClick={() => setFrequencyFilter("zero")}
             />
             <FilterButton
-              label="Frequency > 0"
+              label=">0"
               isActive={frequencyFilter === "nonZero"}
               onClick={() => setFrequencyFilter("nonZero")}
               className="rounded-r-lg"
@@ -131,11 +131,11 @@ const WordFrequencyGrid: React.FC<WordFrequencyGridProps> = ({ data }) => {
             >
               {sort === "desc" ? (
                 <>
-                  <ArrowDownWideNarrow className="inline mr-2" /> High to Low
+                  <ArrowDownWideNarrow className="inline mr-2" />
                 </>
               ) : (
                 <>
-                  <ArrowUpNarrowWide className="inline mr-2" /> Low to High
+                  <ArrowUpNarrowWide className="inline mr-2" />
                 </>
               )}
             </button>
@@ -205,8 +205,8 @@ const WordFrequencyGrid: React.FC<WordFrequencyGridProps> = ({ data }) => {
                           </div>
                         </div>
                       </div>
-                      <div className="text-sm text-gray-600">
-                        {isInTheArray ? "In array" : "Not in array"}
+                      <div className="text-xs text-gray-600">
+                        {isInTheArray ? "Oxford3000+" : "Extra Vocab"}
                       </div>
                     </div>
                   </div>
