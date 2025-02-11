@@ -43,12 +43,12 @@ export default function HamburgerMenu() {
 
   return (
     <div className="relative">
-      {count && count > 0 && (
+      {count !== null && count > 0 && (
         <Button
           variant="outline"
           className="absolute z-50 -right-2 -top-2 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
         >
-          {isLoading ? <p>0</p> : error ? <>{error}</> : <>{count}</>}
+          {isLoading ? <></> : error ? <>{error}</> : <>{count}</>}
         </Button>
       )}
       <button
@@ -69,10 +69,9 @@ export default function HamburgerMenu() {
               onClick={toggleMenu}
             >
               {item.name}
-              {item.name === "Vocabulary" &&
-                count &&
+              {item.name === "Vocabulary" && count !== null &&
                 count > 0 &&
-                (isLoading ? <p>0</p> : error ? <>{error}</> : <> ({count})</>)}
+                (isLoading ? <></> : error ? <>{error}</> : <> ({count})</>)}
             </Link>
           ))}
           <LogoutLink className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

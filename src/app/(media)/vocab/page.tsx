@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "@/components/squeeze-form";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export const runtime = "edge";
 
@@ -113,8 +114,9 @@ export default function StatsPage() {
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
                 <div className="flex-shrink-0">
-                  <Link href="/" className="text-2xl font-bold text-indigo-600">
-                    Vocabulary
+                  <Link href="/" className="flex gap-2 items-center text-2xl font-bold text-indigo-600">
+                    <ChevronLeft className="scale-150" />
+                    <span>Vocabulary</span>
                   </Link>
                 </div>
                 <div>

@@ -34,10 +34,10 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
   }
 
   return (
-    <div className="max-w-xl mx-auto min-h-screen bg-gray-100 py-8">
-      <div className="container mx-auto px-4">
+    <div className="max-w-3xl mx-auto min-h-screen py-8">
+      <div className="mx-auto px-4">
         <Link
-          href="/"
+          href="/courses"
           className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 transition-colors duration-200"
         >
           <svg
@@ -52,7 +52,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
               clipRule="evenodd"
             />
           </svg>
-          Back to all playlists
+          Back to all courses 
         </Link>
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6">

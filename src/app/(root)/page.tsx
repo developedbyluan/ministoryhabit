@@ -18,6 +18,7 @@ import { PlaylistCard } from "./PlaylistCard";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "../../components/squeeze-form";
 import Header from "@/components/Header";
+import Link from "next/link";
 
 export const runtime = "edge";
 
@@ -190,23 +191,16 @@ export default function ContinueStudying() {
     );
   }
 
+  console.log(logs, statsData);
+
   return (
     <>
       {!isAuthenticated ? (
         <SqueezePage redirectURL="/" />
-      ) : (
+      ) : logs.length > 0 && statsData ? (
         <>
           <Header logoText="Continue Learning" />
           <div className="container mx-auto py-4">
-            {/* <h1 className="">
-              Continue Studying
-            </h1>
-            <div>
-              <LogoutLink>
-                <Button>Log out</Button>
-              </LogoutLink>
-            </div> */}
-            {/* <ProgressForm setLogs={setLogs} /> */}
             <div className="my-4 flex justify-center">
               {!isSyncSuccessful && (
                 <Button
@@ -279,6 +273,15 @@ export default function ContinueStudying() {
             </Tabs>
           </div>
         </>
+      ) : (
+        <div className="min-h-dvh flex justify-center items-center">
+          <Link
+            className="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            href="/go/trump"
+          >
+            Start practicing
+          </Link>
+        </div>
       )}
     </>
   );

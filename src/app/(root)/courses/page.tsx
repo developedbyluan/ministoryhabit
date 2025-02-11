@@ -34,12 +34,32 @@ export default function FavoriteSongs() {
   };
 
   return (
-    <div className="max-w-xl bg-white container mx-auto px-4 py-8">
+    <div className="max-w-3xl bg-white container mx-auto px-4 py-8">
       {/* <h1 className="text-3xl font-bold mb-8">Dot Habit</h1> */}
+      <div>
+        <Link
+          href="/"
+          className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 transition-colors duration-200"
+        >
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Back to Home page
+        </Link>
+      </div>
       {genres.map((genre) => (
-        <div key={genre.id} className="mb-8 h-screen overflow-y-auto">
-          <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2">
-            {genre.name}
+        <div key={genre.id} className="mb-8 overflow-y-auto">
+          <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2 border-b-2">
+            🔴 {genre.name}
           </h2>
           <div className="mb-4">
             <button
@@ -82,7 +102,7 @@ function PlaylistsTab({ playlists }: PlaylistsTabProps) {
   return (
     <>
       {playlists.map((playlist) => (
-        <div key={playlist.id} className="mb-6 border-0 border-t-2 border-gray-50 p-4">
+        <div key={playlist.id} className="mb-6 border-2 border-gray-50 p-4">
           <h3 className="text-xl font-medium mb-2">
             <Link
               href={`/playlist/${playlist.id}`}
