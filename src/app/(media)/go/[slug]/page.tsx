@@ -200,12 +200,9 @@ export default function GoPage() {
     setShowVideo((prev) => !prev);
   };
 
-  // if (isLoading) {
-  //   return "Loading";
-  // }
   if (lessonData.paid) {
-    console.log(lessonData.paid);
-    console.log(isVIP);
+    // console.log(lessonData.paid);
+    // console.log(isVIP);
     if (!isVIP?.isGranted) {
       // console.log(isVIP)
       return (

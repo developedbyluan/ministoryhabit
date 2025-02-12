@@ -18,6 +18,7 @@ import { PlaylistCard } from "./PlaylistCard";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "../../components/squeeze-form";
 import Header from "@/components/Header";
+import Link from "next/link";
 
 export const runtime = "edge";
 
@@ -223,7 +224,18 @@ export default function ContinueStudying() {
               </TabsList>
               <TabsContent value="all-lessons">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {!(logs.length > 0 && statsData) && <p className="text-center text-slate-300">Learn a lesson to see your progress</p>}
+                  {!(logs.length > 0 && statsData) && (
+                    <p className="text-center text-slate-300">
+                      Learn{" "}
+                      <Link
+                        className="text-blue-600 hover:text-blue-800 underline underline-offset-2"
+                        href="/courses"
+                      >
+                        a lesson
+                      </Link>{" "}
+                      to see your progress
+                    </p>
+                  )}
                   {sortedLogs.map((log) => (
                     <LessonCard key={log.lesson_slug} lesson={log} />
                   ))}

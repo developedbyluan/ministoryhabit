@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "@/components/squeeze-form";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
+import VocabularyPanel from "./VocabularyPanel";
 
 export const runtime = "edge";
 
@@ -88,10 +89,14 @@ export default function StatsPage() {
     }
   };
 
+  const handlePractice = () => {
+    setWordFrequency({})
+  }
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div className="min-h-dvh flex justify-center items-center gap-2 text-white bg-slate-800">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -114,20 +119,32 @@ export default function StatsPage() {
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
                 <div className="flex-shrink-0">
-                  <Link href="/" className="flex gap-2 items-center text-2xl font-bold text-indigo-600">
+                  <Link
+                    href="/"
+                    className="flex gap-2 items-center text-2xl font-bold text-indigo-600"
+                  >
                     <ChevronLeft className="scale-150" />
                     <span>Vocabulary</span>
                   </Link>
                 </div>
                 <div>
-                  {Object.entries(wordFrequency).length === 0 && (
+                  {Object.entries(wordFrequency).length === 0 ? (
                     <Button
                       variant="outline"
-                      className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
+                      className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-bold"
                       onClick={handleStoreExposureWords}
                       disabled={isLoading}
                     >
                       {isLoading ? "Loading..." : "My HF Vocabulary"}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="default"
+                      className="border-2 border-blue-700 bg-blue-700 hover:text-blue-700 hover:bg-white font-bold"
+                      onClick={handlePractice}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Loading..." : "Practice"}
                     </Button>
                   )}
                 </div>
@@ -141,6 +158,9 @@ export default function StatsPage() {
                 <WordFrequencyGrid data={wordFrequency} />
               </div>
             )}
+          </div>
+          <div>
+            <VocabularyPanel />
           </div>
         </div>
       )}
