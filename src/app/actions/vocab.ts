@@ -64,7 +64,7 @@ export async function fetchReviewItems(startDate: string, endDate: string) {
   const { data, error } = await supabase
     .from("goldlist")
     .select(
-      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at"
+      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at, start_time"
     )
     .lt("last_review_at", fourteenDaysAgo.toISOString())
     .is("is_acquired", false)

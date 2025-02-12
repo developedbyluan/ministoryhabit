@@ -60,12 +60,13 @@ export default function VideoPlayer({ src, startTime }: VideoPlayerProps) {
   };
 
   return (
-    <div className="w-full max-w-3xl rounded-2xl bg-gray-800 p-6 shadow-lg">
+    <div className="w-full max-w-3xl rounded-md bg-gray-800 p-3 shadow-lg">
       <div className="relative aspect-video overflow-hidden rounded-lg">
         <video
           ref={videoRef}
           src={src}
           className="h-full w-full object-cover"
+          playsInline
         />
       </div>
       <div className="mt-4 flex items-center justify-between">

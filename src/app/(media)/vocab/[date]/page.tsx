@@ -3,19 +3,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import VocabularyCard from "../VocabularyCard";
-import { Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import {
   fetchVocabularyItems,
-//   fetchReviewItems,
+  //   fetchReviewItems,
   acquireItem,
   reviewMoreItem,
 } from "@/app/actions/vocab";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 interface GoldlistItem {
   id: number;
@@ -78,7 +78,7 @@ export default function DateVocabularyPage() {
       setCurrentIndex(currentIndex + 1);
     } else {
       toast({
-        title: "All cards reviewed!",
+        title: "✅ All cards reviewed!",
         description: "You've gone through all the vocabulary items.",
       });
     }
@@ -149,12 +149,11 @@ export default function DateVocabularyPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Vocabulary for {date}</h1>
-        <Link href="/vocab" className="text-blue-500 hover:underline">
-          Back to all vocabulary 
-        </Link>
-      </div>
+      <Link href="/vocab" className="flex gap-1 items-center mb-4 text-xl text-blue-500 hover:underline">
+        <ChevronLeft />
+        <span>{date}</span>
+      </Link>
+
       {vocabularyItems.length === 0 ? (
         <p className="text-center text-gray-500">
           No vocabulary items for this date.
@@ -177,7 +176,7 @@ export default function DateVocabularyPage() {
               variant="outline"
               className="w-[48%]"
             >
-              Need to Review More
+              Forgotten
             </Button>
           </div>
           <p className="mt-4 text-sm text-gray-500">

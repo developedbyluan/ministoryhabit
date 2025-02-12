@@ -97,6 +97,7 @@ export default function ReadMode({
               variant="outline"
               size="sm"
               onClick={() => handleShowKaraokeMode("read")}
+              aria-label="show/hide video"
             >
               <TvMinimalPlay className="scale-150" />
             </Button>
