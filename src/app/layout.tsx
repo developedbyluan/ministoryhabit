@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mini Story Habit",
-  description: "How I train myself to learn English speaking consistently",
+  title: "SpeakFC.com",
+  description: "How I train myself to speak English fluently and confidently every day",
 };
 
 export default function RootLayout({
