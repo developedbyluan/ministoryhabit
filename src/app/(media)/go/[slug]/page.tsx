@@ -12,6 +12,7 @@ import type { LessonData } from "@/types";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SignupForm from "@/components/squeeze-form/SignupForm";
+import Link from "next/link";
 
 export const runtime = "edge";
 
@@ -29,7 +30,7 @@ export default function GoPage() {
   const [lessonData, setLessonData] = useState<LessonData>({
     id: "",
     media_url: "",
-    paid: true,
+    paid: false,
     title: "",
     type: "video",
     body: "",
@@ -50,8 +51,8 @@ export default function GoPage() {
 
   const previousModeRef = useRef<"karaoke" | "read" | "">("");
 
-  const { isAuthenticated } = useKindeBrowserClient();
-
+  const { isAuthenticated, getPermission } = useKindeBrowserClient();
+  const isVIP = getPermission("access:paidcontent");
   useEffect(() => {
     if (!lessonSlug) return;
 
@@ -202,6 +203,21 @@ export default function GoPage() {
   // if (isLoading) {
   //   return "Loading";
   // }
+  if (lessonData.paid) {
+    console.log(lessonData.paid);
+    console.log(isVIP);
+    if (!isVIP?.isGranted) {
+      // console.log(isVIP)
+      return (
+        <div className="min-h-dvh flex flex-col justify-center items-center">
+          <p>This content is for VIP members only!</p>
+          <Link className="text-blue-600 hover:text-blue-800" href="/">
+            Back to Home Page
+          </Link>
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="bg-white max-w-xl mx-auto h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">

@@ -114,7 +114,7 @@ function PlaylistsTab({ playlists }: PlaylistsTabProps) {
                 <Link
                   key={song.id}
                   href={`/go/${song.slug}`}
-                  className="flex-shrink-0 w-64 p-4 bg-white rounded shadow hover:shadow-md transition-shadow duration-200"
+                  className="flex-shrink-0 w-64 p-4 bg-white rounded shadow hover:shadow-md transition-shadow duration-200 space-y-2"
                 >
                   <Image
                     src={song.thumbnail_url}
@@ -125,6 +125,13 @@ function PlaylistsTab({ playlists }: PlaylistsTabProps) {
                   />
                   <p className="font-semibold">{song.title}</p>
                   <p className="text-gray-600">{song.artist}</p>
+                  <p>
+                    {song.paid && (
+                      <span className="text-red-700 text-sm font-semibold px-2 py-1 rounded-md border">
+                        VIP only
+                      </span>
+                    )}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -158,6 +165,11 @@ function SongsTab({ playlists }: SongsTabProps) {
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                   {playlist.name}
                 </span>
+                {song.paid && (
+                  <span className="text-red-700 text-sm font-semibold px-2 py-1 rounded-md border">
+                    VIP only
+                  </span>
+                )}
                 <button className="text-blue-500 hover:text-blue-700 transition-colors duration-300">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

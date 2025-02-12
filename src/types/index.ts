@@ -4,6 +4,7 @@ export interface Song {
   artist: string;
   slug: string;
   thumbnail_url: string;
+  paid: boolean;
 }
 
 export interface Playlist {

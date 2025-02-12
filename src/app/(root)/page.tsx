@@ -184,13 +184,13 @@ export default function ContinueStudying() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-24">
+      <div className="min-h-dvh flex justify-center items-center gap-2 text-white bg-slate-800">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
-  console.log(logs, statsData);
+  // console.log(logs, statsData);
 
   return (
     <>
