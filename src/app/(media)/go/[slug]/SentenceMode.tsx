@@ -93,8 +93,7 @@ export default function SentenceMode({
       newChunk,
       params.slug,
       currentLyricIndex,
-      // "kp_e15445a4c1334aa3a592809f9444e9d9",
-      user?.id || "",
+      user?.id || "xxx",
       currentLyric.start_time,
       currentLyric.end_time
     );

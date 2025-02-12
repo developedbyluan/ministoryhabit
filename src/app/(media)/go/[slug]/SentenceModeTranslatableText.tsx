@@ -7,7 +7,6 @@ import { translateText } from "@/app/actions/translate";
 import { openaiApiLogs } from "@/app/actions/openai-api-logs";
 import { useParams } from "next/navigation";
 
-
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 interface TranslatableTextProps {
@@ -122,7 +121,7 @@ export function TranslatableText({
     // const { data, error } = await openaiApiLogs(
     //   params.slug,
     //   original,
-    //   "kp_xxx"
+    //   "xxx"
     // );
     // if (error) {
     //   console.error(error);
@@ -132,8 +131,7 @@ export function TranslatableText({
     await openaiApiLogs(
       params.slug,
       original,
-      // "kp_xxx",
-      user?.id || "kp_"
+      user?.id || "xxx"
     );
   };
 

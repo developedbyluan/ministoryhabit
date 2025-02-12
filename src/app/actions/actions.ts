@@ -2,13 +2,21 @@
 
 import supabase from "@/utils/supabase";
 import { Genre } from "@/types";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function getVocabulary() {
   try {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    if (!user || !user.id) {
+      return { success: false, error: "User not authenticated." };
+    }
+
     const { data, error } = await supabase
       .from("collected_vocab")
       .select("vocab_array")
-      .eq("kinde_id", "kp_e15445a4c1334aa3a592809f9444e9d9");
+      .eq("kinde_id", user.id);
 
     if (error) {
       throw error;
@@ -40,14 +48,12 @@ export async function createPost(
   sentenceIndex: number,
   kindeId: string
 ) {
-  await supabase
-    .from("posts")
-    .insert({
-      content,
-      slug,
-      sentence_index: sentenceIndex,
-      kinde_id: kindeId,
-    });
+  await supabase.from("posts").insert({
+    content,
+    slug,
+    sentence_index: sentenceIndex,
+    kinde_id: kindeId,
+  });
 }
 
 export async function getPosts() {
@@ -70,7 +76,7 @@ export async function getPost(id: number) {
     .from("posts")
     .select("*")
     .eq("id", id)
-    .single()
+    .single();
 
   if (error) {
     console.error("Error fetching post:", error);
