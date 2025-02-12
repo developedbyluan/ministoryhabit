@@ -115,6 +115,13 @@ app.post("/supabase_vocab", async (c) => {
 });
 
 app.get("/supabase_goldlist_count", async (c) => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user || !user.id) {
+    return c.json({ error: "User not authenticated." });
+  }
+
 // Calculate the date 14 days ago
 const fourteenDaysAgo = new Date()
 fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
@@ -123,6 +130,7 @@ const { count, error } = await supabase
   .from("goldlist")
   .select("*", { count: "exact", head: true })
   .or(`last_review_at.is.null,and(last_review_at.lt.${fourteenDaysAgo.toISOString()},is_acquired.is.false)`)
+  .eq("kinde_id", user.id)
 
   if (error) return c.json({ error: error, status: 500 });
 
