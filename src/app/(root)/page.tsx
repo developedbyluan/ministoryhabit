@@ -224,6 +224,11 @@ export default function ContinueStudying() {
               </TabsList>
               <TabsContent value="all-lessons">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {!(logs.length > 0 && statsData) && (
+                    <p className="text-center text-slate-300">
+                      Learn a lesson to see your progress
+                    </p>
+                  )}
                   {sortedLogs.map((log) => (
                     <LessonCard key={log.lesson_slug} lesson={log} />
                   ))}
