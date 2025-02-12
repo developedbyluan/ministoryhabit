@@ -197,7 +197,7 @@ export default function ContinueStudying() {
     <>
       {!isAuthenticated ? (
         <SqueezePage redirectURL="/" />
-      ) : logs.length > 0 && statsData ? (
+      ) : (
         <>
           <Header logoText="Continue Learning" />
           <div className="container mx-auto py-4">
@@ -273,15 +273,6 @@ export default function ContinueStudying() {
             </Tabs>
           </div>
         </>
-      ) : (
-        <div className="min-h-dvh flex justify-center items-center">
-          <Link
-            className="flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            href="/go/trump"
-          >
-            Start practicing
-          </Link>
-        </div>
       )}
     </>
   );
