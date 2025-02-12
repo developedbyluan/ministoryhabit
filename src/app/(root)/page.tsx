@@ -18,7 +18,6 @@ import { PlaylistCard } from "./PlaylistCard";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SqueezePage from "../../components/squeeze-form";
 import Header from "@/components/Header";
-import Link from "next/link";
 
 export const runtime = "edge";
 

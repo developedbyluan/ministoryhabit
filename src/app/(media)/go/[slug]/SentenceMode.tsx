@@ -16,6 +16,8 @@ import VoiceRecorder from "./SentenceModeVoiceRecorder";
 import { addToGoldlist } from "@/app/actions/add-to-goldlist";
 import { useParams } from "next/navigation";
 
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
 type Lyric = {
   start_time: number;
   end_time: number;
@@ -53,6 +55,8 @@ export default function SentenceMode({
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
   const [showVoiceRecorder, setShowVoiceRecorder] = useState<boolean>(false);
 
+  const { user } = useKindeBrowserClient();
+
   const handlePlayNextLyric = (currentLyricIndex: number) => {
     if (isPlaying || currentLyricIndex > lyrics.length - 1) return;
     updateCurrentLyricIndex(currentLyricIndex + 1);
@@ -89,7 +93,8 @@ export default function SentenceMode({
       newChunk,
       params.slug,
       currentLyricIndex,
-      "kp_e15445a4c1334aa3a592809f9444e9d9",
+      // "kp_e15445a4c1334aa3a592809f9444e9d9",
+      user?.id || "",
       currentLyric.start_time,
       currentLyric.end_time
     );
