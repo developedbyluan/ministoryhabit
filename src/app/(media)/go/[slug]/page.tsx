@@ -44,7 +44,7 @@ export default function GoPage() {
 
   const [text, setText] = useState<string>("");
 
-  const [showKaraokeMode, setKaraokeMode] = useState(false);
+  const [showKaraokeMode, setKaraokeMode] = useState(true);
 
   const [showSentenceMode, setShowSentenceMode] = useState(false);
 
