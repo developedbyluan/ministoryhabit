@@ -7,6 +7,9 @@ import { translateText } from "@/app/actions/translate";
 import { openaiApiLogs } from "@/app/actions/openai-api-logs";
 import { useParams } from "next/navigation";
 
+
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
 interface TranslatableTextProps {
   text: string;
   handleAddToGoldlist: (
@@ -37,6 +40,8 @@ export function TranslatableText({
 
   const params: { slug: string } = useParams();
   // console.log(params.slug)
+
+  const { user } = useKindeBrowserClient();
 
   const handleWordClick = async (index: number) => {
     if (firstClick === null) {
@@ -127,7 +132,8 @@ export function TranslatableText({
     await openaiApiLogs(
       params.slug,
       original,
-      "kp_e15445a4c1334aa3a592809f9444e9d9"
+      // "kp_xxx",
+      user?.id || "kp_"
     );
   };
 
