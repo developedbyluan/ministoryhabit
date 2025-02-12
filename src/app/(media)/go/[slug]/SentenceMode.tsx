@@ -18,6 +18,9 @@ import { useParams } from "next/navigation";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+
 type Lyric = {
   start_time: number;
   end_time: number;
@@ -58,11 +61,21 @@ export default function SentenceMode({
   const { user } = useKindeBrowserClient();
 
   const handlePlayNextLyric = (currentLyricIndex: number) => {
-    if (isPlaying || currentLyricIndex > lyrics.length - 1) return;
+    if (isPlaying || currentLyricIndex > lyrics.length - 2) {
+      toast({
+        title: "✅ End!",
+        description: "You're at the end of the lesson.",
+      });
+      return;
+    }
     updateCurrentLyricIndex(currentLyricIndex + 1);
 
-    const nextLyric = lyrics[currentLyricIndex + 1];
-    playInRange(nextLyric.start_time, nextLyric.end_time);
+    try {
+      const nextLyric = lyrics[currentLyricIndex + 1];
+      playInRange(nextLyric.start_time, nextLyric.end_time);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleGoBackToPreviousMode = () => {
@@ -191,6 +204,7 @@ export default function SentenceMode({
             </Button>
           </div>
         </div>
+      <Toaster />
       </footer>
     </>
   );

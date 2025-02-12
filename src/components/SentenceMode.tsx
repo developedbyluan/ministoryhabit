@@ -29,8 +29,12 @@ export default function SentenceMode({
 
   function handlePlayNext() {
     const lyric = lyrics[currentLyricIndex + 1];
-    nextLyric();
-    playInRange(lyric.startTime, lyric.endTime);
+    if (currentLyricIndex < lyrics.length - 1) {
+      nextLyric();
+      playInRange(lyric.startTime, lyric.endTime);
+    } else {
+      console.log("end")
+    }
   }
 
   function handlePlayPrev() {
