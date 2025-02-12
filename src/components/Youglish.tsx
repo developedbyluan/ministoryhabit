@@ -16,7 +16,7 @@ export default function Youglish({dataQuery}: {dataQuery: string}) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-slate-50 overflow-y-auto">
       <main className="container mx-auto px-4 py-8">
         <div className="mt-8">
           <a

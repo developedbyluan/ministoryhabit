@@ -12,6 +12,11 @@ import VideoPlayer from "./VocabularyCardVideoPlayer";
 import { ChevronDown, MonitorUp, Speech } from "lucide-react";
 import Link from "next/link";
 import Youglish from "@/components/Youglish";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface VocabularyCardProps {
   item: {
@@ -56,7 +61,44 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
   };
 
   const handleShowYouglish = () => {
-    setShowYouglish(prev => !prev);
+    setShowYouglish((prev) => !prev);
+  };
+
+  const handleReplace = (
+    sentence: string,
+    originalChunk: string,
+    newChunk: string
+  ) => {
+    return sentence.replace(originalChunk, newChunk);
+  };
+
+  const renderResultWithPopover = (
+    sentence: string,
+    originalChunk: string,
+    newChunk: string
+  ) => {
+    const result = handleReplace(sentence, originalChunk, newChunk);
+
+    const parts = result.split(newChunk);
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <Popover>
+                <PopoverTrigger>
+                  <span className="underline underline-offset-8 cursor-pointer text-blue-600 leading-10">
+                    {newChunk}
+                  </span>
+                </PopoverTrigger>
+                <PopoverContent>{originalChunk}</PopoverContent>
+              </Popover>
+            )}
+          </span>
+        ))}
+      </>
+    );
   };
 
   if (isLoading) {
@@ -65,7 +107,7 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-shadow duration-300">
+      <Card className={`hover:shadow-lg transition-shadow duration-300 ${showYouglish? "hidden": ""}`}>
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
@@ -102,20 +144,22 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
               </Button>
             )}
           </div>
-          <p className="mb-2">
-            <strong>Sentence:</strong> {item.sentence}
-          </p>
-          <p className="mb-2">
-            <strong>Original:</strong> {item.original_chunk}
-          </p>
-          <p>
-            <strong>New:</strong> {item.new_chunk}
-          </p>
+          <div className="text-xl mt-4 p-4 bg-blue-50 rounded-md">
+            {renderResultWithPopover(
+              item.sentence,
+              item.original_chunk,
+              item.new_chunk
+            )}
+          </div>
         </CardContent>
       </Card>
       {showYouglish && (
         <div className="fixed w-full">
-          <Button variant="ghost" className="fixed w-full" onClick={handleShowYouglish}>
+          <Button
+            variant="ghost"
+            className="fixed w-full"
+            onClick={handleShowYouglish}
+          >
             <ChevronDown className="scale-150" strokeWidth={3} />
           </Button>
           <Youglish dataQuery={item.original_chunk} />
