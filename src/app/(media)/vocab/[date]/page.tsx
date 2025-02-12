@@ -26,6 +26,7 @@ interface GoldlistItem {
   lesson_slug: string;
   is_acquired: boolean;
   last_review_at: string | null;
+  start_time: number;
 }
 
 export default function DateVocabularyPage() {

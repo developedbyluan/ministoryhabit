@@ -6,6 +6,7 @@ import { useVideo } from "@/hooks/use-video";
 import ReadMode from "./ReadMode";
 import { useEffect, useRef, useState } from "react";
 // import { getVideo, saveVideo } from "@/utils/indexedDB";
+import { saveVideo } from "@/utils/indexedDB";
 import KaraokeMode from "./KaraokeMode";
 import SentenceMode from "./SentenceMode";
 import type { LessonData } from "@/types";
@@ -96,24 +97,24 @@ export default function GoPage() {
     setText(lessonData.body);
     // console.log("lessonData", lessonData)
 
-    // const handleDownload = async (
-    //   remoteVideoUrl: string,
-    //   videoName: string
-    // ) => {
-    //   try {
-    //     setIsLoading(true);
-    //     const response = await fetch(remoteVideoUrl);
-    //     const videoBlob = await response.blob();
-    //     await saveVideo(videoBlob, videoName);
-    //     // await loadStoredVideos()
-    //     // setIsDownloadDialogOpen(false)
-    //   } catch (err) {
-    //     // setError("Failed to download video")
-    //     console.error(err);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
+    const handleDownload = async (
+      remoteVideoUrl: string,
+      videoName: string
+    ) => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(remoteVideoUrl);
+        const videoBlob = await response.blob();
+        await saveVideo(videoBlob, videoName);
+        // await loadStoredVideos()
+        // setIsDownloadDialogOpen(false)
+      } catch (err) {
+        // setError("Failed to download video")
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     const loadVideo = async (videoName: string) => {
       try {
@@ -129,7 +130,7 @@ export default function GoPage() {
         const remoteVideoUrl = lessonData.media_url;
         // console.log(remoteVideoUrl);
         setVideoSource(remoteVideoUrl);
-        //   handleDownload(remoteVideoUrl, lessonSlug);
+        handleDownload(remoteVideoUrl, lessonSlug);
         // }
       } catch (err) {
         // setError("Failed to load video")

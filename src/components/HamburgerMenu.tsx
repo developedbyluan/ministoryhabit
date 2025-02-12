@@ -9,7 +9,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 const menuItems = [
   { name: "Vocabulary", href: "/vocab" },
-  { name: "Courses", href: "/courses" }
+  { name: "Courses", href: "/courses" },
 ];
 
 export default function HamburgerMenu() {
@@ -31,7 +31,7 @@ export default function HamburgerMenu() {
         const data: { count: number } = await response.json();
         setCount(data.count);
       } catch (err) {
-        console.log(err)
+        console.log(err);
         setError("Failed to load data");
       } finally {
         setIsLoading(false);
@@ -44,12 +44,14 @@ export default function HamburgerMenu() {
   return (
     <div className="relative">
       {count !== null && count > 0 && (
-        <Button
-          variant="outline"
-          className="absolute z-50 -right-2 -top-2 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
-        >
-          {isLoading ? <></> : error ? <>{error}</> : <>{count}</>}
-        </Button>
+        <Link href="/vocab">
+          <Button
+            variant="outline"
+            className="absolute z-50 -right-2 -top-2 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
+          >
+            {isLoading ? <></> : error ? <>{error}</> : <>{count}</>}
+          </Button>
+        </Link>
       )}
       <button
         onClick={toggleMenu}
@@ -69,7 +71,8 @@ export default function HamburgerMenu() {
               onClick={toggleMenu}
             >
               {item.name}
-              {item.name === "Vocabulary" && count !== null &&
+              {item.name === "Vocabulary" &&
+                count !== null &&
                 count > 0 &&
                 (isLoading ? <></> : error ? <>{error}</> : <> ({count})</>)}
             </Link>

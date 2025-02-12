@@ -16,7 +16,7 @@ export async function fetchVocabularyItems(startDate: string, endDate: string) {
   const { data, error } = await supabase
     .from("goldlist")
     .select(
-      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at, kinde_id"
+      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at, kinde_id, start_time"
     )
     .gte("created_at", startDate)
     .lt("created_at", endDate)
