@@ -208,7 +208,7 @@ export default function ContinueStudying() {
                   className="border-2 hover:bg-red-400 hover:text-white border-red-400 font-semibold"
                   onClick={handleInsertUserProgress}
                 >
-                  Save My Progress to Cloud
+                  Update My Progress
                 </Button>
               )}
             </div>
@@ -224,11 +224,7 @@ export default function ContinueStudying() {
               </TabsList>
               <TabsContent value="all-lessons">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {!(logs.length > 0 && statsData) && (
-                    <p className="text-center text-slate-300">
-                      Learn a lesson to see your progress
-                    </p>
-                  )}
+                  {!(logs.length > 0 && statsData) && <p className="text-center text-slate-300">Learn a lesson to see your progress</p>}
                   {sortedLogs.map((log) => (
                     <LessonCard key={log.lesson_slug} lesson={log} />
                   ))}

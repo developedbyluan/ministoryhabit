@@ -5,10 +5,11 @@ import Link from "next/link";
 import { fetchGenresData } from "@/app/actions/actions";
 import { Genre, Playlist } from "@/types";
 import Image from "next/image";
+import { ChevronLeft } from "lucide-react";
 
 export const runtime = "edge";
 
-export default function FavoriteSongs() {
+export default function CoursesPage() {
   const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
@@ -34,63 +35,59 @@ export default function FavoriteSongs() {
   };
 
   return (
-    <div className="max-w-3xl bg-white container mx-auto px-4 py-8">
-      {/* <h1 className="text-3xl font-bold mb-8">Dot Habit</h1> */}
-      <div>
-        <Link
-          href="/"
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 transition-colors duration-200"
-        >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Back to Home page
-        </Link>
-      </div>
-      {genres.map((genre) => (
-        <div key={genre.id} className="mb-8 overflow-y-auto">
-          <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2 border-b-2">
-            🔴 {genre.name}
-          </h2>
-          <div className="mb-4">
-            <button
-              className={`mr-4 px-4 py-2 rounded ${
-                genre.activeTab === "playlists"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => setGenreActiveTab(genre.id, "playlists")}
-            >
-              Playlists
-            </button>
-            <button
-              className={`px-4 py-2 rounded ${
-                genre.activeTab === "songs"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => setGenreActiveTab(genre.id, "songs")}
-            >
-              Songs
-            </button>
+    <>
+      <header className="w-full fixed z-50 bg-white shadow-sm">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex-shrink-0">
+              <Link
+                href="/"
+                className="flex gap-2 items-center text-2xl font-bold text-indigo-600"
+              >
+                <ChevronLeft className="scale-150" />
+                <span>Courses</span>
+              </Link>
+            </div>
           </div>
-          {genre.activeTab === "playlists" ? (
-            <PlaylistsTab playlists={genre.playlists} />
-          ) : (
-            <SongsTab playlists={genre.playlists} />
-          )}
         </div>
-      ))}
-    </div>
+      </header>
+      <div className="mt-12 max-w-3xl bg-white container mx-auto px-4 py-8">
+        {genres.map((genre) => (
+          <div key={genre.id} className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4 sticky top-0 bg-white z-10 py-2 border-b-2">
+              🔴 {genre.name}
+            </h2>
+            <div className="mb-4">
+              <button
+                className={`mr-4 px-4 py-2 rounded ${
+                  genre.activeTab === "playlists"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => setGenreActiveTab(genre.id, "playlists")}
+              >
+                Playlists
+              </button>
+              <button
+                className={`px-4 py-2 rounded ${
+                  genre.activeTab === "songs"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => setGenreActiveTab(genre.id, "songs")}
+              >
+                Songs
+              </button>
+            </div>
+            {genre.activeTab === "playlists" ? (
+              <PlaylistsTab playlists={genre.playlists} />
+            ) : (
+              <SongsTab playlists={genre.playlists} />
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
