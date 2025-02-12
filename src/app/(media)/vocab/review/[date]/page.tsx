@@ -15,6 +15,8 @@ import {
   reviewMoreItem,
 } from "@/app/actions/vocab";
 
+export const runtime = 'edge';
+
 interface GoldlistItem {
   id: number;
   created_at: string;

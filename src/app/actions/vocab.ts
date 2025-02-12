@@ -1,16 +1,27 @@
 "use server";
 
 import supabase from "@/utils/supabase";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function fetchVocabularyItems(startDate: string, endDate: string) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  // console.log(user);
+  if (!user || !user.id) {
+    // return { success: false, error: "User not authenticated." };
+    throw new Error("User not authenticated.");
+  }
+
   const { data, error } = await supabase
     .from("goldlist")
     .select(
-      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at"
+      "id, created_at, sentence, original_chunk, new_chunk, lesson_slug, is_acquired, last_review_at, kinde_id"
     )
     .gte("created_at", startDate)
     .lt("created_at", endDate)
     .is("last_review_at", null)
+    .eq("kinde_id", user.id)
     .order("created_at", { ascending: true });
 
   if (error) throw new Error(error.message);
@@ -18,6 +29,16 @@ export async function fetchVocabularyItems(startDate: string, endDate: string) {
 }
 
 export async function acquireItem(id: number) {
+  const { isAuthenticated } = getKindeServerSession();
+  // const user = await getUser();
+
+  // console.log(user);
+
+  if (!isAuthenticated) {
+    // return { success: false, error: "User not authenticated." };
+    throw new Error("User not authenticated.");
+  }
+
   const today = new Date().toISOString().split("T")[0];
   const { error } = await supabase
     .from("goldlist")
@@ -29,7 +50,15 @@ export async function acquireItem(id: number) {
 }
 
 export async function fetchReviewItems(startDate: string, endDate: string) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  // console.log(user);
   console.log(startDate, endDate);
+  if (!user || !user.id) {
+    // return { success: false, error: "User not authenticated." };
+    throw new Error("User not authenticated.");
+  }
   const fourteenDaysAgo = new Date();
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
   const { data, error } = await supabase
@@ -39,6 +68,7 @@ export async function fetchReviewItems(startDate: string, endDate: string) {
     )
     .lt("last_review_at", fourteenDaysAgo.toISOString())
     .is("is_acquired", false)
+    .eq("kinde_id", user.id)
     .order("last_review_at", { ascending: true });
 
   if (error) throw new Error(error.message);
@@ -46,12 +76,21 @@ export async function fetchReviewItems(startDate: string, endDate: string) {
 }
 
 export async function fetchGroupedItems(isReviewItems: boolean) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  // console.log(user);
+  if (!user || !user.id) {
+    // return { success: false, error: "User not authenticated." };
+    throw new Error("User not authenticated.");
+  }
   const fourteenDaysAgo = new Date();
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 0);
 
   const query = supabase
     .from("goldlist")
-    .select("id, created_at, last_review_at");
+    .select("id, created_at, last_review_at")
+    .eq("kinde_id", user.id);
 
   if (isReviewItems) {
     query
@@ -86,11 +125,20 @@ export async function fetchGroupedItems(isReviewItems: boolean) {
 }
 
 export async function reviewMoreItem(id: number) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  // console.log(user);
+  if (!user || !user.id) {
+    return { success: false, error: "User not authenticated." };
+  }
+
   const today = new Date().toISOString().split("T")[0];
   const { error } = await supabase
     .from("goldlist")
     .update({ last_review_at: today })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("kinde_id", user.id);
 
   if (error) throw new Error(error.message);
 }
