@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { MessageSquareText } from "lucide-react";
 
@@ -8,9 +8,8 @@ import { X, TvMinimalPlay, TextSearch, Play, Pause } from "lucide-react";
 import { Ref, useState } from "react";
 import ReadModeText from "./ReadModeText";
 
-import { useRouter } from 'next/navigation';
-
 import { LessonData } from "@/types";
+import Link from "next/link";
 
 type Lyric = {
   start_time: number;
@@ -49,14 +48,9 @@ export default function ReadMode({
   handleShowSentenceMode,
 }: ReadModeProps) {
   const [showIPA, setShowIPA] = useState(false);
-  const router = useRouter();
 
   const handleShowIPA = () => {
     setShowIPA((prev) => !prev);
-  };
-
-  const handleGoBack = () => {
-    router.back(); // Navigate back to the previous page
   };
 
   return (
@@ -68,9 +62,11 @@ export default function ReadMode({
       )}
       <header>
         <div className="flex-shrink max-w-[396px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
-          <Button variant="ghost" onClick={handleGoBack}>
-            <X className="scale-150" />
-          </Button>
+          <Link href="/">
+            <Button variant="ghost">
+              <X className="scale-150" />
+            </Button>
+          </Link>
           <Slider
             value={[progress]}
             max={duration}
@@ -96,7 +92,11 @@ export default function ReadMode({
       <footer>
         <div className="max-w-[396px] w-[95%] mx-auto px-4 pt-4">
           <div className="play-pause-toggler flex justify-between items-center">
-            <Button variant="outline" size="sm" onClick={() => handleShowKaraokeMode("read")}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShowKaraokeMode("read")}
+            >
               <TvMinimalPlay className="scale-150" />
             </Button>
             <Button
@@ -110,7 +110,11 @@ export default function ReadMode({
                 <Play fill="black" strokeWidth={4} stroke="black" />
               )}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => handleShowSentenceMode("read")}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShowSentenceMode("read")}
+            >
               <TextSearch className="scale-150" />
             </Button>
           </div>

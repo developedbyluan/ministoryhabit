@@ -10,6 +10,9 @@ import KaraokeMode from "./KaraokeMode";
 import SentenceMode from "./SentenceMode";
 import type { LessonData } from "@/types";
 
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import SignupForm from "@/components/squeeze-form/SignupForm";
+
 export const runtime = "edge";
 
 export default function GoPage() {
@@ -46,6 +49,8 @@ export default function GoPage() {
   const [showVideo, setShowVideo] = useState<boolean>(false);
 
   const previousModeRef = useRef<"karaoke" | "read" | "">("");
+
+  const { isAuthenticated } = useKindeBrowserClient();
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -130,7 +135,7 @@ export default function GoPage() {
         console.error(err);
       } finally {
         setIsLoading(false);
-        console.log(isLoading)
+        console.log(isLoading);
       }
     };
 
@@ -200,6 +205,13 @@ export default function GoPage() {
 
   return (
     <div className="bg-white max-w-xl mx-auto h-dvh py-4 grid grid-rows[1fr_auto_auto] gap-4">
+      {!isAuthenticated && (
+        <div className="absolute z-50 inset-0 bg-slate-600/30 flex flex-col justify-center items-center">
+          <div className="bg-slate-100 pb-7 rounded-md px-10">
+            <SignupForm redirectURL={`/go/${lessonSlug}`} />
+          </div>
+        </div>
+      )}
       <video
         ref={videoRef}
         className={`${
@@ -208,7 +220,7 @@ export default function GoPage() {
         playsInline
       />
 
-      {showKaraokeMode && (
+      {showKaraokeMode && isAuthenticated && (
         <KaraokeMode
           videoRef={videoRef}
           isPlaying={isPlaying}
@@ -245,7 +257,7 @@ export default function GoPage() {
         />
       )}
 
-      {showSentenceMode && (
+      {showSentenceMode && isAuthenticated && (
         <SentenceMode
           isPlaying={isPlaying}
           playInRange={playInRange}
