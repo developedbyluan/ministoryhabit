@@ -149,10 +149,18 @@ export default function DateVocabularyPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link href="/vocab" className="flex gap-1 items-center mb-4 text-xl text-blue-500 hover:underline">
-        <ChevronLeft />
-        <span>{date}</span>
-      </Link>
+      <div className="flex justify-between items-center mb-4">
+        <Link
+          href="/vocab"
+          className="flex gap-1 items-center text-xl text-blue-500 hover:underline hover:underline-offset-2"
+        >
+          <ChevronLeft />
+          <span>{date}</span>
+        </Link>
+        <p className="text-sm text-gray-500">
+          Card {currentIndex + 1} of {vocabularyItems.length}
+        </p>
+      </div>
 
       {vocabularyItems.length === 0 ? (
         <p className="text-center text-gray-500">
@@ -179,9 +187,6 @@ export default function DateVocabularyPage() {
               Forgotten
             </Button>
           </div>
-          <p className="mt-4 text-sm text-gray-500">
-            Card {currentIndex + 1} of {vocabularyItems.length}
-          </p>
         </div>
       )}
       <Toaster />

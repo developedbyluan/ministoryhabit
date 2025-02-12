@@ -9,8 +9,9 @@ import { useState } from "react";
 import { getVideo } from "@/utils/indexedDB";
 import { Button } from "@/components/ui/button";
 import VideoPlayer from "./VocabularyCardVideoPlayer";
-import { MonitorUp, Speech } from "lucide-react";
+import { ChevronDown, MonitorUp, Speech } from "lucide-react";
 import Link from "next/link";
+import Youglish from "@/components/Youglish";
 
 interface VocabularyCardProps {
   item: {
@@ -28,6 +29,8 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [videoSource, setVideoSource] = useState("");
   const [isError, setError] = useState<string | null>(null);
+
+  const [showYouglish, setShowYouglish] = useState<boolean>(false);
 
   const loadVideo = async (videoName: string) => {
     try {
@@ -52,53 +55,72 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
     }
   };
 
+  const handleShowYouglish = () => {
+    setShowYouglish(prev => !prev);
+  };
+
   if (isLoading) {
     return "Loading";
   }
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-300">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="text-lg font-semibold">
-              <Link href={`/go/${item.lesson_slug}`}>{item.lesson_slug}</Link>
-            </CardTitle>
-            <CardDescription>Created on: {createdDate}</CardDescription>
-          </div>
-          <Button variant="ghost" size="icon" aria-label="open real world pronunciation app">
-            <Speech className="text-red-400 scale-150" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center gap-4 mb-7">
-          <p className="text-red-600">{isError}</p>
-          {videoSource ? (
-            <VideoPlayer src={videoSource} startTime={item.start_time} />
-          ) : (
+    <>
+      <Card className="hover:shadow-lg transition-shadow duration-300">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="text-lg font-semibold">
+                <Link href={`/go/${item.lesson_slug}`}>{item.lesson_slug}</Link>
+              </CardTitle>
+              <CardDescription>Created on: {createdDate}</CardDescription>
+            </div>
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                loadVideo(item.lesson_slug);
-              }}
-              aria-label="show video"
+              variant="ghost"
+              size="icon"
+              aria-label="open real world pronunciation app"
+              onClick={handleShowYouglish}
             >
-              <MonitorUp className="scale-150" />
+              <Speech className="text-red-400 scale-150" />
             </Button>
-          )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center gap-4 mb-7">
+            <p className="text-red-600">{isError}</p>
+            {videoSource ? (
+              <VideoPlayer src={videoSource} startTime={item.start_time} />
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  loadVideo(item.lesson_slug);
+                }}
+                aria-label="show video"
+              >
+                <MonitorUp className="scale-150" />
+              </Button>
+            )}
+          </div>
+          <p className="mb-2">
+            <strong>Sentence:</strong> {item.sentence}
+          </p>
+          <p className="mb-2">
+            <strong>Original:</strong> {item.original_chunk}
+          </p>
+          <p>
+            <strong>New:</strong> {item.new_chunk}
+          </p>
+        </CardContent>
+      </Card>
+      {showYouglish && (
+        <div className="fixed w-full">
+          <Button variant="ghost" className="fixed w-full" onClick={handleShowYouglish}>
+            <ChevronDown className="scale-150" strokeWidth={3} />
+          </Button>
+          <Youglish dataQuery={item.original_chunk} />
         </div>
-        <p className="mb-2">
-          <strong>Sentence:</strong> {item.sentence}
-        </p>
-        <p className="mb-2">
-          <strong>Original:</strong> {item.original_chunk}
-        </p>
-        <p>
-          <strong>New:</strong> {item.new_chunk}
-        </p>
-      </CardContent>
-    </Card>
+      )}
+    </>
   );
 }
