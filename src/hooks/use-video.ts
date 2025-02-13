@@ -72,10 +72,11 @@ interface UseVideoProps {
   text: string;
   lineIndex: number | null;
   lessonSlug: string;
-  playlistId: string
+  playlistId: string;
+  thumbnail: string
 }
 
-export function useVideo({ src, text, lineIndex, lessonSlug, playlistId }: UseVideoProps) {
+export function useVideo({ src, text, lineIndex, lessonSlug, playlistId, thumbnail }: UseVideoProps) {
   const [state, dispatch] = useReducer(videoReducer, initialState);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -97,6 +98,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug, playlistId }: UseVi
 
     video.src = src;
     video.preload = "auto";
+    video.poster = thumbnail
     const updateProgress = () => {
       dispatch({ type: "SET_PROGRESS", payload: video.currentTime });
       updateLyrics(video.currentTime);
@@ -119,25 +121,27 @@ export function useVideo({ src, text, lineIndex, lessonSlug, playlistId }: UseVi
     };
   }, [src, text]);
 
-  useEffect(() => {
-    // if (!lineIndex) return;
-    if (!state.lyrics) return;
-    // console.log(lineIndex)
+  // TODO: take a pause on scroll into previous session lyric
+  console.log(lineIndex)
+  // useEffect(() => {
+  //   // if (!lineIndex) return;
+  //   if (!state.lyrics) return;
+  //   // console.log(lineIndex)
 
-    if (lineIndex) {
-      const startTime = state.lyrics[lineIndex]?.start_time;
-      if (!startTime) return;
-      handlePause(startTime, lineIndex);
-      return;
-    }
+  //   if (lineIndex) {
+  //     const startTime = state.lyrics[lineIndex]?.start_time;
+  //     if (!startTime) return;
+  //     handlePause(startTime, lineIndex);
+  //     return;
+  //   }
 
-    const previousIndex = getIndexFromLocalStorage(lessonSlug);
-    // console.log("previousIndex", previousIndex);
+  //   const previousIndex = getIndexFromLocalStorage(lessonSlug);
+  //   // console.log("previousIndex", previousIndex);
 
-    const startTime = state.lyrics[previousIndex]?.start_time;
-    if (!startTime) return;
-    handlePause(startTime, previousIndex);
-  }, [lineIndex, state.lyrics, lessonSlug]);
+  //   const startTime = state.lyrics[previousIndex]?.start_time;
+  //   if (!startTime) return;
+  //   handlePause(startTime, previousIndex);
+  // }, [lineIndex, state.lyrics, lessonSlug]);
 
   useEffect(() => {
     if (!lessonSlug) return;

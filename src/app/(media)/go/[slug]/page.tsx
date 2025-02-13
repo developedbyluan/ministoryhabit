@@ -167,6 +167,7 @@ export default function GoPage() {
     lineIndex: parseInt(lineIndex || "0"),
     lessonSlug: lessonSlug,
     playlistId: lessonData.playlists.id,
+    thumbnail: lessonData.thumbnail_url
   });
 
   const handleShowKaraokeMode = (mode: "karaoke" | "read") => {
