@@ -77,7 +77,7 @@ export default function HamburgerMenu() {
                 (isLoading ? <></> : error ? <>{error}</> : <> ({count})</>)}
             </Link>
           ))}
-          <LogoutLink className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+          <LogoutLink postLogoutRedirectURL="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
             Logout
           </LogoutLink>
         </div>

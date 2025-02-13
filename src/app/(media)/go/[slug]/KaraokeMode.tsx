@@ -1,4 +1,4 @@
-import { Book, Languages, Pause, TextSearch } from "lucide-react";
+import { Book, Languages, Loader2, Pause, TextSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { Ref, useEffect, useState } from "react";
@@ -61,6 +61,12 @@ export default function KaraokeMode({
   }, [videoRef]);
   return (
     <>
+      {!duration && (
+        <div className="absolute inset-0 text-white bg-slate-800 z-50 flex items-center justify-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span>Video is being downloaded</span>
+        </div>
+      )}
       <main className="flex-grow overflow-y-auto">
         <KaraokeModeText
           lyrics={lyrics}
@@ -91,7 +97,11 @@ export default function KaraokeMode({
             </div>
           </div>
           <div className="play-pause-toggler flex justify-between items-center">
-            <Button variant="outline" size="sm" onClick={() => handleShowKaraokeMode("karaoke")}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleShowKaraokeMode("karaoke")}
+            >
               <Book className="scale-150" />
             </Button>
             <select

@@ -234,7 +234,7 @@ export default function GoPage() {
         playsInline
       />
 
-      {showKaraokeMode && isAuthenticated && (
+      {showKaraokeMode && (
         <KaraokeMode
           videoRef={videoRef}
           isPlaying={isPlaying}
@@ -254,7 +254,7 @@ export default function GoPage() {
         />
       )}
 
-      {!showKaraokeMode && !showSentenceMode && (
+      {!showKaraokeMode && !showSentenceMode && isAuthenticated && (
         <ReadMode
           videoRef={videoRef}
           progress={progress}

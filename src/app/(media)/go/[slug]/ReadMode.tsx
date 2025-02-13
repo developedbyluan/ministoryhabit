@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, MessageSquareText } from "lucide-react";
+// import { Loader2, MessageSquareText } from "lucide-react";
+import { MessageSquareText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -55,12 +56,12 @@ export default function ReadMode({
 
   return (
     <>
-      {!duration && (
+      {/* {!duration && (
         <div className="absolute inset-0 text-white bg-slate-800 z-50 flex items-center justify-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin" />
           <span>Video is being downloaded</span>
         </div>
-      )}
+      )} */}
       <header>
         <div className="flex-shrink max-w-[396px] w-[95%] mx-auto flex justify-between items-center gap-4 pb-4">
           <Link href="/">
