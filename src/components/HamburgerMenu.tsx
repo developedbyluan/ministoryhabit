@@ -47,7 +47,7 @@ export default function HamburgerMenu() {
         <Link href="/vocab">
           <Button
             variant="outline"
-            className="absolute z-50 -right-2 -top-2 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
+            className="absolute z-50 -right-3 -top-3 h-6 px-2 font-bold border border-red-400 hover:text-red-400 hover:bg-white text-sm bg-red-400 text-white hover rounded-full"
           >
             {isLoading ? <></> : error ? <>{error}</> : <>{count}</>}
           </Button>

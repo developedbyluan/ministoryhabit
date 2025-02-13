@@ -65,7 +65,7 @@ export default function VideoPlayer({ src, startTime }: VideoPlayerProps) {
         <video
           ref={videoRef}
           src={src}
-          className="h-full w-full object-cover"
+          className="bg-slate-100 h-full w-full object-cover"
           playsInline
         />
       </div>

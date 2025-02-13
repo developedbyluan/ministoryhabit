@@ -176,7 +176,7 @@ export default function SentenceMode({
             >
               <CornerDownLeft className="scale-150" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" disabled>
               <MessageCircleQuestion className="scale-150" />
             </Button>
             <Button

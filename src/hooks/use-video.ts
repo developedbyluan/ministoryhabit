@@ -2,7 +2,7 @@ import { useReducer, useRef, useEffect } from "react";
 
 import { subCrafter } from "@/utils/subcrafter";
 import {
-  getIndexFromLocalStorage,
+  // getIndexFromLocalStorage,
   storeIndexToLocalStorage,
   storeTotalPlayTimeToLocalStorage,
 } from "@/utils/storeDataToLocalStorage";

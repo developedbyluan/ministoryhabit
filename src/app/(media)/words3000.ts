@@ -3865,6 +3865,4 @@ export const words3000 = [
   "realizes",
   "comes",
   "turns",
-  "Van Ness",
-  "San Francisco",
 ];
