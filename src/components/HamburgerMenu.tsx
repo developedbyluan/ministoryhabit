@@ -8,8 +8,8 @@ import { Button } from "./ui/button";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 const menuItems = [
-  { name: "Vocabulary", href: "/vocab" },
   { name: "Courses", href: "/courses" },
+  { name: "Vocabulary", href: "/vocab" },
 ];
 
 export default function HamburgerMenu() {

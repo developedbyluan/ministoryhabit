@@ -62,7 +62,7 @@ export default function KaraokeMode({
   return (
     <>
       {!duration && (
-        <div className="absolute inset-0 text-white bg-slate-800 z-50 flex items-center justify-center gap-2">
+        <div className="min-h-dvh absolute inset-0 text-white bg-slate-800 z-50 flex items-center justify-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin" />
           <span>Video is being downloaded</span>
         </div>

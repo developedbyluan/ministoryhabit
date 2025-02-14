@@ -183,7 +183,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug, playlistId, thumbna
       if (!videoElement) return;
 
       if (state.progress >= endTimeRef.current && endTimeRef.current !== -1) {
-        console.log("end");
+        // console.log("end 1");
         const currentLyric = state.lyrics[state.currentLyricIndex];
         handlePause(currentLyric.start_time, state.currentLyricIndex);
         videoElement.pause();
@@ -278,7 +278,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug, playlistId, thumbna
 
   // Sentence Mode
   function playInRange(startTime: number, endTime: number) {
-    console.log(endTimeRef.current);
+    // console.log(endTimeRef.current);
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
@@ -292,7 +292,7 @@ export function useVideo({ src, text, lineIndex, lessonSlug, playlistId, thumbna
     handleProgressChange(startTime);
     videoElement.play();
     dispatch({ type: "TOGGLE_PLAY" });
-    endTimeRef.current = endTime;
+    endTimeRef.current = endTime - 0.44;
 
     // dispatch({ type: "TOGGLE_PLAY" });
 
