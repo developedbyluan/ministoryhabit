@@ -76,7 +76,7 @@ export default function CoursesPage() {
                 }`}
                 onClick={() => setGenreActiveTab(genre.id, "songs")}
               >
-                Songs
+               Lessons 
               </button>
             </div>
             {genre.activeTab === "playlists" ? (
