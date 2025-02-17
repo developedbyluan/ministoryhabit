@@ -118,7 +118,7 @@ export default function DateVocabularyPage() {
       );
       toast({
         title: "Marked for review!",
-        description: "This item has been marked for further review.",
+        description: "This item has been marked for further review in 2 weeks.",
       });
       showNextCard();
     } catch (error) {
@@ -184,7 +184,7 @@ export default function DateVocabularyPage() {
               variant="outline"
               className="w-[48%]"
             >
-              Forgotten
+             Review it 
             </Button>
           </div>
         </div>

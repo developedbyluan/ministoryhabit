@@ -18,7 +18,6 @@ export default function Youglish({dataQuery}: {dataQuery: string}) {
   return (
     <div className="min-h-screen bg-slate-50 overflow-y-auto">
       <main className="container mx-auto px-4 py-8">
-        <div className="mt-8">
           <a
             id="yg-widget-0"
             className="youglish-widget"
@@ -31,7 +30,6 @@ export default function Youglish({dataQuery}: {dataQuery: string}) {
           >
             Visit YouGlish.com
           </a>
-        </div>
       </main>
     </div>
   );

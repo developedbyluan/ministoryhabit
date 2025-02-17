@@ -74,7 +74,7 @@ export function SavedTranslations({
                   : ""
               }`}
               disabled={
-                item.isLoading || addedToGoldlist.has(index) || !isTranslated
+                item.isLoading || addedToGoldlist.has(index) || isTranslated
               }
               onClick={() =>
                 handleButtonClick(index, item.original, item.translation)
@@ -96,15 +96,15 @@ export function SavedTranslations({
                   </span>
                 ) : (
                   <>
-                    {isTranslated ? (
+                    {item.translation === "Translation failed" ? (
+                      item.translation
+                    ) : (
                       <EditableText
-                        isDisabled={true}
+                        isDisabled={false}
                         initialText={item.translation}
                         className="text-sm font-semibold"
                         onTextChange={(newText) => handleTextChange(newText)}
                       />
-                    ) : (
-                      item.translation
                     )}
                   </>
                 )}

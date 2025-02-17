@@ -154,7 +154,7 @@ export default function VocabularyCard({ item }: VocabularyCardProps) {
         </CardContent>
       </Card>
       {showYouglish && (
-        <div className="fixed w-full">
+        <div className="fixed w-full lg:w-[60%] z-50">
           <Button
             variant="ghost"
             className="fixed w-full"
