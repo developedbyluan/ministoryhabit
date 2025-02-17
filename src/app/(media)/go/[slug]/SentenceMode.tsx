@@ -40,6 +40,7 @@ type SentenceModeProps = {
   previousMode: "karaoke" | "read" | "";
   showVideoInSentenceMode: () => void;
   showVideo: boolean;
+  handleShowPost: () => void;
 };
 
 export default function SentenceMode({
@@ -53,6 +54,7 @@ export default function SentenceMode({
   previousMode,
   showVideoInSentenceMode,
   showVideo,
+  handleShowPost,
 }: SentenceModeProps) {
   const currentLyric = lyrics[currentLyricIndex];
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
@@ -176,7 +178,13 @@ export default function SentenceMode({
             >
               <CornerDownLeft className="scale-150" />
             </Button>
-            <Button variant="ghost" size="sm" disabled>
+            {/* Trigger show post */}
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label="show post"
+              onClick={handleShowPost}
+            >
               <MessageCircleQuestion className="scale-150" />
             </Button>
             <Button
@@ -204,7 +212,7 @@ export default function SentenceMode({
             </Button>
           </div>
         </div>
-      <Toaster />
+        <Toaster />
       </footer>
     </>
   );

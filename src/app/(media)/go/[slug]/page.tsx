@@ -14,6 +14,7 @@ import type { LessonData } from "@/types";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import SignupForm from "@/components/squeeze-form/SignupForm";
 import Link from "next/link";
+import Posts from "./Posts";
 
 export const runtime = "edge";
 
@@ -54,6 +55,14 @@ export default function GoPage() {
 
   const { isAuthenticated, getPermission } = useKindeBrowserClient();
   const isVIP = getPermission("access:paidcontent");
+
+  const [showPost, setShowPost] = useState(false)
+
+  const handleShowPost = () => {
+    setShowSentenceMode(prev => !prev)
+    setShowPost(prev => !prev)
+  }
+
   useEffect(() => {
     if (!lessonSlug) return;
 
@@ -235,7 +244,7 @@ export default function GoPage() {
         playsInline
       />
 
-      {showKaraokeMode && (
+      {showKaraokeMode && !showPost && (
         <KaraokeMode
           videoRef={videoRef}
           isPlaying={isPlaying}
@@ -255,7 +264,7 @@ export default function GoPage() {
         />
       )}
 
-      {!showKaraokeMode && !showSentenceMode && isAuthenticated && (
+      {!showKaraokeMode && !showSentenceMode && !showPost && isAuthenticated && (
         <ReadMode
           videoRef={videoRef}
           progress={progress}
@@ -272,7 +281,7 @@ export default function GoPage() {
         />
       )}
 
-      {showSentenceMode && isAuthenticated && (
+      {showSentenceMode && !showPost && isAuthenticated && (
         <SentenceMode
           isPlaying={isPlaying}
           playInRange={playInRange}
@@ -284,8 +293,10 @@ export default function GoPage() {
           previousMode={previousModeRef.current}
           showVideoInSentenceMode={handleShowVideoInSentenceMode}
           showVideo={showVideo}
+          handleShowPost={handleShowPost}
         />
       )}
+    {showPost && <Posts slugText={lessonSlug} sentenceIndexNumber={currentLyricIndex} />} 
     </div>
   );
 }

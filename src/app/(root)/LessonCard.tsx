@@ -22,7 +22,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
       </CardHeader>
       <CardContent className="pt-4">
         <p className="text-sm text-muted-foreground mb-2">
-          Course: {lesson.playlist_name}
+          Lesson Set: {lesson.playlist_name}
         </p>
         <p className="text-sm mb-1">
           Latest session: {formatDate(lesson.latest_date)}

@@ -219,7 +219,7 @@ export default function ContinueStudying() {
             <Tabs defaultValue="all-lessons" className="w-full px-4 md:px-8">
               <TabsList className="grid w-full mx-auto grid-cols-3 mb-8">
                 <TabsTrigger value="all-lessons">All Lessons</TabsTrigger>
-                <TabsTrigger value="grouped-by-playlist">Courses</TabsTrigger>
+                <TabsTrigger value="grouped-by-playlist">Lesson Sets</TabsTrigger>
                 <TabsTrigger value="stats">Stats</TabsTrigger>
               </TabsList>
               <TabsContent value="all-lessons">
