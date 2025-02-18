@@ -85,7 +85,7 @@ export async function fetchGroupedItems(isReviewItems: boolean) {
     throw new Error("User not authenticated.");
   }
   const fourteenDaysAgo = new Date();
-  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 0);
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
   const query = supabase
     .from("goldlist")
