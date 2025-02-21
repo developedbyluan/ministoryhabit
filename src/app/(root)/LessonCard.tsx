@@ -34,7 +34,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
           Total time: {formatTime(lesson.total_playing_time)}
         </p>
         <Link
-          href={`/go/${lesson.lesson_slug}`}
+          href={lesson.total_playing_time > 10 ? `/run/${lesson.lesson_slug}`:`/go/${lesson.lesson_slug}`}
           className="text-primary mt-4 inline-block"
         >
           <Button>
